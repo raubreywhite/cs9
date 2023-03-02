@@ -1,0 +1,149 @@
+url: https://docs.sykdomspulsen.no/sc
+
+template:
+  bootstrap: 5
+  bslib:
+    # primary: "#393c61"
+    # secondary: "#E9F39F"
+    border-radius: 0.0rem
+    btn-border-radius: 0.0rem
+    # font-size-base: 0.75rem
+
+# navbar:
+#   bg: "#393c61"
+
+authors:
+  Folkehelseinstituttet:
+    href: "https://www.fhi.no"
+    html: "<img src='man/figures/fhi.png' width=72>"
+  footer:
+    roles: [cre, aut]
+    text: "Crafted by"
+  sidebar:
+    roles: [aut, ctb, cph]
+  before: "This package is proudly brought to you by:"
+  after: "See the [changelog](news/index.html) for other contributors. :pray:"
+
+reference:
+- title: Environments
+  desc: >
+    Environments that contain information.
+- contents:
+  - config
+  - connections
+- title: Data and databases
+  desc: >
+    These functions relate to data and databases.
+- subtitle: R6 classes
+  desc: >
+    R6 classes and their helper functions.
+- contents:
+  - Schema_v8
+  - SchemaRedirect_v8
+  - add_schema_v8
+  - Permission
+  - add_permission
+- subtitle: Functions to access datasets
+  desc: >
+    These functions access datasets.
+- contents:
+  - fill_in_missing_v8
+  - get_config_last_updated
+  - update_config_last_updated
+  - mandatory_db_filter
+  - tbl
+  - copy_into_new_table_where
+- subtitle: Censoring
+- contents:
+  - censor_function_factory_everything
+  - censor_function_factory_nothing
+  - censor_function_factory_values_0_4
+  - censor_list_function_factory
+- subtitle: Validators
+- contents:
+  - validator_field_contents_blank
+  - validator_field_contents_sykdomspulsen
+  - validator_field_types_blank
+  - validator_field_types_sykdomspulsen
+- subtitle: Utility functions
+  desc: >
+    These are utility functions for databases. You probably won't work with them.
+- contents:
+  - drop_all_rows
+  - drop_rows_where
+  - drop_table
+  - get_db_connection
+  - get_field_types
+  - keep_rows_where
+  - list_indexes
+  - list_tables
+  - use_db
+
+- title: Tasks
+  desc: >
+    A task is the basic operational unit of Sykdomspulsen Core.
+- subtitle: R6 classes
+  desc: >
+    R6 classes and their helper functions.
+- contents:
+  - Task
+  - add_task_from_config_v8
+  - TaskManager
+- subtitle: Functions
+  desc: >
+    These functions access datasets.
+- contents:
+  - tm_get_argset
+  - tm_get_data
+  - tm_get_plan
+  - tm_get_plans
+  - tm_get_plans_argsets_as_dt
+  - tm_get_schema
+  - tm_get_task
+  - tm_get_task_names
+  - tm_run_task
+  - tm_shortcut_argset
+  - tm_shortcut_data
+  - tm_shortcut_plan
+  - tm_shortcut_schema
+  - tm_shortcut_task
+  - tm_update_plans
+
+- title: Utility functions
+  desc: >
+    Utility functions.
+- contents:
+  - create_folder_if_doesnt_exist
+  - create_latest_folder
+  - describe_schemas
+  - describe_tasks
+  - mv
+  - path
+  - qsenc_read
+  - qsenc_save
+
+- title: Tests
+  desc: >
+    Simple functions used for testing.
+- contents:
+  - sc_test_action
+  - sc_test_data_selector
+  - sc_test_plan_analysis
+
+- title: Deprecated
+  desc: >
+    These functions are out of date,
+    and should not be used.
+- contents:
+  - Schema
+  - add_schema
+  - add_task
+  - get_rundate
+  - update_rundate
+  - latin1_to_utf8
+  - task_from_config
+  - task_from_config_v2
+  - task_from_config_v3
+  - task_inline_v1
+  - update_config_datetime
+  - get_config_datetime

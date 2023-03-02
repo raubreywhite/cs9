@@ -1,13 +1,13 @@
-Package: sc8
+Package: sc9
 Title: Real-time analysis and disease surveillance system
-Version: 8.0.0
+Version: 9.0.0
 Authors@R: c(
   person(c("Richard","Aubrey"), "White", email = "hello@rwhite.no", role = c("aut", "cre"),
     comment = c(ORCID = "0000-0002-6747-1726")
   ))
 Description: The generic infrastructure that can be used to implement new real-time analysis and disease surveillance systems.
-URL: https://docs.sykdomspulsen.no/sc, https://github.com/sykdomspulsen-org/sc
-BugReports: https://github.com/sykdomspulsen-org/sc/issues
+URL: https://www.csids.no/sc9, https://github.com/csids/sc9
+BugReports: https://github.com/csids/sc9/issues
 Depends:
   R (>= 4.1.0)
 Imports:
