@@ -1,4 +1,4 @@
 library(testthat)
-library(sc8)
+library(sc9)
 
-test_check("sc8")
+test_check("sc9")
