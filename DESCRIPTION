@@ -1,0 +1,54 @@
+Package: sc8
+Title: Real-time analysis and disease surveillance system
+Version: 8.0.0
+Authors@R: c(
+  person(c("Richard","Aubrey"), "White", email = "hello@rwhite.no", role = c("aut", "cre"),
+    comment = c(ORCID = "0000-0002-6747-1726")
+  ))
+Description: The generic infrastructure that can be used to implement new real-time analysis and disease surveillance systems.
+URL: https://docs.sykdomspulsen.no/sc, https://github.com/sykdomspulsen-org/sc
+BugReports: https://github.com/sykdomspulsen-org/sc/issues
+Depends:
+  R (>= 4.1.0)
+Imports:
+  data.table,
+  crayon,
+  DBI,
+  dplyr,
+  fhidata,
+  fhiplot,
+  foreach,
+  fs,
+  future,
+  glue,
+  lubridate,
+  magrittr,
+  odbc,
+  openssl,
+  parallel,
+  pbmcapply,
+  plnr (>= 2021.5.4),
+  pool,
+  processx,
+  progress,
+  progressr,
+  pryr,
+  qs,
+  R6,
+  rlang,
+  rstudioapi,
+  spltidy,
+  splutil,
+  stats,
+  stringr,
+  tidyr,
+  uuid
+Suggests: testthat,
+    knitr,
+    usethis
+License: GPL-3 + file LICENSE
+LazyData: true
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.1.2
+VignetteBuilder: knitr
+Encoding: UTF-8
