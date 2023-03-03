@@ -43,12 +43,14 @@ Imports:
   stringr,
   tidyr,
   uuid
-Suggests: testthat,
+Suggests: 
+    testthat,
     knitr,
-    usethis
+    usethis,
+    rmarkdown
 License: GPL-3 + file LICENSE
 LazyData: true
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.1.2
+RoxygenNote: 7.2.3
 VignetteBuilder: knitr
 Encoding: UTF-8

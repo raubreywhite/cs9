@@ -1,49 +1,95 @@
 .onLoad <- function(libname, pkgname) {
-  config$tasks <- TaskManager$new()
 
-  check_env_vars()
-
-  set_computer_type()
+  set_env_vars()
   set_progressr()
-  set_path()
   set_plnr()
 
-  # we need to implement lazy loading when we have more time
-  try(set_db(), silent = T)
+  # config_last_updated ----
+  config$tables$config_last_updated <- csdb::DBTable_v9$new(
+    dbconfig = config$dbconfigs$config,
+    table_name = "config_last_updated",
+    field_types = c(
+      "type" = "TEXT",
+      "tag" = "TEXT",
+      "date" = "DATE",
+      "datetime" = "DATETIME"
+    ),
+    keys = c(
+      "type",
+      "tag"
+    ),
+    validator_field_types = csdb::validator_field_types_blank,
+    validator_field_contents = csdb::validator_field_contents_blank
+  )
+
+  # config_data_hash_for_each_plan ----
+  config$tables$config_data_hash_for_each_plan <- csdb::DBTable_v9$new(
+    dbconfig = config$dbconfigs$config,
+    table_name = "config_data_hash_for_each_plan",
+    field_types = c(
+      "task" = "TEXT",
+      "index_plan" = "INTEGER",
+      "element_tag" = "TEXT",
+      "date" = "DATE",
+      "datetime" = "DATETIME",
+      "element_hash" = "TEXT",
+      "all_hash" = "TEXT"
+    ),
+    keys = c(
+      "task",
+      "index_plan",
+      "element_tag",
+      "date",
+      "datetime"
+    ),
+    validator_field_types = csdb::validator_field_types_blank,
+    validator_field_contents = csdb::validator_field_contents_blank
+  )
 
   invisible()
 }
 
-check_env_vars <- function() {
-  needed <- c(
-    "SYKDOMSPULSEN_DB_DRIVER",
-    "SYKDOMSPULSEN_DB_SERVER",
-    "SYKDOMSPULSEN_DB_PORT",
-    "SYKDOMSPULSEN_DB_USER",
-    "SYKDOMSPULSEN_DB_PASSWORD",
-    "SYKDOMSPULSEN_DB_DB",
-    "SYKDOMSPULSEN_DB_TRUSTED_CONNECTION",
-    "SYKDOMSPULSEN_PRODUCTION",
-    "SYKDOMSPULSEN_PATH_INPUT",
-    "SYKDOMSPULSEN_PATH_OUTPUT"
-  )
-
-  # for(i in needed){
-  #   getval <- Sys.getenv(i)
-  #   if(getval==""){
-  #     packageStartupMessage(crayon::red(glue::glue("{i}=''")))
-  #   } else {
-  #     if(stringr::str_detect(i,"PASSWORD")) getval <- "*****"
-  #     packageStartupMessage(crayon::blue(glue::glue("{i}='{getval}'")))
-  #   }
-  # }
-  # packageStartupMessage(glue::glue("spulscore: {utils::packageVersion('sc')}"))
+# Environmental variables ----
+get_db_acess_from_env <- function() {
+  retval <- Sys.getenv("SC9_DBCONFIG_ACCESS") |>
+    stringr::str_split("/") |>
+    unlist()
+  retval <- retval[retval != ""]
+  return(retval)
 }
 
-set_computer_type <- function() {
-  if (Sys.getenv("SYKDOMSPULSEN_PRODUCTION") == "1") {
-    config$is_production <- TRUE
+get_db_from_env <- function(access) {
+
+  retval <- list(
+    access = access,
+    driver = Sys.getenv("SC9_DBCONFIG_DRIVER"),
+    port = as.integer(Sys.getenv("SC9_DBCONFIG_PORT")),
+    user = Sys.getenv("SC9_DBCONFIG_USER"),
+    password = Sys.getenv("SC9_DBCONFIG_PASSWORD"),
+    trusted_connection = Sys.getenv("SC9_DBCONFIG_TRUSTED_CONNECTION"),
+    server = Sys.getenv("SC9_DBCONFIG_SERVER"),
+    schema = Sys.getenv(paste0("SC9_DBCONFIG_SCHEMA_", toupper(access))),
+    db = Sys.getenv(paste0("SC9_DBCONFIG_DB_", toupper(access)))
+  )
+
+  retval$schema <- gsub("\\\\", "\\\\", retval$schema)
+
+  retval$id <- paste0("[", retval$db, "].[", retval$schema, "]")
+
+  return(retval)
+}
+
+set_env_vars <- function(){
+  config$dbconfigs <- list()
+  for (i in get_db_acess_from_env()) {
+    config$dbconfigs[[i]] <- get_db_from_env(i)
   }
+
+  if (Sys.getenv("SC9_AUTO") == "1") {
+    config$is_auto <- TRUE
+  }
+
+  config$path <- Sys.getenv("SC9_PATH")
 }
 
 set_progressr <- function() {
@@ -54,11 +100,6 @@ set_progressr <- function() {
       clear = FALSE
     )
   )
-}
-
-set_path <- function() {
-  config$path_input <- Sys.getenv("SYKDOMSPULSEN_PATH_INPUT")
-  config$path_output <- Sys.getenv("SYKDOMSPULSEN_PATH_OUTPUT")
 }
 
 set_plnr <- function() {

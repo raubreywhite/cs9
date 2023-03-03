@@ -1,7 +1,5 @@
 update_config_data_hash_for_each_plan <- function(task, index_plan, element_tag, element_hash = NULL, all_hash = NULL, date = NULL, datetime = NULL) {
-  config$schemas$config_data_hash_for_each_plan$disconnect()
-  config$schemas$config_data_hash_for_each_plan$connect()
-  on.exit(config$schemas$config_data_hash_for_each_plan$disconnect())
+  on.exit(config$tables$config_data_hash_for_each_plan$disconnect())
 
   if (!is.null(datetime)) datetime <- as.character(datetime)
 
@@ -29,7 +27,7 @@ update_config_data_hash_for_each_plan <- function(task, index_plan, element_tag,
     "element_hash" = element_hash,
     "all_hash" = all_hash
   )
-  config$schemas$config_data_hash_for_each_plan$upsert_data(to_upload)
+  config$tables$config_data_hash_for_each_plan$upsert_data(to_upload)
 }
 
 #' get_config_data_hash_for_each_plan
@@ -39,17 +37,15 @@ update_config_data_hash_for_each_plan <- function(task, index_plan, element_tag,
 #' @param element_tag a
 #' @export
 get_config_data_hash_for_each_plan <- function(task = NULL, index_plan = NULL, element_tag = NULL) {
-  config$schemas$config_data_hash_for_each_plan$disconnect()
-  config$schemas$config_data_hash_for_each_plan$connect()
-  on.exit(config$schemas$config_data_hash_for_each_plan$disconnect())
+  on.exit(config$tables$config_data_hash_for_each_plan$disconnect())
 
   if (!is.null(task)) {
-    temp <- config$schemas$config_data_hash_for_each_plan$tbl() %>%
+    temp <- config$tables$config_data_hash_for_each_plan$tbl() %>%
       dplyr::filter(task == !!task) %>%
       dplyr::collect() %>%
       as.data.table()
   } else {
-    temp <- config$schemas$config_data_hash_for_each_plan$tbl() %>%
+    temp <- config$tables$config_data_hash_for_each_plan$tbl() %>%
       dplyr::collect() %>%
       as.data.table()
   }

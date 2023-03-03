@@ -1,10 +1,3 @@
-#' add task
-#' @param task a Task R6 class
-#' @export
-add_task <- function(task) {
-  config$tasks$add_task(task)
-}
-
 #' Task
 #'
 #' @import R6
@@ -15,69 +8,47 @@ Task <- R6::R6Class(
   portable = FALSE,
   cloneable = TRUE,
   public = list(
-    type = NULL,
     permission = NULL,
     plans = list(),
-    schema = list(),
+    tables = list(),
     cores = 1,
     upsert_at_end_of_each_plan = FALSE,
     insert_at_end_of_each_plan = FALSE,
     name = NULL,
-    name_description = list(),
+    name_grouping = NULL,
+    name_action = NULL,
+    name_variant = NULL,
     update_plans_fn = NULL,
     action_before_fn = NULL,
     action_after_fn = NULL,
-    info = "No information given in task definition.",
-    info_plan_analysis_fn_name = NULL,
-    info_action_fn_name = NULL,
-    info_data_selector_fn_name = NULL,
-    info_version = "1",
-    initialize = function(name = NULL,
-                          name_description = NULL,
-                          type,
-                          permission = NULL,
-                          plans = NULL,
-                          update_plans_fn = NULL,
-                          schema,
-                          cores = 1,
-                          upsert_at_end_of_each_plan = FALSE,
-                          insert_at_end_of_each_plan = FALSE,
-                          action_before_fn = NULL,
-                          action_after_fn = NULL,
-                          info = NULL,
-                          info_plan_analysis_fn_name = NULL,
-                          info_action_fn_name = NULL,
-                          info_data_selector_fn_name = NULL,
-                          info_version = NULL) {
-      stopifnot(!(is.null(name) & is.null(name_description)))
-      if (!is.null(name_description)) {
-        stopifnot(is.list(name_description))
-        stopifnot(sum(c("grouping", "action", "variant") %in% names(name_description)) == 3)
-        name <- paste0(unlist(name_description), collapse = "_")
-      } else {
-        name_description <- list(
-          grouping = NULL,
-          action = NULL,
-          variant = NULL
-        )
-      }
-      self$name <- name
-      self$name_description <- name_description
-      self$type <- type
+    initialize = function(
+      name_grouping = NULL,
+      name_action = NULL,
+      name_variant = NULL,
+      permission = NULL,
+      plans = NULL,
+      update_plans_fn = NULL,
+      tables,
+      cores = 1,
+      upsert_at_end_of_each_plan = FALSE,
+      insert_at_end_of_each_plan = FALSE,
+      action_before_fn = NULL,
+      action_after_fn = NULL
+    ) {
+
+      self$name <- paste0(c(name_grouping, name_action, name_variant), collapse = "_")
+      self$name_grouping <- name_grouping
+      self$name_action <- name_action
+      self$name_variant <- name_variant
       self$permission <- permission
       self$plans <- plans
       self$update_plans_fn <- update_plans_fn
-      self$schema <- schema
+      self$tables <- tables
       self$cores <- cores
       self$upsert_at_end_of_each_plan <- upsert_at_end_of_each_plan
       self$insert_at_end_of_each_plan <- insert_at_end_of_each_plan
       self$action_before_fn <- action_before_fn
       self$action_after_fn <- action_after_fn
-      if (!is.null(info)) self$info <- info
-      self$info_plan_analysis_fn_name <- info_plan_analysis_fn_name
-      self$info_action_fn_name <- info_action_fn_name
-      self$info_data_selector_fn_name <- info_data_selector_fn_name
-      self$info_version <- info_version
     },
     insert_first_last_analysis = function() {
       if (is.null(self$plans)) {
@@ -240,7 +211,7 @@ Task <- R6::R6Class(
             pb <- progressr::progressor(steps = self$num_analyses())
             private$run_sequential(
               plans_index = 1:length(self$plans),
-              schema = self$schema,
+              tables = self$tables,
               upsert_at_end_of_each_plan = self$upsert_at_end_of_each_plan,
               insert_at_end_of_each_plan = self$insert_at_end_of_each_plan,
               pb = pb,
@@ -275,7 +246,7 @@ Task <- R6::R6Class(
         # pb <- progressr::progressor(steps = self$plans[[1]]$x_length())
         private$run_sequential(
           plans_index = 1,
-          schema = self$schema,
+          tables = self$tables,
           upsert_at_end_of_each_plan = self$upsert_at_end_of_each_plan,
           insert_at_end_of_each_plan = self$insert_at_end_of_each_plan,
           cores = cores
@@ -289,7 +260,7 @@ Task <- R6::R6Class(
 
         private$run_parallel_plans(
           plans_index = 2:(length(self$plans) - 1),
-          schema = self$schema,
+          tables = self$tables,
           upsert_at_end_of_each_plan = self$upsert_at_end_of_each_plan,
           insert_at_end_of_each_plan = self$insert_at_end_of_each_plan,
           cores = cores
@@ -301,7 +272,7 @@ Task <- R6::R6Class(
         a1 <- Sys.time()
         private$run_sequential(
           plans_index = length(self$plans),
-          schema = self$schema,
+          tables = self$tables,
           upsert_at_end_of_each_plan = self$upsert_at_end_of_each_plan,
           insert_at_end_of_each_plan = self$insert_at_end_of_each_plan,
           cores = cores
@@ -327,8 +298,8 @@ Task <- R6::R6Class(
     }
   ),
   private = list(
-    run_sequential = function(plans_index, schema, upsert_at_end_of_each_plan, insert_at_end_of_each_plan, pb = NULL, cores) {
-      for (s in schema) s$connect()
+    run_sequential = function(plans_index, tables, upsert_at_end_of_each_plan, insert_at_end_of_each_plan, pb = NULL, cores) {
+      for (s in tables) s$connect()
       for (i in seq_along(self$plans[plans_index])) {
         if (!is.null(pb)) self$plans[plans_index][[i]]$set_progressor(pb)
         config$plan_attempt_index <- 1
@@ -346,18 +317,18 @@ Task <- R6::R6Class(
         data$hash$last_run <- last_run_hashes$last_run
         data$hash$last_run_elements <- last_run_hashes$last_run_elements
 
-        retval <- self$plans[plans_index][[i]]$run_all_with_data(data = data, schema = schema)
+        retval <- self$plans[plans_index][[i]]$run_all_with_data(data = data, tables = tables)
 
         if(upsert_at_end_of_each_plan){
           retval <- splutil::unnest_dfs_within_list_of_fully_named_lists(retval, returned_name_when_dfs_are_not_nested = "output", use.names = T, fill = T)
           for(df_name in names(retval)){
-            schema[[df_name]]$upsert_data(retval[[df_name]], verbose = verbose)
+            tables[[df_name]]$upsert_data(retval[[df_name]], verbose = verbose)
           }
         }
         if (insert_at_end_of_each_plan) {
           retval <- splutil::unnest_dfs_within_list_of_fully_named_lists(retval, returned_name_when_dfs_are_not_nested = "output", use.names = T, fill = T)
           for(df_name in names(retval)){
-            schema[[df_name]]$insert_data(retval[[df_name]], verbose = verbose)
+            tables[[df_name]]$insert_data(retval[[df_name]], verbose = verbose)
           }
         }
 
@@ -372,12 +343,12 @@ Task <- R6::R6Class(
         )
         rm("data")
       }
-      for (s in schema) s$disconnect()
+      for (s in tables) s$disconnect()
     },
-    run_parallel_plans = function(plans_index, schema, upsert_at_end_of_each_plan, insert_at_end_of_each_plan, cores) {
+    run_parallel_plans = function(plans_index, tables, upsert_at_end_of_each_plan, insert_at_end_of_each_plan, cores) {
       y <- pbmcapply::pbmclapply(
         self$plans[plans_index],
-        function(x, schema, upsert_at_end_of_each_plan, insert_at_end_of_each_plan) {
+        function(x, tables, upsert_at_end_of_each_plan, insert_at_end_of_each_plan) {
           config$in_parallel <- TRUE # this will stop TABLOCK from being used in in/upserts
           data.table::setDTthreads(1)
           x$set_verbose(FALSE)
@@ -388,25 +359,25 @@ Task <- R6::R6Class(
 
             catch_result <- tryCatch(
               {
-                for (s in schema) s$connect()
+                for (s in tables) s$connect()
                 data <- x$get_data()
                 hashes <- data$hash
                 last_run_hashes <- get_last_run_data_hash_split_into_plnr_format(task = self$name, index_plan = x$get_argset(1)$index_plan, expected_element_tags = names(data$hash$current_elements))
                 data$hash$last_run <- last_run_hashes$last_run
                 data$hash$last_run_elements <- last_run_hashes$last_run_elements
 
-                retval <- x$run_all_with_data(data = data, schema = schema)
+                retval <- x$run_all_with_data(data = data, tables = tables)
 
                 if(upsert_at_end_of_each_plan){
                   retval <- splutil::unnest_dfs_within_list_of_fully_named_lists(retval, returned_name_when_dfs_are_not_nested = "output", use.names = T, fill = T)
                   for(df_name in names(retval)){
-                    schema[[df_name]]$upsert_data(retval[[df_name]], verbose = F)
+                    tables[[df_name]]$upsert_data(retval[[df_name]], verbose = F)
                   }
                 }
                 if (insert_at_end_of_each_plan) {
                   retval <- splutil::unnest_dfs_within_list_of_fully_named_lists(retval, returned_name_when_dfs_are_not_nested = "output", use.names = T, fill = T)
                   for(df_name in names(retval)){
-                    schema[[df_name]]$insert_data(retval[[df_name]], verbose = F)
+                    tables[[df_name]]$insert_data(retval[[df_name]], verbose = F)
                   }
                 }
 
@@ -434,7 +405,7 @@ Task <- R6::R6Class(
                 ))
               }
             )
-            for (s in schema) s$disconnect()
+            for (s in tables) s$disconnect()
 
             # if the plan executed without any errors
             # then break the loop
@@ -455,7 +426,7 @@ Task <- R6::R6Class(
           # ***************************** #
           1
         },
-        schema = schema,
+        tables = tables,
         upsert_at_end_of_each_plan = upsert_at_end_of_each_plan,
         insert_at_end_of_each_plan = insert_at_end_of_each_plan,
         ignore.interactive = TRUE,
@@ -471,25 +442,25 @@ Task <- R6::R6Class(
       }
       # print(y)
     },
-    # run_parallel = function(plans_index, schema, upsert_at_end_of_each_plan, insert_at_end_of_each_plan, pb){
+    # run_parallel = function(plans_index, tables, upsert_at_end_of_each_plan, insert_at_end_of_each_plan, pb){
     #   y <- foreach(x = self$plans[plans_index]) %dopar% {
     #     data.table::setDTthreads(1)
     #
-    #     for (s in schema) s$connect()
+    #     for (s in tables) s$connect()
     #     x$set_progressor(pb)
-    #     retval <- x$run_all(schema = schema)
+    #     retval <- x$run_all(tables = tables)
     #
     #     if (upsert_at_end_of_each_plan) {
     #       retval <- rbindlist(retval)
-    #       schema$output$upsert_data(retval, verbose = F)
+    #       tables$output$upsert_data(retval, verbose = F)
     #     }
     #
     #     if (insert_at_end_of_each_plan) {
     #       retval <- rbindlist(retval)
-    #       schema$output$insert_data(retval, verbose = F)
+    #       tables$output$insert_data(retval, verbose = F)
     #     }
     #     rm("retval")
-    #     for (s in schema) s$db_disconnect()
+    #     for (s in tables) s$db_disconnect()
     #
     #     # ***************************** #
     #     # NEVER DELETE gc()             #
@@ -500,27 +471,27 @@ Task <- R6::R6Class(
     #     1
     #   }
     # },
-    run_parallel = function(plans_index, schema, upsert_at_end_of_each_plan, insert_at_end_of_each_plan, pb) {
+    run_parallel = function(plans_index, tables, upsert_at_end_of_each_plan, insert_at_end_of_each_plan, pb) {
       # y <- future.apply::future_lapply(
       #   self$plans[plans_index],
-      #   function(x, schema, upsert_at_end_of_each_plan, insert_at_end_of_each_plan, pb){
+      #   function(x, tables, upsert_at_end_of_each_plan, insert_at_end_of_each_plan, pb){
       #     data.table::setDTthreads(1)
       #
-      #     for (s in schema) s$connect()
+      #     for (s in tables) s$connect()
       #     x$set_progressor(pb)
-      #     retval <- x$run_all(schema = schema)
+      #     retval <- x$run_all(tables = tables)
       #
       #     if (upsert_at_end_of_each_plan) {
       #       retval <- rbindlist(retval)
-      #       schema$output$upsert_data(retval, verbose = F)
+      #       tables$output$upsert_data(retval, verbose = F)
       #     }
       #
       #     if (insert_at_end_of_each_plan) {
       #       retval <- rbindlist(retval)
-      #       schema$output$insert_data(retval, verbose = F)
+      #       tables$output$insert_data(retval, verbose = F)
       #     }
       #     rm("retval")
-      #     for (s in schema) s$db_disconnect()
+      #     for (s in tables) s$db_disconnect()
       #
       #     # ***************************** #
       #     # NEVER DELETE gc()             #
@@ -530,30 +501,30 @@ Task <- R6::R6Class(
       #     # ***************************** #
       #     1
       #   },
-      #   schema = schema,
+      #   tables = tables,
       #   upsert_at_end_of_each_plan = upsert_at_end_of_each_plan,
       #   insert_at_end_of_each_plan = insert_at_end_of_each_plan,
       #   pb = pb
       # )
       y <- pbmcapply::pbmcmapply(
-        function(x, schema, upsert_at_end_of_each_plan, insert_at_end_of_each_plan, pb) {
+        function(x, tables, upsert_at_end_of_each_plan, insert_at_end_of_each_plan, pb) {
           data.table::setDTthreads(1)
 
-          for (s in schema) s$connect()
+          for (s in tables) s$connect()
           x$set_progressor(pb)
-          retval <- x$run_all(schema = schema)
+          retval <- x$run_all(tables = tables)
 
           if (upsert_at_end_of_each_plan) {
             retval <- rbindlist(retval)
-            schema$output$upsert_data(retval, verbose = F)
+            tables$output$upsert_data(retval, verbose = F)
           }
 
           if (insert_at_end_of_each_plan) {
             retval <- rbindlist(retval)
-            schema$output$insert_data(retval, verbose = F)
+            tables$output$insert_data(retval, verbose = F)
           }
           rm("retval")
-          for (s in schema) s$db_disconnect()
+          for (s in tables) s$db_disconnect()
 
           # ***************************** #
           # NEVER DELETE gc()             #
@@ -565,7 +536,7 @@ Task <- R6::R6Class(
         },
         self$plans[plans_index],
         MoreArgs = list(
-          schema, upsert_at_end_of_each_plan, insert_at_end_of_each_plan, pb
+          tables, upsert_at_end_of_each_plan, insert_at_end_of_each_plan, pb
         ),
         ignore.interactive = TRUE,
         mc.cores = 2
@@ -573,21 +544,21 @@ Task <- R6::R6Class(
       # y <- foreach(x = self$plans[plans_index]) %dopar% {
       #   data.table::setDTthreads(1)
       #
-      #   for (s in schema) s$connect()
+      #   for (s in tables) s$connect()
       #   x$set_progressor(pb)
-      #   retval <- x$run_all(schema = schema)
+      #   retval <- x$run_all(tables = tables)
       #
       #   if (upsert_at_end_of_each_plan) {
       #     retval <- rbindlist(retval)
-      #     schema$output$upsert_data(retval, verbose = F)
+      #     tables$output$upsert_data(retval, verbose = F)
       #   }
       #
       #   if (insert_at_end_of_each_plan) {
       #     retval <- rbindlist(retval)
-      #     schema$output$insert_data(retval, verbose = F)
+      #     tables$output$insert_data(retval, verbose = F)
       #   }
       #   rm("retval")
-      #   for (s in schema) s$db_disconnect()
+      #   for (s in tables) s$db_disconnect()
       #
       #   # ***************************** #
       #   # NEVER DELETE gc()             #

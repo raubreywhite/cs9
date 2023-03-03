@@ -1,6 +1,6 @@
 update_config_last_updated_internal <- function(type, tag, date = NULL, datetime = NULL) {
   stopifnot(type %in% c("task", "data"))
-  if (is.null(config$schemas$config_last_updated$conn)) config$schemas$config_last_updated$connect()
+  if (is.null(config$tables$config_last_updated$conn)) config$tables$config_last_updated$connect()
 
   if (!is.null(datetime)) datetime <- as.character(datetime)
 
@@ -24,7 +24,7 @@ update_config_last_updated_internal <- function(type, tag, date = NULL, datetime
     date = date,
     datetime = datetime
   )
-  config$schemas$config_last_updated$upsert_data(to_upload)
+  config$tables$config_last_updated$upsert_data(to_upload)
 }
 
 #' update_config_last_updated
@@ -44,15 +44,15 @@ update_config_last_updated <- function(type, tag, date = NULL, datetime = NULL) 
 #' @param tag a
 #' @export
 get_config_last_updated <- function(type = NULL, tag = NULL) {
-  if (is.null(config$schemas$config_last_updated$conn)) config$schemas$config_last_updated$connect()
+  if (is.null(config$tables$config_last_updated$conn)) config$tables$config_last_updated$connect()
 
   if (!is.null(tag)) {
-    temp <- config$schemas$config_last_updated$tbl() %>%
+    temp <- config$tables$config_last_updated$tbl() %>%
       dplyr::filter(tag == !!tag) %>%
       dplyr::collect() %>%
       as.data.table()
   } else {
-    temp <- config$schemas$config_last_updated$tbl() %>%
+    temp <- config$tables$config_last_updated$tbl() %>%
       dplyr::collect() %>%
       as.data.table()
   }

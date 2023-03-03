@@ -11,45 +11,40 @@ Task
 \section{Methods}{
 \subsection{Public methods}{
 \itemize{
-\item \href{#method-new}{\code{Task$new()}}
-\item \href{#method-insert_first_last_analysis}{\code{Task$insert_first_last_analysis()}}
-\item \href{#method-update_plans}{\code{Task$update_plans()}}
-\item \href{#method-num_argsets}{\code{Task$num_argsets()}}
-\item \href{#method-num_analyses}{\code{Task$num_analyses()}}
-\item \href{#method-run}{\code{Task$run()}}
-\item \href{#method-clone}{\code{Task$clone()}}
+\item \href{#method-Task-new}{\code{Task$new()}}
+\item \href{#method-Task-insert_first_last_analysis}{\code{Task$insert_first_last_analysis()}}
+\item \href{#method-Task-update_plans}{\code{Task$update_plans()}}
+\item \href{#method-Task-num_argsets}{\code{Task$num_argsets()}}
+\item \href{#method-Task-num_analyses}{\code{Task$num_analyses()}}
+\item \href{#method-Task-run}{\code{Task$run()}}
+\item \href{#method-Task-clone}{\code{Task$clone()}}
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-new"></a>}}
-\if{latex}{\out{\hypertarget{method-new}{}}}
+\if{html}{\out{<a id="method-Task-new"></a>}}
+\if{latex}{\out{\hypertarget{method-Task-new}{}}}
 \subsection{Method \code{new()}}{
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{Task$new(
-  name = NULL,
-  name_description = NULL,
-  type,
+  name_grouping = NULL,
+  name_action = NULL,
+  name_variant = NULL,
   permission = NULL,
   plans = NULL,
   update_plans_fn = NULL,
-  schema,
+  tables,
   cores = 1,
   upsert_at_end_of_each_plan = FALSE,
   insert_at_end_of_each_plan = FALSE,
   action_before_fn = NULL,
-  action_after_fn = NULL,
-  info = NULL,
-  info_plan_analysis_fn_name = NULL,
-  info_action_fn_name = NULL,
-  info_data_selector_fn_name = NULL,
-  info_version = NULL
+  action_after_fn = NULL
 )}\if{html}{\out{</div>}}
 }
 
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-insert_first_last_analysis"></a>}}
-\if{latex}{\out{\hypertarget{method-insert_first_last_analysis}{}}}
+\if{html}{\out{<a id="method-Task-insert_first_last_analysis"></a>}}
+\if{latex}{\out{\hypertarget{method-Task-insert_first_last_analysis}{}}}
 \subsection{Method \code{insert_first_last_analysis()}}{
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{Task$insert_first_last_analysis()}\if{html}{\out{</div>}}
@@ -57,8 +52,8 @@ Task
 
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-update_plans"></a>}}
-\if{latex}{\out{\hypertarget{method-update_plans}{}}}
+\if{html}{\out{<a id="method-Task-update_plans"></a>}}
+\if{latex}{\out{\hypertarget{method-Task-update_plans}{}}}
 \subsection{Method \code{update_plans()}}{
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{Task$update_plans()}\if{html}{\out{</div>}}
@@ -66,8 +61,8 @@ Task
 
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-num_argsets"></a>}}
-\if{latex}{\out{\hypertarget{method-num_argsets}{}}}
+\if{html}{\out{<a id="method-Task-num_argsets"></a>}}
+\if{latex}{\out{\hypertarget{method-Task-num_argsets}{}}}
 \subsection{Method \code{num_argsets()}}{
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{Task$num_argsets()}\if{html}{\out{</div>}}
@@ -75,8 +70,8 @@ Task
 
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-num_analyses"></a>}}
-\if{latex}{\out{\hypertarget{method-num_analyses}{}}}
+\if{html}{\out{<a id="method-Task-num_analyses"></a>}}
+\if{latex}{\out{\hypertarget{method-Task-num_analyses}{}}}
 \subsection{Method \code{num_analyses()}}{
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{Task$num_analyses()}\if{html}{\out{</div>}}
@@ -84,8 +79,8 @@ Task
 
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-run"></a>}}
-\if{latex}{\out{\hypertarget{method-run}{}}}
+\if{html}{\out{<a id="method-Task-run"></a>}}
+\if{latex}{\out{\hypertarget{method-Task-run}{}}}
 \subsection{Method \code{run()}}{
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{Task$run(log = TRUE, cores = self$cores)}\if{html}{\out{</div>}}
@@ -93,8 +88,8 @@ Task
 
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-clone"></a>}}
-\if{latex}{\out{\hypertarget{method-clone}{}}}
+\if{html}{\out{<a id="method-Task-clone"></a>}}
+\if{latex}{\out{\hypertarget{method-Task-clone}{}}}
 \subsection{Method \code{clone()}}{
 The objects of this class are cloneable with this method.
 \subsection{Usage}{

@@ -1,0 +1,149 @@
+---
+title: "sc9"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{sc9}
+  %\VignetteEncoding{UTF-8}
+  %\VignetteEngine{knitr::rmarkdown}
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```
+library(sc9)
+
+ss <- sc9::SurveillanceSystem_v9$new()
+ss$tables
+ss$tasks
+
+ss$add_table(
+  name_access = "anon",
+  name_grouping = "test",
+  name_variant = NULL,
+  field_types = c(
+    "granularity_time" = "TEXT",
+    "granularity_geo" = "TEXT",
+    "country_iso3" = "TEXT",
+    "location_code" = "TEXT",
+    "border" = "INTEGER",
+    "age" = "TEXT",
+    "sex" = "TEXT",
+    "isoyear" = "INTEGER",
+    "isoweek" = "INTEGER",
+    "isoyearweek" = "TEXT",
+    "season" = "TEXT",
+    "seasonweek" = "DOUBLE",
+    "calyear" = "INTEGER",
+    "calmonth" = "INTEGER",
+    "calyearmonth" = "TEXT",
+    "date" = "DATE",
+    "covid19_cases_testdate_n" = "INTEGER",
+    "covid19_cases_testdate_pr100000" = "DOUBLE"
+  ),
+  keys = c(
+    "granularity_time",
+    "location_code",
+    "date",
+    "age",
+    "sex"
+  ),
+  indexes = list(
+    "ind1" = c("granularity_time", "granularity_geo", "country_iso3", "location_code", "border", "age", "sex", "date", "isoyear", "isoweek", "isoyearweek")
+  ),
+  validator_field_types = csdb::validator_field_types_csfmt_rts_data_v1,
+  validator_field_contents = csdb::validator_field_contents_csfmt_rts_data_v1
+)
+
+ss$tables$anon_test$tbl()
+ss$tables$anon_test$upsert_data(csdb::nor_covid19_cases_by_time_location)
+ss$tables$anon_test$tbl() %>% colnames()
+print(ss$tables$anon_test$tbl(), n = 2, width=10000)
+
+ss$add_task(
+  name_grouping = "a",
+  name_action = "b",
+  name_variant = NULL,
+  cores = 1,
+  plan_analysis_fn_name = NULL,
+  for_each_plan = plnr::expand_list(
+    x = 1
+  ),
+  for_each_analysis = NULL,
+  universal_argset = NULL,
+  upsert_at_end_of_each_plan = FALSE,
+  insert_at_end_of_each_plan = FALSE,
+  action_fn_name = "test_action",
+  data_selector_fn_name = "test_data_selector",
+  tables = list(
+    # input
+
+    # output
+    "test" = ss$tables$anon_test
+  )
+)
+
+test_action <- function(data, argset, tables) {
+  # tm_run_task("skuhr_create_alerts")
+  # Rscript -e '.libPaths("/home/RIWH/R/x86_64-pc-linux-gnu-library/4.0");analytics::tm_run_task("skuhr_create_alerts")'
+
+  if (plnr::is_run_directly()) {
+    # sc8::tm_get_plans_argsets_as_dt("skuhr_create_alerts")
+
+    index_plan <- 1
+    index_analysis <- 1
+
+    data <- ss$shortcut_get_data("a_b", index_plan = index_plan)
+    argset <- ss$shortcut_get_argset("a_b", index_plan = index_plan, index_analysis = index_analysis)
+    tables <- ss$shortcut_get_tables("a_b")
+
+    # pryr::object_size(data)
+  }
+  return(data$data)
+}
+
+test_data_selector <- function(argset, tables) {
+  if (plnr::is_run_directly()) {
+    # sc8::tm_get_plans_argsets_as_dt("skuhr_create_alerts")
+
+    index_plan <- 1
+
+    argset <- ss$shortcut_get_argset("a_b", index_plan = index_plan, index_analysis = index_analysis)
+    tables <- ss$shortcut_get_tables("a_b")
+  }
+
+  # The database tables can be accessed here
+  d <- tables$test$tbl() %>%
+    head(1) %>% 
+    dplyr::collect() %>%
+    as.data.table() %>%
+    setorder(
+      location_code,
+      date
+    )
+
+  # The variable returned must be a named list
+  retval <- list(
+    "data" = d
+  )
+  retval
+}
+
+ss$shortcut_get_plans_argsets_as_dt("a_b")
+r <- ss$shortcut_run_task("a_b")
+
+get_config_data_hash_for_each_plan()
+get_config_last_updated()
+```
+
+
+
+
+
+
