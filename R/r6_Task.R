@@ -1,8 +1,3 @@
-#' Task
-#'
-#' @import R6
-#' @import foreach
-#' @export
 Task <- R6::R6Class(
   "Task",
   portable = FALSE,
