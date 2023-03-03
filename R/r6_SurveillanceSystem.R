@@ -346,7 +346,7 @@ task_from_config_v9 <- function(
     )
   }
 
-  task <- sc9::Task$new(
+  task <- Task$new(
     name_grouping = name_grouping,
     name_action = name_action,
     name_variant = name_variant,
