@@ -1,5 +1,3 @@
-#'
-#'
 #' Surveillance System
 #'
 #' An R6 Action class contains a function called 'run' that takes three arguments:
@@ -34,7 +32,6 @@ SurveillanceSystem_v9 <- R6::R6Class(
     tasks = list(),
     initialize = function() {
       # nothing
-
     },
     add_table = function(
       name_access,
@@ -308,7 +305,6 @@ task_from_config_v9_list_plan <- function(for_each_plan,
 
   return(list_plan)
 }
-
 
 task_from_config_v9 <- function(
   name_grouping = NULL,

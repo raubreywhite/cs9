@@ -1,20 +1,9 @@
-#' Environment to store db connections
-#' @export connections
-connections <- new.env()
-
 #' Flags/values to be used in the 'dashboards' scene
 #' @export config
 config <- new.env()
-config$db_loaded <- FALSE
 
-#' Flags/values to be used in the 'dashboards' scene
-#' @export pools
-pools <- new.env()
-
-config$is_production <- FALSE
+config$is_auto <- FALSE
 config$verbose <- FALSE
-config$schemas <- list()
-config$permissions <- list()
 config$in_parallel <- FALSE
 config$tables <- list()
 
