@@ -1,0 +1,14 @@
+---
+title: "Docker"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{docker}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+This is how you use docker
+
+```
+This is how you use
+```
