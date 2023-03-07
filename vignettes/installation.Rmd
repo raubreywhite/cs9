@@ -1,8 +1,8 @@
 ---
-title: "Infrastructure"
+title: "Installation"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{infrastructure-introduction}
+  %\VignetteIndexEntry{installation}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -20,7 +20,7 @@ Currently sc9 only works with MSSQL databases.
 The following environmental variables must be available from within R. R only loads a limited amount of environmental variables by default, so you should make sure that these environmental variables are located in your `Renviron` file.
 
 | Variable                        | Value                           | Description                                                           |
-|----------------------------|----------------------------|-----------------|
+|------------------|------------------|------------------------------------|
 | SC9_AUTO                        | 0                               | Is this auto or interactive                                           |
 | SC9_PATH                        | '/input'                        | The base path that will be inserted when using the sc9::path function |
 |                                 |                                 |                                                                       |
