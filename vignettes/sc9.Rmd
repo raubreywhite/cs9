@@ -16,6 +16,8 @@ knitr::opts_chunk$set(
 )
 ```
 
+http://github.com/csids/sc9example is an example surveillance system that can be used as a template.
+
 ```
 library(sc9)
 

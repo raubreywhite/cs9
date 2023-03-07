@@ -19,25 +19,25 @@ Currently sc9 only works with MSSQL databases.
 
 The following environmental variables must be available from within R. R only loads a limited amount of environmental variables by default, so you should make sure that these environmental variables are located in your `Renviron` file.
 
-| Env                             | Value                           | Description |
-|---------------------------------|---------------------------------|-------------|
-| SC9_AUTO                        | 0                               |             |
-| SC9_PATH                        | '/input'                        |             |
-|                                 |                                 |             |
-| SC9_DBCONFIG_ACCESS             | 'config/anon'                   |             |
-| SC9_DBCONFIG_DRIVER             | 'ODBC Driver 17 for SQL Server' |             |
-| SC9_DBCONFIG_PORT               | 1433                            |             |
-| SC9_DBCONFIG_USER               | 'SA'                            |             |
-| SC9_DBCONFIG_PASSWORD           | 'yourStrongPassword100'         |             |
-| SC9_DBCONFIG_TRUSTED_CONNECTION | 'no'                            |             |
-| SC9_DBCONFIG_SERVER             | 'dm-prod'                       |             |
-|                                 |                                 |             |
-| SC9_DBCONFIG_SCHEMA_CONFIG      | 'dbo'                           |             |
-| SC9_DBCONFIG_DB_CONFIG          | 'sc_interactive_config'         |             |
-|                                 |                                 |             |
-| SC9_DBCONFIG_SCHEMA_ANON        | 'dbo'                           |             |
-| SC9_DBCONFIG_DB_ANON            | 'sc_interactive_anon'           |             |
-|                                 |                                 |             |
-|                                 |                                 |             |
+| Variable                        | Value                           | Description                                                           |
+|----------------------------|----------------------------|-----------------|
+| SC9_AUTO                        | 0                               | Is this auto or interactive                                           |
+| SC9_PATH                        | '/input'                        | The base path that will be inserted when using the sc9::path function |
+|                                 |                                 |                                                                       |
+| SC9_DBCONFIG_ACCESS             | 'config/anon'                   |                                                                       |
+| SC9_DBCONFIG_DRIVER             | 'ODBC Driver 17 for SQL Server' |                                                                       |
+| SC9_DBCONFIG_PORT               | 1433                            |                                                                       |
+| SC9_DBCONFIG_USER               | 'SA'                            |                                                                       |
+| SC9_DBCONFIG_PASSWORD           | 'yourStrongPassword100'         |                                                                       |
+| SC9_DBCONFIG_TRUSTED_CONNECTION | 'no'                            |                                                                       |
+| SC9_DBCONFIG_SERVER             | 'dm-prod'                       |                                                                       |
+|                                 |                                 |                                                                       |
+| SC9_DBCONFIG_SCHEMA_CONFIG      | 'dbo'                           |                                                                       |
+| SC9_DBCONFIG_DB_CONFIG          | 'sc_interactive_config'         |                                                                       |
+|                                 |                                 |                                                                       |
+| SC9_DBCONFIG_SCHEMA_ANON        | 'dbo'                           |                                                                       |
+| SC9_DBCONFIG_DB_ANON            | 'sc_interactive_anon'           |                                                                       |
+|                                 |                                 |                                                                       |
+|                                 |                                 |                                                                       |
 
 ## Docker
