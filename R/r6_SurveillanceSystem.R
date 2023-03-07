@@ -159,11 +159,13 @@ SurveillanceSystem_v9 <- R6::R6Class(
   )
 )
 
-#' Run
+#' Run a task sequentially as an RStudio job
+#'
+#' Description
 #' @param task_name Task name
 #' @param ss_prefix The prefix that locates the surveillance system
 #' @export
-run_task_sequentially_as_rstudio_job_loading_from_devtools <- function(
+run_task_sequentially_as_rstudio_job_using_load_all <- function(
     task_name,
     ss_prefix = "global$ss"
     ){
@@ -173,7 +175,7 @@ run_task_sequentially_as_rstudio_job_loading_from_devtools <- function(
         devtools::load_all('.')
         {ss_prefix}$tasks[['{task_name}']]$cores <- 1
         {ss_prefix}$shortcut_run_task('{task_name}')
-      "
+    "
   ), file = tempfile)
   rstudioapi::jobRunScript(
     path = tempfile,

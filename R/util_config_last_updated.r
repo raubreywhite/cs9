@@ -27,13 +27,6 @@ update_config_last_updated_internal <- function(type, tag, date = NULL, datetime
   config$tables$config_last_updated$upsert_data(to_upload)
 }
 
-#' update_config_last_updated
-#' Updates the config_last_updated db tables
-#' @param type a
-#' @param tag a
-#' @param date Date to set in config_last_updated
-#' @param datetime Datetime to set in config_last_updated
-#' @export
 update_config_last_updated <- function(type, tag, date = NULL, datetime = NULL) {
   if (!stringr::str_detect(tag, "^tmp") & !tag %in% c("config_datetime", "config_last_updated", "permission", "rundate")) update_config_last_updated_internal(type = type, tag = tag)
 }
