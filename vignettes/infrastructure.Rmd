@@ -1,0 +1,42 @@
+---
+title: "Infrastructure"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{infrastructure}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+This vignette details the infrastructure requirements of sc9.
+
+We strongly recommend that you use sc9 within a Docker environment.
+
+## Infrastructure
+
+- A MSSQL database
+
+## Environmental variables
+
+The following environmental variables must be available from within R. R only loads a limited amount of environmental variables by default, so you should make sure that these environmental variables are located in your `Renviron` file.
+
+```
+echo "SC9_AUTO=0" >> $R_HOME/etc/Renviron
+echo "SC9_PATH='/input'" >> $R_HOME/etc/Renviron
+
+echo "SC9_DBCONFIG_ACCESS='config/anon/restr'" >> $R_HOME/etc/Renviron
+echo "SC9_DBCONFIG_DRIVER='ODBC Driver 17 for SQL Server'" >> $R_HOME/etc/Renviron
+echo "SC9_DBCONFIG_PORT='1433'" >> $R_HOME/etc/Renviron
+echo "SC9_DBCONFIG_USER='SA'" >> $R_HOME/etc/Renviron
+echo "SC9_DBCONFIG_PASSWORD='yourStrongPassword100'" >> $R_HOME/etc/Renviron
+echo "SC9_DBCONFIG_TRUSTED_CONNECTION='no'" >> $R_HOME/etc/Renviron
+echo "SC9_DBCONFIG_SERVER='dm-prod'" >> $R_HOME/etc/Renviron
+
+echo "SC9_DBCONFIG_SCHEMA_CONFIG='dbo'" >> $R_HOME/etc/Renviron
+echo "SC9_DBCONFIG_DB_CONFIG='sc_interactive_config'" >> $R_HOME/etc/Renviron
+
+echo "SC9_DBCONFIG_SCHEMA_ANON='dbo'" >> $R_HOME/etc/Renviron
+echo "SC9_DBCONFIG_DB_ANON='sc_interactive_anon'" >> $R_HOME/etc/Renviron
+
+echo "SC9_DBCONFIG_SCHEMA_RESTR='dbo'" >> $R_HOME/etc/Renviron
+echo "SC9_DBCONFIG_DB_RESTR='sc_interactive_restr'" >> $R_HOME/etc/Renviron
+```

@@ -152,51 +152,35 @@ SurveillanceSystem_v9 <- R6::R6Class(
       setcolorder(retval, c("index_plan", "index_analysis"))
       retval
     },
-    shortcut_run_task = function(task_name, run_as_rstudio_job_loading_from_devtools = FALSE){
-      if (!run_as_rstudio_job_loading_from_devtools) {
-        task <- self$shortcut_get_task(task_name)
-        task$run(log = FALSE)
-      } else {
-        # get num_analyses
-        # tempfile <- fs::path(tempdir(check = T), paste0(task_name, ".r"))
-        # cat(glue::glue(
-        #   "
-        #     devtools::load_all('.')
-        #     num_analyses <- sc8::tm_get_plans_argsets_as_dt('{task_name}') %>%
-        #       nrow()
-        #     cat('RETVAL:',num_analyses,'\n')
-        #   "
-        # ), file = tempfile)
-        #
-        #
-        # x <- system2("Rscript",tempfile, stdout=TRUE, stderr = NULL)
-        # x <- stringr::str_extract(x,"RETVAL: [0-9]+")
-        # x <- stringr::str_extract(x,"[0-9]+")
-        # num_analyses <- as.numeric()
-        #
-        # rstudioapi::jobAdd(
-        #   name = task_name,
-        #   progressUnits = num_analyses
-        # )
-
-        tempfile <- fs::path(tempdir(check = T), paste0(task_name, ".r"))
-        cat(glue::glue(
-          "
-        devtools::load_all('.')
-        x <- sc8::config
-        x$tasks$list_task[['{task_name}']]$cores <- 1
-        tm_run_task('{task_name}')
-      "
-        ), file = tempfile)
-        rstudioapi::jobRunScript(
-          path = tempfile,
-          name = task_name,
-          workingDir = getwd(),
-        )
-      }
+    shortcut_run_task = function(task_name){
+      task <- self$shortcut_get_task(task_name)
+      task$run(log = FALSE)
     }
   )
 )
+
+#' Run
+#' @param task_name Task name
+#' @param ss_prefix The prefix that locates the surveillance system
+#' @export
+run_task_sequentially_as_rstudio_job_loading_from_devtools <- function(
+    task_name,
+    ss_prefix = "global$ss"
+    ){
+  tempfile <- fs::path(tempdir(check = T), paste0(task_name, ".R"))
+  cat(glue::glue(
+    "
+        devtools::load_all('.')
+        {ss_prefix}$tasks[['{task_name}']]$cores <- 1
+        {ss_prefix}$shortcut_run_task('{task_name}')
+      "
+  ), file = tempfile)
+  rstudioapi::jobRunScript(
+    path = tempfile,
+    name = task_name,
+    workingDir = getwd(),
+  )
+}
 
 generic_data_function_factory_v9 <- function(tables, argset, fn_name) {
   force(tables)

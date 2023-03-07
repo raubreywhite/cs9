@@ -189,10 +189,7 @@ A TaskManager is:
 \if{latex}{\out{\hypertarget{method-SurveillanceSystem_v9-shortcut_run_task}{}}}
 \subsection{Method \code{shortcut_run_task()}}{
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{SurveillanceSystem_v9$shortcut_run_task(
-  task_name,
-  run_as_rstudio_job_loading_from_devtools = FALSE
-)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{SurveillanceSystem_v9$shortcut_run_task(task_name)}\if{html}{\out{</div>}}
 }
 
 }
