@@ -42,12 +42,12 @@ A TaskManager is:
 \item \href{#method-SurveillanceSystem_v9-new}{\code{SurveillanceSystem_v9$new()}}
 \item \href{#method-SurveillanceSystem_v9-add_table}{\code{SurveillanceSystem_v9$add_table()}}
 \item \href{#method-SurveillanceSystem_v9-add_task}{\code{SurveillanceSystem_v9$add_task()}}
-\item \href{#method-SurveillanceSystem_v9-shortcut_get_task}{\code{SurveillanceSystem_v9$shortcut_get_task()}}
+\item \href{#method-SurveillanceSystem_v9-get_task}{\code{SurveillanceSystem_v9$get_task()}}
+\item \href{#method-SurveillanceSystem_v9-run_task}{\code{SurveillanceSystem_v9$run_task()}}
 \item \href{#method-SurveillanceSystem_v9-shortcut_get_tables}{\code{SurveillanceSystem_v9$shortcut_get_tables()}}
 \item \href{#method-SurveillanceSystem_v9-shortcut_get_argset}{\code{SurveillanceSystem_v9$shortcut_get_argset()}}
 \item \href{#method-SurveillanceSystem_v9-shortcut_get_data}{\code{SurveillanceSystem_v9$shortcut_get_data()}}
 \item \href{#method-SurveillanceSystem_v9-shortcut_get_plans_argsets_as_dt}{\code{SurveillanceSystem_v9$shortcut_get_plans_argsets_as_dt()}}
-\item \href{#method-SurveillanceSystem_v9-shortcut_run_task}{\code{SurveillanceSystem_v9$shortcut_run_task()}}
 \item \href{#method-SurveillanceSystem_v9-clone}{\code{SurveillanceSystem_v9$clone()}}
 }
 }
@@ -136,11 +136,20 @@ A TaskManager is:
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-SurveillanceSystem_v9-shortcut_get_task"></a>}}
-\if{latex}{\out{\hypertarget{method-SurveillanceSystem_v9-shortcut_get_task}{}}}
-\subsection{Method \code{shortcut_get_task()}}{
+\if{html}{\out{<a id="method-SurveillanceSystem_v9-get_task"></a>}}
+\if{latex}{\out{\hypertarget{method-SurveillanceSystem_v9-get_task}{}}}
+\subsection{Method \code{get_task()}}{
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{SurveillanceSystem_v9$shortcut_get_task(task_name)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{SurveillanceSystem_v9$get_task(task_name)}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-SurveillanceSystem_v9-run_task"></a>}}
+\if{latex}{\out{\hypertarget{method-SurveillanceSystem_v9-run_task}{}}}
+\subsection{Method \code{run_task()}}{
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{SurveillanceSystem_v9$run_task(task_name)}\if{html}{\out{</div>}}
 }
 
 }
@@ -181,15 +190,6 @@ A TaskManager is:
 \subsection{Method \code{shortcut_get_plans_argsets_as_dt()}}{
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{SurveillanceSystem_v9$shortcut_get_plans_argsets_as_dt(task_name)}\if{html}{\out{</div>}}
-}
-
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-SurveillanceSystem_v9-shortcut_run_task"></a>}}
-\if{latex}{\out{\hypertarget{method-SurveillanceSystem_v9-shortcut_run_task}{}}}
-\subsection{Method \code{shortcut_run_task()}}{
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{SurveillanceSystem_v9$shortcut_run_task(task_name)}\if{html}{\out{</div>}}
 }
 
 }

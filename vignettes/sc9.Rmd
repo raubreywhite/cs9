@@ -138,7 +138,7 @@ test_data_selector <- function(argset, tables) {
 }
 
 ss$shortcut_get_plans_argsets_as_dt("a_b")
-r <- ss$shortcut_run_task("a_b")
+r <- ss$run_task("a_b")
 
 get_config_data_hash_for_each_plan()
 get_config_last_updated()

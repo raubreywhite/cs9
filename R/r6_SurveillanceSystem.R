@@ -130,31 +130,31 @@ SurveillanceSystem_v9 <- R6::R6Class(
         )
         self$tasks[[task$name]] <- task
     },
-    shortcut_get_task = function(task_name){
+    get_task = function(task_name){
       retval <- self$tasks[[task_name]]
       retval$update_plans()
       retval
     },
+    run_task = function(task_name){
+      task <- self$get_task(task_name)
+      task$run(log = FALSE)
+    },
     shortcut_get_tables = function(task_name){
-      self$shortcut_get_task(task_name)$tables
+      self$get_task(task_name)$tables
     },
     shortcut_get_argset = function(task_name, index_plan = 1, index_analysis = 1){
-      self$shortcut_get_task(task_name)$plans[[index_plan]]$get_argset(index_analysis)
+      self$get_task(task_name)$plans[[index_plan]]$get_argset(index_analysis)
     },
     shortcut_get_data = function(task_name, index_plan = 1){
-      self$shortcut_get_task(task_name)$plans[[index_plan]]$get_data()
+      self$get_task(task_name)$plans[[index_plan]]$get_data()
     },
     shortcut_get_plans_argsets_as_dt = function(task_name){
-      plans <- self$shortcut_get_task(task_name)$plans
+      plans <- self$get_task(task_name)$plans
 
       retval <- lapply(plans, function(x) analyses_to_dt(x$analyses))
       retval <- rbindlist(retval)
       setcolorder(retval, c("index_plan", "index_analysis"))
       retval
-    },
-    shortcut_run_task = function(task_name){
-      task <- self$shortcut_get_task(task_name)
-      task$run(log = FALSE)
     }
   )
 )
@@ -174,7 +174,7 @@ run_task_sequentially_as_rstudio_job_using_load_all <- function(
     "
         devtools::load_all('.')
         {ss_prefix}$tasks[['{task_name}']]$cores <- 1
-        {ss_prefix}$shortcut_run_task('{task_name}')
+        {ss_prefix}$run_task('{task_name}')
     "
   ), file = tempfile)
   rstudioapi::jobRunScript(
