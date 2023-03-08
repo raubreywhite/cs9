@@ -3,7 +3,7 @@
 #' An R6 Action class contains a function called 'run' that takes three arguments:
 #' - data (list)
 #' - arg (list)
-#' - schema (list)
+#' - tables (list)
 #'
 #' An action is (note: we dont explicitly create these):
 #' - one R6 Action class
@@ -54,7 +54,7 @@ SurveillanceSystem_v9 <- R6::R6Class(
 
       table_name <- paste0(c(name_access, name_grouping, name_variant), collapse = "_")
 
-      dbtable <- csdb::DBTable_v9$new(
+      dbtable <- DBTableExtended_v9$new(
         dbconfig = config$dbconfigs[[name_access]],
         table_name = table_name,
         field_types = field_types,
