@@ -1,6 +1,7 @@
 # Version 2023.3.8
 
-* `SurveillanceSystem_v9` now uses an internal R6 class `DBTableExtended_v9` (which extends `csdb::DBTable_v9`) instead of using `csdb::DBTable_v9` directly. `DBTableExtended_v9` calls `sc9::update_config_last_updated` after altering a database table.
+* `update_config_last_updated` has now been replaced by `update_config_tables_last_updated` (which contains when the tables were last updated) and `config_tasks_stats` (which contains all the runtimes of the tasks).
+* `SurveillanceSystem_v9` now uses an internal R6 class `DBTableExtended_v9` (which extends `csdb::DBTable_v9`) instead of using `csdb::DBTable_v9` directly. `DBTableExtended_v9` calls `update_config_last_updated` after altering a database table.
 
 # Version 2023.3.7
 

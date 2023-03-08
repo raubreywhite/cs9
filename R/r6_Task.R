@@ -105,12 +105,8 @@ Task <- R6::R6Class(
       }
       self$insert_first_last_analysis()
     },
-    num_argsets = function() {
-      retval <- 0
-      for (i in seq_along(plans)) {
-        retval <- retval + plans[[i]]$x_length()
-      }
-      return(retval)
+    num_plans = function() {
+      return(length(self$plans))
     },
     num_analyses = function() {
       retval <- 0
@@ -120,8 +116,23 @@ Task <- R6::R6Class(
       return(retval)
     },
     run = function(log = TRUE, cores = self$cores) {
-      # task <- tm_get_task("analysis_norsyss_qp_gastro")
 
+      status <- "failed"
+      start_datetime <- lubridate::now()
+      on.exit({
+        update_config_tasks_stats(
+          task = self$name,
+          implementation_version = "unspecified",
+          cores_n = cores,
+          plans_n = self$num_plans(),
+          analyses_n = self$num_analyses(),
+          start_datetime = start_datetime,
+          stop_datetime = lubridate::now(),
+          ram_max_used_mb = ram_max_used_mb,
+          status = status)
+      })
+
+      # task <- tm_get_task("analysis_norsyss_qp_gastro")
       message(glue::glue("task: {self$name}"))
       if (!is.null(self$permission)) if (!self$permission$has_permission()) {
         return(NULL)
@@ -152,7 +163,7 @@ Task <- R6::R6Class(
         run_description <- "plans=sequential, argset=sequential"
         cores <- 1
 
-        message("\n***** MULTICORE DOES NOT WORK IN RSTUDIO *****")
+        message("\n***** MULTICORE DOES NOT WORK IN INTERACTIVE MODE *****")
         message("***** YOU MUST DO THE FOLLOWING: *****")
         message("***** 1. INSTALL THE PACKAGE (SYKDOMSPULSEN) *****")
         message("***** 2. RUN THE FOLLOWING FROM THE TERMINAL: *****")
@@ -230,6 +241,9 @@ Task <- R6::R6Class(
           delay_stdout = FALSE,
           delay_conditions = ""
         )
+
+        ram_max_used_mb <- gc(reset = FALSE)[,6]|>sum()
+
       } else if (run_type == "parallel_plans") {
         # running in parallel
 
@@ -274,6 +288,9 @@ Task <- R6::R6Class(
         )
         b1 <- Sys.time()
         message("\nPlan ", length(self$plans), " ran in ", round(as.numeric(difftime(b1, a1, units = "mins")), 1), " mins")
+
+        ram_max_used_mb <- gc(reset = FALSE)[,6]|>sum()
+        ram_max_used_mb <- ram_max_used_mb * length(self$plans)
       }
 
       b1 <- Sys.time()
@@ -288,7 +305,7 @@ Task <- R6::R6Class(
         self$action_after_fn()
       }
 
-      update_config_last_updated(type = "task", tag = self$name)
+    status <- "success"
       if (!is.null(self$permission)) self$permission$revoke_permission()
     }
   ),

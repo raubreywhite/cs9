@@ -4,19 +4,44 @@
   set_progressr()
   set_plnr()
 
-  # config_last_updated ----
-  config$tables$config_last_updated <- csdb::DBTable_v9$new(
+  # config_tables_last_updated ----
+  config$tables$config_tables_last_updated <- csdb::DBTable_v9$new(
     dbconfig = config$dbconfigs$config,
-    table_name = "config_last_updated",
+    table_name = "config_tables_last_updated",
     field_types = c(
-      "type" = "TEXT",
-      "tag" = "TEXT",
+      "table" = "TEXT",
       "date" = "DATE",
       "datetime" = "DATETIME"
     ),
     keys = c(
-      "type",
-      "tag"
+      "table"
+    ),
+    validator_field_types = csdb::validator_field_types_blank,
+    validator_field_contents = csdb::validator_field_contents_blank
+  )
+
+  # config_tasks_stats ----
+  config$tables$config_tasks_stats <- csdb::DBTable_v9$new(
+    dbconfig = config$dbconfigs$config,
+    table_name = "config_tasks_stats",
+    field_types = c(
+      "task" = "TEXT",
+      "sc_version" = "TEXT",
+      "implementation_version" = "TEXT",
+      "cores_n" = "INTEGER",
+      "plans_n" = "INTEGER",
+      "analyses_n" = "INTEGER",
+      "start_date" = "DATE",
+      "start_datetime" = "DATETIME",
+      "stop_date" = "DATE",
+      "stop_datetime" = "DATETIME",
+      "runtime_minutes" = "DOUBLE",
+      "ram_max_used_mb" = "DOUBLE",
+      "status" = "TEXT"
+    ),
+    keys = c(
+      "task",
+      "start_datetime"
     ),
     validator_field_types = csdb::validator_field_types_blank,
     validator_field_contents = csdb::validator_field_contents_blank
