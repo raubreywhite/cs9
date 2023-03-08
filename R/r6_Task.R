@@ -129,7 +129,8 @@ Task <- R6::R6Class(
           analyses_n = self$num_analyses(),
           start_datetime = start_datetime,
           stop_datetime = lubridate::now(),
-          ram_max_used_mb = ram_max_used_mb,
+          ram_all_cores_mb = ram_max_used_mb,
+          ram_per_core_mb = round(ram_max_used_mb/self$cores, 3),
           status = status)
       })
 

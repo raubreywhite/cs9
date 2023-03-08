@@ -6,7 +6,8 @@ update_config_tasks_stats <- function(
     analyses_n,
     start_datetime,
     stop_datetime,
-    ram_max_used_mb,
+    ram_all_cores_mb,
+    ram_per_core_mb,
     status
 ) {
   stopifnot(status %in% c("success", "failed"))
@@ -32,10 +33,11 @@ update_config_tasks_stats <- function(
     stop_date = stop_date,
     stop_datetime = stop_datetime,
     runtime_minutes = runtime_minutes,
-    ram_max_used_mb = ram_max_used_mb,
+    ram_all_cores_mb = ram_all_cores_mb,
+    ram_per_core_mb = ram_per_core_mb,
     status = status
   )
-  config$tables$config_tables_last_updated$upsert_data(to_upload)
+  config$tables$config_tasks_stats$upsert_data(to_upload)
 }
 
 #' get_config_last_updated
@@ -44,15 +46,15 @@ update_config_tasks_stats <- function(
 #' @param last_run Just get the last run?
 #' @export
 get_config_tasks_stats <- function(task = NULL, last_run = FALSE) {
-  if (is.null(config$tables$config_tables_last_updated$conn)) config$tables$config_tables_last_updated$connect()
+  if (is.null(config$tables$config_tasks_stats$conn)) config$tables$config_tasks_stats$connect()
 
-  if (!is.null(table)) {
-    temp <- config$tables$config_tables_last_updated$tbl() %>%
-      dplyr::filter(table == !!table) %>%
+  if (!is.null(task)) {
+    temp <- config$tables$config_tasks_stats$tbl() %>%
+      dplyr::filter(task == !!task) %>%
       dplyr::collect() %>%
       as.data.table()
   } else {
-    temp <- config$tables$config_tables_last_updated$tbl() %>%
+    temp <- config$tables$config_tasks_stats$tbl() %>%
       dplyr::collect() %>%
       as.data.table()
   }

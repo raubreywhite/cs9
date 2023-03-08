@@ -5,10 +5,10 @@
 \title{get_config_last_updated
 Gets the config_last_updated db table}
 \usage{
-get_config_tables_last_updated(table = NULL)
+get_config_tables_last_updated(table_name = NULL)
 }
 \arguments{
-\item{table}{Table name}
+\item{table_name}{Table name}
 }
 \description{
 get_config_last_updated

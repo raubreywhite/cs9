@@ -9,12 +9,12 @@
     dbconfig = config$dbconfigs$config,
     table_name = "config_tables_last_updated",
     field_types = c(
-      "table" = "TEXT",
+      "table_name" = "TEXT",
       "date" = "DATE",
       "datetime" = "DATETIME"
     ),
     keys = c(
-      "table"
+      "table_name"
     ),
     validator_field_types = csdb::validator_field_types_blank,
     validator_field_contents = csdb::validator_field_contents_blank
@@ -36,7 +36,8 @@
       "stop_date" = "DATE",
       "stop_datetime" = "DATETIME",
       "runtime_minutes" = "DOUBLE",
-      "ram_max_used_mb" = "DOUBLE",
+      "ram_all_cores_mb" = "DOUBLE",
+      "ram_per_core_mb" = "DOUBLE",
       "status" = "TEXT"
     ),
     keys = c(

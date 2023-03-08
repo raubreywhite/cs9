@@ -1,4 +1,4 @@
-update_config_tables_last_updated <- function(table, date = NULL, datetime = NULL) {
+update_config_tables_last_updated <- function(table_name, date = NULL, datetime = NULL) {
   if (is.null(config$tables$config_tasks_stats$conn)) config$tables$config_tasks_stats$connect()
 
   if (!is.null(datetime)) datetime <- as.character(datetime)
@@ -14,32 +14,33 @@ update_config_tables_last_updated <- function(table, date = NULL, datetime = NUL
     datetime <- paste0(date, " 00:01:00")
   }
 
-  table_cleaned <- stringr::str_split(table, "].\\[")[[1]]
+  table_cleaned <- stringr::str_split(table_name, "].\\[")[[1]]
   table_cleaned <- table_cleaned[length(table_cleaned)]
 
   to_upload <- data.table(
-    table = table_cleaned,
+    table_name = table_cleaned,
     date = date,
     datetime = datetime
   )
-  config$tables$config_tasks_stats$upsert_data(to_upload)
+  config$tables$config_tables_last_updated$upsert_data(to_upload)
 }
 
 
 #' get_config_last_updated
 #' Gets the config_last_updated db table
-#' @param table Table name
+#' @param table_name Table name
 #' @export
-get_config_tables_last_updated <- function(table = NULL) {
-  if (is.null(config$tables$config_tasks_stats$conn)) config$tables$config_tasks_stats$connect()
+get_config_tables_last_updated <- function(table_name = NULL) {
+  if (is.null(config$tables$config_tables_last_updated$conn)) config$config_tables_last_updated$config_tasks_stats$connect()
 
-  if (!is.null(table)) {
-    temp <- config$tables$config_tasks_stats$tbl() %>%
-      dplyr::filter(table == !!table) %>%
+  if (!is.null(table_name)) {
+
+    temp <- config$tables$config_tables_last_updated$tbl() %>%
+      dplyr::filter(table_name == !!table_name) %>%
       dplyr::collect() %>%
       as.data.table()
   } else {
-    temp <- config$tables$config_tasks_stats$tbl() %>%
+    temp <- config$tables$config_tables_last_updated$tbl() %>%
       dplyr::collect() %>%
       as.data.table()
   }
