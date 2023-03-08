@@ -11,7 +11,6 @@ update_config_tasks_stats <- function(
     status
 ) {
   stopifnot(status %in% c("success", "failed"))
-  if (is.null(config$tables$config_tables_last_updated$conn)) config$tables$config_tables_last_updated$connect()
 
   start_datetime <- as.character(start_datetime)
   start_date <- stringr::str_sub(start_datetime, 1, 10)
@@ -46,8 +45,6 @@ update_config_tasks_stats <- function(
 #' @param last_run Just get the last run?
 #' @export
 get_config_tasks_stats <- function(task = NULL, last_run = FALSE) {
-  if (is.null(config$tables$config_tasks_stats$conn)) config$tables$config_tasks_stats$connect()
-
   if (!is.null(task)) {
     temp <- config$tables$config_tasks_stats$tbl() %>%
       dplyr::filter(task == !!task) %>%

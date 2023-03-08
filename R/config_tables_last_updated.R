@@ -1,6 +1,4 @@
 update_config_tables_last_updated <- function(table_name, date = NULL, datetime = NULL) {
-  if (is.null(config$tables$config_tasks_stats$conn)) config$tables$config_tasks_stats$connect()
-
   if (!is.null(datetime)) datetime <- as.character(datetime)
 
   if (is.null(date) & is.null(datetime)) {
@@ -31,10 +29,7 @@ update_config_tables_last_updated <- function(table_name, date = NULL, datetime 
 #' @param table_name Table name
 #' @export
 get_config_tables_last_updated <- function(table_name = NULL) {
-  if (is.null(config$tables$config_tables_last_updated$conn)) config$config_tables_last_updated$connect()
-
   if (!is.null(table_name)) {
-
     temp <- config$tables$config_tables_last_updated$tbl() %>%
       dplyr::filter(table_name == !!table_name) %>%
       dplyr::collect() %>%
