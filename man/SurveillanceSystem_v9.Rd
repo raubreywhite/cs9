@@ -8,7 +8,7 @@ An R6 Action class contains a function called 'run' that takes three arguments:
 \itemize{
 \item data (list)
 \item arg (list)
-\item schema (list)
+\item tables (list)
 }
 }
 \details{
