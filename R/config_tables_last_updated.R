@@ -14,7 +14,7 @@ update_config_tables_last_updated <- function(table, date = NULL, datetime = NUL
     datetime <- paste0(date, " 00:01:00")
   }
 
-  table_cleaned <- stringr::str_split(table_cleaned, "].\\[")[[1]]
+  table_cleaned <- stringr::str_split(table, "].\\[")[[1]]
   table_cleaned <- table_cleaned[length(table_cleaned)]
 
   to_upload <- data.table(
