@@ -16,6 +16,7 @@ Task <- R6::R6Class(
     update_plans_fn = NULL,
     action_before_fn = NULL,
     action_after_fn = NULL,
+    implementation_version = "unspecified",
     initialize = function(
       name_grouping = NULL,
       name_action = NULL,
@@ -122,7 +123,7 @@ Task <- R6::R6Class(
       on.exit({
         update_config_tasks_stats(
           task = self$name,
-          implementation_version = "unspecified",
+          implementation_version = self$implementation_version,
           cores_n = cores,
           plans_n = self$num_plans(),
           analyses_n = self$num_analyses(),

@@ -30,8 +30,11 @@ SurveillanceSystem_v9 <- R6::R6Class(
   public = list(
     tables = list(),
     tasks = list(),
-    initialize = function() {
-      # nothing
+    implementation_version = NULL,
+    initialize = function(
+      implementation_version = "unspecified"
+    ) {
+      self$implementation_version <- implementation_version
     },
     add_table = function(
       name_access,
@@ -128,6 +131,7 @@ SurveillanceSystem_v9 <- R6::R6Class(
           data_selector_fn_name = data_selector_fn_name,
           tables = tables
         )
+        task$implementation_version <- self$implementation_version
         self$tasks[[task$name]] <- task
     },
     get_task = function(task_name){

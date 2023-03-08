@@ -56,7 +56,7 @@ A TaskManager is:
 \if{latex}{\out{\hypertarget{method-SurveillanceSystem_v9-new}{}}}
 \subsection{Method \code{new()}}{
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{SurveillanceSystem_v9$new()}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{SurveillanceSystem_v9$new(implementation_version = "unspecified")}\if{html}{\out{</div>}}
 }
 
 }
