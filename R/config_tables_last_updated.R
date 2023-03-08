@@ -31,7 +31,7 @@ update_config_tables_last_updated <- function(table_name, date = NULL, datetime 
 #' @param table_name Table name
 #' @export
 get_config_tables_last_updated <- function(table_name = NULL) {
-  if (is.null(config$tables$config_tables_last_updated$conn)) config$config_tables_last_updated$config_tasks_stats$connect()
+  if (is.null(config$tables$config_tables_last_updated$conn)) config$config_tables_last_updated$connect()
 
   if (!is.null(table_name)) {
 
