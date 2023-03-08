@@ -121,6 +121,7 @@ Task <- R6::R6Class(
       status <- "failed"
       start_datetime <- lubridate::now()
       on.exit({
+        if(status=="failed") ram_max_used_mb <- 0
         update_config_tasks_stats(
           task = self$name,
           implementation_version = self$implementation_version,
