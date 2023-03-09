@@ -129,7 +129,7 @@ tab
 
 ## General tasks
 
-<img src="tasks-task-general.png" title="A general task showing the many options of a task" alt="A general task showing the many options of a task" width="100%" />
+<img src="tasks-task-general.png" title="A general task showing the many options of a task" width="100%" />
 
 Figure \@ref(fig:general-tasks) shows us the full potential of a task.
 
@@ -542,9 +542,7 @@ tm_run_task("example_weather_import_data_from_api")
 
 ### Importing data
 
-```{r, out.width = "100%", echo = FALSE}
-knitr::include_graphics(system.file("vignette_resources/tasks/task_import_data.png",package="sc9"))
-```
+<img src="tasks-task-import-data.png" width="100%" />
 
 ```
 sc::add_task_from_config_v8(
@@ -576,9 +574,7 @@ sc::add_task_from_config_v8(
 
 ### Analysis
 
-```{r, out.width = "100%", echo = FALSE}
-knitr::include_graphics(system.file("vignette_resources/tasks/task_analysis.png",package="sc9"))
-```
+<img src="tasks-task-analysis.png" width="100%" />
 
 ```
 sc::add_task_from_config_v8(
@@ -609,9 +605,7 @@ sc::add_task_from_config_v8(
 
 ### Exporting multiple sets of results
 
-```{r, out.width = "100%", echo = FALSE}
-knitr::include_graphics(system.file("vignette_resources/tasks/task_export_multiple.png",package="sc9"))
-```
+<img src="tasks-task-export-multiple-results.png" width="100%" />
 
 ```{r, echo=T, eval=F}
 sc::add_task_from_config_v8(
@@ -643,9 +637,7 @@ sc::add_task_from_config_v8(
 
 ### Exporting combined results
 
-```{r, out.width = "100%", echo = FALSE}
-knitr::include_graphics(system.file("vignette_resources/tasks/task_export_combined.png",package="sc9"))
-```
+<img src="tasks-task-export-combined-results.png" width="100%" />
 
 ```{r, echo=T, eval=F}
 sc::add_task_from_config_v8(
