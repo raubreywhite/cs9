@@ -52,7 +52,7 @@ In short, you can think of a task as multiple [plnr plans](https://www.csids.no/
 <td style='padding-left: .4em; padding-right: .2em; padding-top: .4em; padding-bottom: .4em; font-size: 14px; border-bottom: 1px dashed grey; width: 80%; border-right: 1px solid black; text-align: left;'>A function that takes two arguments:
 <ul>
   <li>argset (named list)</li>
-  <li>schema (named list)</li>
+  <li>tables (named list)</li>
 </ul>
 This function provides a named list to be used as the `data` argument to `action_fn`</td>
 </tr>
@@ -62,13 +62,13 @@ This function provides a named list to be used as the `data` argument to `action
 <ul>
   <li>data (named list, returned from data_selector_fn)</li>
   <li>argset (named list)</li>
-  <li>schema (named list)</li>
+  <li>tables (named list)</li>
 </ul>
-This is the thing that **'does stuff'** in Sykdomspulsen Core.</td>
+This is the thing that **'does stuff'** in Surveillance Core 9.</td>
 </tr>
 <tr>
 <td style='padding-left: .4em; padding-right: .2em; padding-top: .4em; padding-bottom: .4em; font-size: 14px; border-bottom: 1px dashed grey; width: 20%; border-left: 1px solid black; border-right: 1px solid black; text-align: left;'>sc analysis</td>
-<td style='padding-left: .4em; padding-right: .2em; padding-top: .4em; padding-bottom: .4em; font-size: 14px; border-bottom: 1px dashed grey; width: 80%; border-right: 1px solid black; text-align: left;'>A `sc analysis` is essentially a `plnr analysis` with database schemas:
+<td style='padding-left: .4em; padding-right: .2em; padding-top: .4em; padding-bottom: .4em; font-size: 14px; border-bottom: 1px dashed grey; width: 80%; border-right: 1px solid black; text-align: left;'>A `sc analysis` is essentially a `plnr analysis` with database tables:
 <ul>
   <li>1 argset</li>
   <li>1 action_fn</li>
@@ -131,12 +131,12 @@ Figure 1 shows only 2 location based analyses, but in reality there are 356 muni
 
 <figure>
 <img src="tasks-file-locations.png" width="100%" />
-<figcaption>Figure 2. A typical file setup for an implementation of Sykdomspulsen Core. $plan_argset_fn$ is rarely used, and is therefore shown as blacked out in the most of the tasks..</figcaption>
+<figcaption>Figure 2. A typical file setup for an implementation of Surveillance Core 9. $plan_argset_fn$ is rarely used, and is therefore shown as blacked out in the most of the tasks..</figcaption>
 </figure>
 
-Figure 2 shows a typical implementation of Sykdomspulsen Core.
+Figure 2 shows a typical implementation of Surveillance Core 9.
 
-`config_db.r` contains all of the [Sykdomspulsen Core db schemas](analytics_db_schemas_introduction.html) definitions. i.e. A long list of `sc::add_schema_v8` commands.
+`config_db.r` contains all of the [Surveillance Core 9 db schemas](analytics_db_schemas_introduction.html) definitions. i.e. A long list of `sc::add_schema_v8` commands.
 
 `config_tasks.r` contains all of the task definitions. i.e. A long list of `sc::add_task_from_config_v8` commands.
 
@@ -500,11 +500,6 @@ index_plan <- 1
 index_analysis <- 1
 
 data <- ss$shortcut_get_data("example_weather_import_data_from_api", index_plan = index_plan)
-#> given fields: granularity_time, granularity_geo, country_iso3, location_code, border, age, sex, isoyear, isoweek, isoyearweek, season, seasonweek, calyear, calmonth, calyearmonth, date, tg, tx, tn
-#> db fields: granularity_time, granularity_geo, country_iso3, location_code, border, age, sex, isoyear, isoweek, isoyearweek, season, seasonweek, calyear, calmonth, calyearmonth, date, tg, tx, tn, rr
-#> Dropping table anon_example_weather because fields dont match
-#> Dropping table anon_example_weather
-#> Creating table anon_example_weather
 argset <- ss$shortcut_get_argset("example_weather_import_data_from_api", index_plan = index_plan, index_analysis = index_analysis)
 tables <- ss$shortcut_get_tables("example_weather_import_data_from_api")
 
@@ -780,7 +775,7 @@ sc::add_task_from_config_v8(
   insert_at_end_of_each_plan = FALSE,
   action_fn_name = "example_export_results_action",
   data_selector_fn_name = "example_export_results_data_selector",
-  schema = list(
+  tables = list(
     # input
     "input" = sc::config$schemas$input
 
