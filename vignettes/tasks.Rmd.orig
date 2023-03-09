@@ -9,9 +9,18 @@ editor_options:
   chunk_output_type: console
 ---
 
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+options(knitr.kable.NA = '')
+```
 
-
-
+```{r, include=FALSE}
+library(data.table)
+library(magrittr)
+```
 
 ## Introduction
 
@@ -21,21 +30,18 @@ In short, you can think of a task as multiple [plnr plans](https://www.csids.no/
 
 ## Definitions
 
-<table class='gmisc_table' style='border-collapse: collapse; width: 100%; border-collapse: separate;' >
-<thead>
-<tr>
-<th style='font-size: 16px; font-weight: bold; border-top: 2px solid grey; border-bottom: 1px solid grey; border-left: 1px solid black; border-right: 1px solid black; text-align: left;'>Object</th>
-<th style='font-size: 16px; font-weight: bold; border-top: 2px solid grey; border-bottom: 1px solid grey; border-right: 1px solid black; text-align: left;'>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style='padding-left: .4em; padding-right: .2em; padding-top: .4em; padding-bottom: .4em; font-size: 14px; border-bottom: 1px dashed grey; width: 20%; border-left: 1px solid black; border-right: 1px solid black; text-align: left;'>argset</td>
-<td style='padding-left: .4em; padding-right: .2em; padding-top: .4em; padding-bottom: .4em; font-size: 14px; border-bottom: 1px dashed grey; width: 80%; border-right: 1px solid black; text-align: left;'>A named list containing arguments.</td>
-</tr>
-<tr>
-<td style='padding-left: .4em; padding-right: .2em; padding-top: .4em; padding-bottom: .4em; font-size: 14px; border-bottom: 1px dashed grey; width: 20%; border-left: 1px solid black; border-right: 1px solid black; text-align: left;'>plnr analysis</td>
-<td style='padding-left: .4em; padding-right: .2em; padding-top: .4em; padding-bottom: .4em; font-size: 14px; border-bottom: 1px dashed grey; width: 80%; border-right: 1px solid black; text-align: left;'>These are the fundamental units that are scheduled in plnr:
+```{r definitions, echo=FALSE}
+d <- rbindlist(list(
+  data.table(
+    Object = glue::glue("argset"),
+    Description = glue::glue(
+      "A named list containing arguments."
+    )
+  ),
+  data.table(
+    Object = glue::glue("plnr analysis"),
+    Description = glue::glue(
+      "These are the fundamental units that are scheduled in plnr:
 <ul>
   <li>1 argset</li>
   <li>1 function that takes two (or more) arguments:
@@ -45,52 +51,81 @@ In short, you can think of a task as multiple [plnr plans](https://www.csids.no/
       <li>... (optional arguments)</li>
     </ul>
   </li>
-</ul></td>
-</tr>
-<tr>
-<td style='padding-left: .4em; padding-right: .2em; padding-top: .4em; padding-bottom: .4em; font-size: 14px; border-bottom: 1px dashed grey; width: 20%; border-left: 1px solid black; border-right: 1px solid black; text-align: left;'>data_selector_fn</td>
-<td style='padding-left: .4em; padding-right: .2em; padding-top: .4em; padding-bottom: .4em; font-size: 14px; border-bottom: 1px dashed grey; width: 80%; border-right: 1px solid black; text-align: left;'>A function that takes two arguments:
+</ul>
+"
+    )
+  ),
+  data.table(
+    Object = glue::glue("data_selector_fn"),
+    Description = glue::glue(
+      "A function that takes two arguments:
 <ul>
   <li>argset (named list)</li>
   <li>schema (named list)</li>
 </ul>
-This function provides a named list to be used as the `data` argument to `action_fn`</td>
-</tr>
-<tr>
-<td style='padding-left: .4em; padding-right: .2em; padding-top: .4em; padding-bottom: .4em; font-size: 14px; border-bottom: 1px dashed grey; width: 20%; border-left: 1px solid black; border-right: 1px solid black; text-align: left;'>action_fn</td>
-<td style='padding-left: .4em; padding-right: .2em; padding-top: .4em; padding-bottom: .4em; font-size: 14px; border-bottom: 1px dashed grey; width: 80%; border-right: 1px solid black; text-align: left;'>A function that takes three arguments:
+This function provides a named list to be used as the `data` argument to `action_fn`
+"
+    )
+  ),
+  data.table(
+    Object = glue::glue("action_fn"),
+    Description = glue::glue(
+      "A function that takes three arguments:
 <ul>
   <li>data (named list, returned from data_selector_fn)</li>
   <li>argset (named list)</li>
   <li>schema (named list)</li>
 </ul>
-This is the thing that **'does stuff'** in Sykdomspulsen Core.</td>
-</tr>
-<tr>
-<td style='padding-left: .4em; padding-right: .2em; padding-top: .4em; padding-bottom: .4em; font-size: 14px; border-bottom: 1px dashed grey; width: 20%; border-left: 1px solid black; border-right: 1px solid black; text-align: left;'>sc analysis</td>
-<td style='padding-left: .4em; padding-right: .2em; padding-top: .4em; padding-bottom: .4em; font-size: 14px; border-bottom: 1px dashed grey; width: 80%; border-right: 1px solid black; text-align: left;'>A `sc analysis` is essentially a `plnr analysis` with database schemas:
+This is the thing that **'does stuff'** in Sykdomspulsen Core.
+"
+    )
+  ),
+  data.table(
+    Object = glue::glue("sc analysis"),
+    Description = glue::glue(
+      "A `sc analysis` is essentially a `plnr analysis` with database schemas:
 <ul>
   <li>1 argset</li>
   <li>1 action_fn</li>
-</ul></td>
-</tr>
-<tr>
-<td style='padding-left: .4em; padding-right: .2em; padding-top: .4em; padding-bottom: .4em; font-size: 14px; border-bottom: 1px dashed grey; width: 20%; border-left: 1px solid black; border-right: 1px solid black; text-align: left;'>plan</td>
-<td style='padding-left: .4em; padding-right: .2em; padding-top: .4em; padding-bottom: .4em; font-size: 14px; border-bottom: 1px dashed grey; width: 80%; border-right: 1px solid black; text-align: left;'><ul>
+</ul>
+"
+    )
+  ),
+  data.table(
+    Object = glue::glue("plan"),
+    Description = glue::glue(
+      "
+<ul>
   <li>1 data-pull (using data_selector_fn)</li>
   <li>1 list of sc analyses</li>
-</ul></td>
-</tr>
-<tr>
-<td style='padding-left: .4em; padding-right: .2em; padding-top: .4em; padding-bottom: .4em; font-size: 14px; border-bottom: 2px solid grey; width: 20%; border-left: 1px solid black; border-right: 1px solid black; text-align: left;'>task</td>
-<td style='padding-left: .4em; padding-right: .2em; padding-top: .4em; padding-bottom: .4em; font-size: 14px; border-bottom: 2px solid grey; width: 80%; border-right: 1px solid black; text-align: left;'>This is is the unit that Airflow schedules.
+</ul>
+"
+    )
+  ),
+  data.table(
+    Object = glue::glue("task"),
+    Description = glue::glue(
+      "
+This is is the unit that Airflow schedules.
 <ul>
   <li>1 list of plans</li>
 </ul>
-We sometimes run the list of plans in parallel.</td>
-</tr>
-</tbody>
-</table>
+We sometimes run the list of plans in parallel.
+"
+    )
+  )
+))
+tab <- fhiplot::htmltable_quick_style(d, widths = c(20, 80)) %>%
+  htmlTable::htmlTable(
+    rnames = FALSE,
+    align = "|l|l|",
+    align.header = "|l|l|",
+    align.cgroup = "|l|l|",
+    spacer.celltype = "skip",
+    caption = NULL
+  )
+tab
+```
 
 ## General tasks
 
@@ -126,9 +161,8 @@ Figure \@ref(fig:general-tasks) shows only 2 location based analyses, but in rea
 
 ## Putting it together
 
-
-```
-#> Error in knitr::include_graphics(system.file("vignette_resources/tasks/file_locations.png", : Cannot find the file(s): ""
+```{r file-locations, fig.cap="A typical file setup for an implementation of Sykdomspulsen Core. $plan_argset_fn$ is rarely used, and is therefore shown as blacked out in the most of the tasks.", out.width = "100%", echo = FALSE}
+knitr::include_graphics(system.file("vignette_resources/tasks/file_locations.png",package="sc9"))
 ```
 
 Figure \@ref(fig:file-locations) shows a typical implementation of Sykdomspulsen Core.
@@ -147,9 +181,8 @@ We will now go through an example of how a person would design and implement tas
 
 As documented in more detail [here](analytics_db_schemas_introduction.html), we create a db schema that fits our needs (recording weather data).
 
-
-```
-#> Error in knitr::include_graphics(system.file("vignette_resources/tasks/addins_1.png", : Cannot find the file(s): ""
+```{r, out.width = "100%", echo = FALSE}
+knitr::include_graphics(system.file("vignette_resources/tasks/addins_1.png",package="sc9"))
 ```
 
 ```
@@ -206,9 +239,8 @@ sc9::add_schema_v8(
 
 To "register" our task, we use the RStudio addin `task_from_config`.
 
-
-```
-#> Error in knitr::include_graphics(system.file("vignette_resources/tasks/addins_2.png", : Cannot find the file(s): ""
+```{r, out.width = "100%", echo = FALSE}
+knitr::include_graphics(system.file("vignette_resources/tasks/addins_2.png",package="sc9"))
 ```
 
 
@@ -248,8 +280,7 @@ There are a number of important things in this code that need highlighting.
 
 For example, the following code would give 4 plans, with 1 analysis per each plan, with each analysis containing `argset$var_1` and `argset$var_2` as appropriate.
 
-
-```r
+```{r, echo=T, eval=F}
 for_each_plan <- list()
 for_each_plan[[1]] <- list(
   var_1 = 1,
@@ -271,14 +302,10 @@ for_each_plan[[4]] <- list(
 
 You **always** need at least 1 plan. The most simple plan possible is:
 
-
-```r
+```{r, echo=T}
 plnr::expand_list(
   x = 1
 )
-#> [[1]]
-#> [[1]]$x
-#> [1] 1
 ```
 
 #### plnr::expand_list
@@ -287,43 +314,12 @@ plnr::expand_list(
 
 The code above could be simplified as follows.
 
-
-```r
+```{r, echo=T}
 for_each_plan <- plnr::expand_list(
   var_1 = c(1,2),
   var_2 = c("a", "b")
 )
 for_each_plan
-#> [[1]]
-#> [[1]]$var_1
-#> [1] 1
-#> 
-#> [[1]]$var_2
-#> [1] "a"
-#> 
-#> 
-#> [[2]]
-#> [[2]]$var_1
-#> [1] 2
-#> 
-#> [[2]]$var_2
-#> [1] "a"
-#> 
-#> 
-#> [[3]]
-#> [[3]]$var_1
-#> [1] 1
-#> 
-#> [[3]]$var_2
-#> [1] "b"
-#> 
-#> 
-#> [[4]]
-#> [[4]]$var_1
-#> [1] 2
-#> 
-#> [[4]]$var_2
-#> [1] "b"
 ```
 
 #### for_each_analysis
@@ -368,9 +364,8 @@ A named list containing the schemas used in this task.
 
 Use the addins dropdown to easily add in boilerplate code.
 
-
-```
-#> Error in knitr::include_graphics(system.file("vignette_resources/tasks/addins_3.png", : Cannot find the file(s): ""
+```{r, out.width = "100%", echo = FALSE}
+knitr::include_graphics(system.file("vignette_resources/tasks/addins_3.png",package="sc9"))
 ```
 
 The `data_selector_fn` is used to extract the data for each plan.
@@ -547,9 +542,8 @@ tm_run_task("example_weather_import_data_from_api")
 
 ### Importing data
 
-
-```
-#> Error in knitr::include_graphics(system.file("vignette_resources/tasks/task_import_data.png", : Cannot find the file(s): ""
+```{r, out.width = "100%", echo = FALSE}
+knitr::include_graphics(system.file("vignette_resources/tasks/task_import_data.png",package="sc9"))
 ```
 
 ```
@@ -582,9 +576,8 @@ sc::add_task_from_config_v8(
 
 ### Analysis
 
-
-```
-#> Error in knitr::include_graphics(system.file("vignette_resources/tasks/task_analysis.png", : Cannot find the file(s): ""
+```{r, out.width = "100%", echo = FALSE}
+knitr::include_graphics(system.file("vignette_resources/tasks/task_analysis.png",package="sc9"))
 ```
 
 ```
@@ -616,13 +609,11 @@ sc::add_task_from_config_v8(
 
 ### Exporting multiple sets of results
 
-
+```{r, out.width = "100%", echo = FALSE}
+knitr::include_graphics(system.file("vignette_resources/tasks/task_export_multiple.png",package="sc9"))
 ```
-#> Error in knitr::include_graphics(system.file("vignette_resources/tasks/task_export_multiple.png", : Cannot find the file(s): ""
-```
 
-
-```r
+```{r, echo=T, eval=F}
 sc::add_task_from_config_v8(
   name_grouping = "example",
   name_action = "export_results",
@@ -652,13 +643,11 @@ sc::add_task_from_config_v8(
 
 ### Exporting combined results
 
-
+```{r, out.width = "100%", echo = FALSE}
+knitr::include_graphics(system.file("vignette_resources/tasks/task_export_combined.png",package="sc9"))
 ```
-#> Error in knitr::include_graphics(system.file("vignette_resources/tasks/task_export_combined.png", : Cannot find the file(s): ""
-```
 
-
-```r
+```{r, echo=T, eval=F}
 sc::add_task_from_config_v8(
   name_grouping = "example",
   name_action = "export_results",
