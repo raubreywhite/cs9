@@ -129,19 +129,22 @@ tab
 
 ## General tasks
 
-<img src="tasks-task-general.png" title="A general task showing the many options of a task" width="100%" />
+<figure>
+<img src="tasks-task-general.png" width="100%" />
+<figcaption>Figure 1. A general task showing the many options of a task.</figcaption>
+</figure>
 
-Figure \@ref(fig:general-tasks) shows us the full potential of a task.
+Figure 1 shows us the full potential of a task.
 
 Data can be read from any sources, then within a plan the data will be extracted **once** by `data_selector_fn` (i.e. "one data-pull"). The data will then be provided to each analysis, which will run `action_fn` on:
 
 - The provided data
 - The provided argset
-- The provided schemas
+- The provided tables
 
 The `action_fn` can then:
 
-- Write data/results to db schemas
+- Write data/results to db tables
 - Send emails
 - Export graphs, excel files, reports, or other physical files
 
@@ -157,15 +160,16 @@ In general, a data-pull is slow and wastes time. This means that it is preferabl
 
 Obviously, if a plan's data-pull is larger, it will use more RAM. If you need to conserve RAM, then you should use a plan-heavy approach.
 
-Figure \@ref(fig:general-tasks) shows only 2 location based analyses, but in reality there are 356 municipalities in Norway in 2021. If figure \@ref(fig:general-tasks) had 2 plans (1 for 2021 data, 1 for 2020 data) and 356 analyses for each plan (1 for each location_code) then we would be taking an analysis-heavy approach.
+Figure 1 shows only 2 location based analyses, but in reality there are 356 municipalities in Norway in 2021. If figure 1 had 2 plans (1 for 2021 data, 1 for 2020 data) and 356 analyses for each plan (1 for each location_code) then we would be taking an analysis-heavy approach.
 
 ## Putting it together
 
-```{r file-locations, fig.cap="A typical file setup for an implementation of Sykdomspulsen Core. $plan_argset_fn$ is rarely used, and is therefore shown as blacked out in the most of the tasks.", out.width = "100%", echo = FALSE}
-knitr::include_graphics(system.file("vignette_resources/tasks/file_locations.png",package="sc9"))
-```
+<figure>
+<img src="tasks-file-locations.png" width="100%" />
+<figcaption>Figure 2. A typical file setup for an implementation of Sykdomspulsen Core. $plan_argset_fn$ is rarely used, and is therefore shown as blacked out in the most of the tasks..</figcaption>
+</figure>
 
-Figure \@ref(fig:file-locations) shows a typical implementation of Sykdomspulsen Core.
+Figure 2 shows a typical implementation of Sykdomspulsen Core.
 
 `config_db.r` contains all of the [Sykdomspulsen Core db schemas](analytics_db_schemas_introduction.html) definitions. i.e. A long list of `sc::add_schema_v8` commands.
 
@@ -177,6 +181,14 @@ Then we have a one file for each task that contains the `action_fn`, `data_selec
 
 We will now go through an example of how a person would design and implement tasks relating to weather
 
+### Surveillance system
+
+We begin by creating a surveillance system
+
+```{r}
+ss <- sc9::SurveillanceSystem_v9$new()
+```
+
 ### db schema
 
 As documented in more detail [here](analytics_db_schemas_introduction.html), we create a db schema that fits our needs (recording weather data).
@@ -185,12 +197,11 @@ As documented in more detail [here](analytics_db_schemas_introduction.html), we 
 knitr::include_graphics(system.file("vignette_resources/tasks/addins_1.png",package="sc9"))
 ```
 
-```
-sc9::add_schema_v8(
+```{r}
+ss$add_table(
   name_access = c("anon"),
   name_grouping = "example_weather",
   name_variant = NULL,
-  db_configs = sc::config$db_configs,
   field_types =  c(
     "granularity_time" = "TEXT",
     "granularity_geo" = "TEXT",
@@ -199,8 +210,6 @@ sc9::add_schema_v8(
     "border" = "INTEGER",
     "age" = "TEXT",
     "sex" = "TEXT",
-
-    "date" = "DATE",
 
     "isoyear" = "INTEGER",
     "isoweek" = "INTEGER",
@@ -212,10 +221,11 @@ sc9::add_schema_v8(
     "calmonth" = "INTEGER",
     "calyearmonth" = "TEXT",
 
+    "date" = "DATE",
+
     "tg" = "DOUBLE",
     "tx" = "DOUBLE",
-    "tn" = "DOUBLE",
-    "rr" = "DOUBLE"
+    "tn" = "DOUBLE"
   ),
   keys = c(
     "granularity_time",
@@ -224,14 +234,8 @@ sc9::add_schema_v8(
     "age",
     "sex"
   ),
-  censors = list(
-    anon = list(
-
-    )
-  ),
-  validator_field_types = sc::validator_field_types_sykdomspulsen,
-  validator_field_contents = sc::validator_field_contents_sykdomspulsen,
-  info = "This db table is used for..."
+  validator_field_types = csdb::validator_field_types_csfmt_rts_data_v1,
+  validator_field_contents = csdb::validator_field_contents_csfmt_rts_data_v1
 )
 ```
 
@@ -244,9 +248,9 @@ knitr::include_graphics(system.file("vignette_resources/tasks/addins_2.png",pack
 ```
 
 
-```
+```{r}
 # tm_run_task("example_weather_import_data_from_api")
-sc::add_task_from_config_v8(
+ss$add_task(
   name_grouping = "example_weather",
   name_action = "import_data_from_api",
   name_variant = NULL,
@@ -261,15 +265,13 @@ sc::add_task_from_config_v8(
   insert_at_end_of_each_plan = FALSE,
   action_fn_name = "example_weather_import_data_from_api_action",
   data_selector_fn_name = "example_weather_import_data_from_api_data_selector",
-  schema = list(
+  tables = list(
     # input
 
     # output
-    "anon_example_weather" = sc::config$schemas$anon_example_weather
-  ),
-  info = "This task does..."
+    "anon_example_weather" = ss$tables$anon_example_weather
+  )
 )
-
 ```
 
 There are a number of important things in this code that need highlighting.
@@ -372,30 +374,30 @@ The `data_selector_fn` is used to extract the data for each plan.
 
 The lines inside `if(plnr::is_run_directly()){` are used to help developers. You can run the code manually/interactively to "load" the values of `argset` and `schema`.
 
-```
+```{r}
 index_plan <- 1
 
-argset <- sc::tm_get_argset("example_weather_import_data_from_api", index_plan = index_plan)
-schema <- sc::tm_get_schema("example_weather_import_data_from_api")
+argset <- ss$shortcut_get_argset("example_weather_import_data_from_api", index_plan = index_plan)
+tables <- ss$shortcut_get_tables("example_weather_import_data_from_api")
 
 print(argset)
-print(names(schema))
+print(tables)
 ```
 
-```
+```{r}
 # **** data_selector **** ----
 #' example_weather_import_data_from_api (data selector)
 #' @param argset Argset
 #' @param schema DB Schema
 #' @export
-example_weather_import_data_from_api_data_selector = function(argset, schema){
+example_weather_import_data_from_api_data_selector = function(argset, tables){
   if(plnr::is_run_directly()){
     # sc::tm_get_plans_argsets_as_dt("example_weather_import_data_from_api")
 
     index_plan <- 1
 
-    argset <- sc::tm_get_argset("example_weather_import_data_from_api", index_plan = index_plan)
-    schema <- sc::tm_get_schema("example_weather_import_data_from_api")
+    argset <- ss$shortcut_get_argset("example_weather_import_data_from_api", index_plan = index_plan)
+    tables <- ss$shortcut_get_tables("example_weather_import_data_from_api")
   }
 
   # find the mid lat/long for the specified location_code
@@ -420,27 +422,27 @@ example_weather_import_data_from_api_data_selector = function(argset, schema){
 
 The lines inside `if(plnr::is_run_directly()){` are used to help developers. You can run the code manually/interactively to "load" the values of `argset` and `schema`.
 
-```
+```{r}
 index_plan <- 1
 index_analysis <- 1
 
-data <- sc::tm_get_data("example_weather_import_data_from_api", index_plan = index_plan)
-argset <- sc::tm_get_argset("example_weather_import_data_from_api", index_plan = index_plan, index_analysis = index_analysis)
-schema <- sc::tm_get_schema("example_weather_import_data_from_api")
+data <- ss$shortcut_get_data("example_weather_import_data_from_api", index_plan = index_plan)
+argset <- ss$shortcut_get_argset("example_weather_import_data_from_api", index_plan = index_plan, index_analysis = index_analysis)
+tables <- ss$shortcut_get_tables("example_weather_import_data_from_api")
 
 print(data)
 print(argset)
-print(names(schema))
+print(tables)
 ```
 
-```
+```{r}
 # **** action **** ----
 #' example_weather_import_data_from_api (action)
 #' @param data Data
 #' @param argset Argset
 #' @param schema DB Schema
 #' @export
-example_weather_import_data_from_api_action <- function(data, argset, schema) {
+example_weather_import_data_from_api_action <- function(data, argset, tables) {
   # tm_run_task("example_weather_import_data_from_api")
 
   if(plnr::is_run_directly()){
@@ -449,9 +451,9 @@ example_weather_import_data_from_api_action <- function(data, argset, schema) {
     index_plan <- 1
     index_analysis <- 1
 
-    data <- sc::tm_get_data("example_weather_import_data_from_api", index_plan = index_plan)
-    argset <- sc::tm_get_argset("example_weather_import_data_from_api", index_plan = index_plan, index_analysis = index_analysis)
-    schema <- sc::tm_get_schema("example_weather_import_data_from_api")
+    data <- ss$shortcut_get_data("example_weather_import_data_from_api", index_plan = index_plan)
+    argset <- ss$shortcut_get_argset("example_weather_import_data_from_api", index_plan = index_plan, index_analysis = index_analysis)
+    tables <- ss$shortcut_get_tables("example_weather_import_data_from_api")
   }
 
   # code goes here
@@ -473,14 +475,11 @@ example_weather_import_data_from_api_action <- function(data, argset, schema) {
     temp_min <- xml2::xml_attr(x, "value")
     x <- xml2::xml_find_all(parent, ".//maxTemperature")
     temp_max <- xml2::xml_attr(x, "value")
-    x <- xml2::xml_find_all(parent, ".//precipitation")
-    precip <- xml2::xml_attr(x, "value")
     res[[i]] <- data.frame(
       time_from = as.character(time_from),
       time_to = as.character(time_to),
       tx = as.numeric(temp_max),
-      tn = as.numeric(temp_min),
-      rr = as.numeric(precip)
+      tn = as.numeric(temp_min)
     )
   }
   res <- rbindlist(res)
@@ -493,8 +492,7 @@ example_weather_import_data_from_api_action <- function(data, argset, schema) {
     .(
       tg = NA,
       tx = max(tx),
-      tn = min(tn),
-      rr = sum(rr)
+      tn = min(tn)
     ),
     keyby = .(date)
   ]
@@ -508,9 +506,10 @@ example_weather_import_data_from_api_action <- function(data, argset, schema) {
   res[, sex := "total"]
   res[, age := "total"]
   res[, location_code := argset$location_code]
-
+  res[, border := 2020]
+  
   # fill in missing structural variables
-  sc::fill_in_missing_v8(res, border = 2020)
+  cstidy::set_csfmt_rts_data_v1(res)
 
   # we look at the downloaded data
   print("Data after missing structural variables filled in")
@@ -518,7 +517,7 @@ example_weather_import_data_from_api_action <- function(data, argset, schema) {
 
   # put data in db table
   # schema$SCHEMA_NAME$insert_data(d)
-  schema$anon_example_weather$upsert_data(res)
+  tables$anon_example_weather$upsert_data(res)
   # schema$SCHEMA_NAME$drop_all_rows_and_then_upsert_data(d)
 
   # special case that runs after everything
@@ -545,7 +544,7 @@ tm_run_task("example_weather_import_data_from_api")
 <img src="tasks-task-import-data.png" width="100%" />
 
 ```
-sc::add_task_from_config_v8(
+ss$add_task(
   name_grouping = "example",
   name_action = "import_data",
   name_variant = NULL,
@@ -556,17 +555,17 @@ sc::add_task_from_config_v8(
   ),
   for_each_analysis = NULL,
   universal_argset = list(
-    folder = sc::path("input", "example")
+    # folder = sc9::path("input", "example")
   ),
   upsert_at_end_of_each_plan = FALSE,
   insert_at_end_of_each_plan = FALSE,
   action_fn_name = "example_import_data_action",
   data_selector_fn_name = "example_import_data_data_selector",
-  schema = list(
+  tables = list(
     # input
 
     # output
-    "output" = sc::config$schemas$output
+    "output" = ss$tables$output
   ),
   info = "This task does..."
 )
