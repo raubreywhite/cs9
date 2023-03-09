@@ -1,0 +1,679 @@
+---
+title: "Tasks"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Tasks}
+  %\VignetteEncoding{UTF-8}
+  %\VignetteEngine{knitr::rmarkdown}
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+options(knitr.kable.NA = '')
+```
+
+```{r, include=FALSE}
+library(data.table)
+library(magrittr)
+```
+
+## Introduction
+
+A task is the basic operational unit of sc9. It is based on [plnr](https://www.csids.no/plnr/).
+
+In short, you can think of a task as multiple [plnr plans](https://www.csids.no/plnr/) plus [csdb tables](https://www.csids.no/csdb/reference/DBTable_v9.html).
+
+## Definitions
+
+```{r definitions, echo=FALSE}
+d <- rbindlist(list(
+  data.table(
+    Object = glue::glue("argset"),
+    Description = glue::glue(
+      "A named list containing arguments."
+    )
+  ),
+  data.table(
+    Object = glue::glue("plnr analysis"),
+    Description = glue::glue(
+      "These are the fundamental units that are scheduled in plnr:
+<ul>
+  <li>1 argset</li>
+  <li>1 function that takes two (or more) arguments:
+    <ul>
+      <li>data (named list)</li>
+      <li>argset (named list)</li>
+      <li>... (optional arguments)</li>
+    </ul>
+  </li>
+</ul>
+"
+    )
+  ),
+  data.table(
+    Object = glue::glue("data_selector_fn"),
+    Description = glue::glue(
+      "A function that takes two arguments:
+<ul>
+  <li>argset (named list)</li>
+  <li>schema (named list)</li>
+</ul>
+This function provides a named list to be used as the `data` argument to `action_fn`
+"
+    )
+  ),
+  data.table(
+    Object = glue::glue("action_fn"),
+    Description = glue::glue(
+      "A function that takes three arguments:
+<ul>
+  <li>data (named list, returned from data_selector_fn)</li>
+  <li>argset (named list)</li>
+  <li>schema (named list)</li>
+</ul>
+This is the thing that **'does stuff'** in Sykdomspulsen Core.
+"
+    )
+  ),
+  data.table(
+    Object = glue::glue("sc analysis"),
+    Description = glue::glue(
+      "A `sc analysis` is essentially a `plnr analysis` with database schemas:
+<ul>
+  <li>1 argset</li>
+  <li>1 action_fn</li>
+</ul>
+"
+    )
+  ),
+  data.table(
+    Object = glue::glue("plan"),
+    Description = glue::glue(
+      "
+<ul>
+  <li>1 data-pull (using data_selector_fn)</li>
+  <li>1 list of sc analyses</li>
+</ul>
+"
+    )
+  ),
+  data.table(
+    Object = glue::glue("task"),
+    Description = glue::glue(
+      "
+This is is the unit that Airflow schedules.
+<ul>
+  <li>1 list of plans</li>
+</ul>
+We sometimes run the list of plans in parallel.
+"
+    )
+  )
+))
+tab <- fhiplot::htmltable_quick_style(d, widths = c(20, 80)) %>%
+  htmlTable::htmlTable(
+    rnames = FALSE,
+    align = "|l|l|",
+    align.header = "|l|l|",
+    align.cgroup = "|l|l|",
+    spacer.celltype = "skip",
+    caption = NULL
+  )
+tab
+```
+
+## General tasks
+
+```{r general-tasks, fig.cap="A general task showing the many options of a task.", out.width = "100%", echo = FALSE}
+knitr::include_graphics(system.file("vignette_resources/tasks/task_general.png",package="sc9"))
+```
+
+Figure \@ref(fig:general-tasks) shows us the full potential of a task.
+
+Data can be read from any sources, then within a plan the data will be extracted **once** by `data_selector_fn` (i.e. "one data-pull"). The data will then be provided to each analysis, which will run `action_fn` on:
+
+- The provided data
+- The provided argset
+- The provided schemas
+
+The `action_fn` can then:
+
+- Write data/results to db schemas
+- Send emails
+- Export graphs, excel files, reports, or other physical files
+
+Typically only a subset of this would be done in a single task.
+
+### Plan-heavy or analysis-heavy tasks?
+
+A plan-heavy task is one that has many plans and a few analyses per plan.
+
+An analysis-heavy task is one that has few plans and many analyses per plan.
+
+In general, a data-pull is slow and wastes time. This means that it is preferable to reduce the number of data-pulls performed by having each data-pull extract larger quantities of data. The analysis can then subset the data as required (identifed via argsets). i.e. If possible, an analysis-heavy task is preferable because it will be faster (at the cost of needing more RAM).
+
+Obviously, if a plan's data-pull is larger, it will use more RAM. If you need to conserve RAM, then you should use a plan-heavy approach.
+
+Figure \@ref(fig:general-tasks) shows only 2 location based analyses, but in reality there are 356 municipalities in Norway in 2021. If figure \@ref(fig:general-tasks) had 2 plans (1 for 2021 data, 1 for 2020 data) and 356 analyses for each plan (1 for each location_code) then we would be taking an analysis-heavy approach.
+
+## Putting it together
+
+```{r file-locations, fig.cap="A typical file setup for an implementation of Sykdomspulsen Core. $plan_argset_fn$ is rarely used, and is therefore shown as blacked out in the most of the tasks.", out.width = "100%", echo = FALSE}
+knitr::include_graphics(system.file("vignette_resources/tasks/file_locations.png",package="sc9"))
+```
+
+Figure \@ref(fig:file-locations) shows a typical implementation of Sykdomspulsen Core. 
+
+`config_db.r` contains all of the [Sykdomspulsen Core db schemas](analytics_db_schemas_introduction.html) definitions. i.e. A long list of `sc::add_schema_v8` commands. 
+
+`config_tasks.r` contains all of the task definitions. i.e. A long list of `sc::add_task_from_config_v8` commands.
+
+Then we have a one file for each task that contains the `action_fn`, `data_selector_fn` and other functions that are relevant to the task at hand.
+
+## Weather example
+
+We will now go through an example of how a person would design and implement tasks relating to weather
+
+### db schema
+
+As documented in more detail [here](analytics_db_schemas_introduction.html), we create a db schema that fits our needs (recording weather data).
+
+```{r, out.width = "100%", echo = FALSE}
+knitr::include_graphics(system.file("vignette_resources/tasks/addins_1.png",package="sc9"))
+```
+
+```
+sc9::add_schema_v8(
+  name_access = c("anon"),
+  name_grouping = "example_weather",
+  name_variant = NULL,
+  db_configs = sc::config$db_configs,
+  field_types =  c(
+    "granularity_time" = "TEXT",
+    "granularity_geo" = "TEXT",
+    "country_iso3" = "TEXT",
+    "location_code" = "TEXT",
+    "border" = "INTEGER",
+    "age" = "TEXT",
+    "sex" = "TEXT",
+    
+    "date" = "DATE",
+    
+    "isoyear" = "INTEGER",
+    "isoweek" = "INTEGER",
+    "isoyearweek" = "TEXT",
+    "season" = "TEXT",
+    "seasonweek" = "DOUBLE",
+    
+    "calyear" = "INTEGER",
+    "calmonth" = "INTEGER",
+    "calyearmonth" = "TEXT",
+
+    "tg" = "DOUBLE",
+    "tx" = "DOUBLE",
+    "tn" = "DOUBLE",
+    "rr" = "DOUBLE"
+  ),
+  keys = c(
+    "granularity_time",
+    "location_code",
+    "date",
+    "age",
+    "sex"
+  ),
+  censors = list(
+    anon = list(
+      
+    )
+  ),
+  validator_field_types = sc::validator_field_types_sykdomspulsen,
+  validator_field_contents = sc::validator_field_contents_sykdomspulsen,
+  info = "This db table is used for..."
+)
+```
+
+### task_from_config_v8
+
+To "register" our task, we use the RStudio addin `task_from_config`.
+
+```{r, out.width = "100%", echo = FALSE}
+knitr::include_graphics(system.file("vignette_resources/tasks/addins_2.png",package="sc9"))
+```
+
+
+```
+# tm_run_task("example_weather_import_data_from_api")
+sc::add_task_from_config_v8(
+  name_grouping = "example_weather",
+  name_action = "import_data_from_api",
+  name_variant = NULL,
+  cores = 1,
+  plan_analysis_fn_name = NULL, # "PACKAGE::TASK_NAME_plan_analysis"
+  for_each_plan = plnr::expand_list(
+    location_code = "county03" # fhidata::norway_locations_names()[granularity_geo %in% c("county")]$location_code
+  ),
+  for_each_analysis = NULL,
+  universal_argset = NULL,
+  upsert_at_end_of_each_plan = FALSE,
+  insert_at_end_of_each_plan = FALSE,
+  action_fn_name = "example_weather_import_data_from_api_action",
+  data_selector_fn_name = "example_weather_import_data_from_api_data_selector",
+  schema = list(
+    # input
+
+    # output
+    "anon_example_weather" = sc::config$schemas$anon_example_weather
+  ),
+  info = "This task does..."
+)
+
+```
+
+There are a number of important things in this code that need highlighting.
+
+#### for_each_plan
+
+`for_each_plan` expects a list. Each component of the list will correspond to a plan, with the values added to the argset of all the analyses inside the plan.
+
+For example, the following code would give 4 plans, with 1 analysis per each plan, with each analysis containing `argset$var_1` and `argset$var_2` as appropriate.
+
+```{r, echo=T, eval=F}
+for_each_plan <- list()
+for_each_plan[[1]] <- list(
+  var_1 = 1,
+  var_2 = "a"
+)
+for_each_plan[[2]] <- list(
+  var_1 = 2,
+  var_2 = "b"
+)
+for_each_plan[[3]] <- list(
+  var_1 = 1,
+  var_2 = "a"
+)
+for_each_plan[[4]] <- list(
+  var_1 = 2,
+  var_2 = "b"
+)
+```
+
+You **always** need at least 1 plan. The most simple plan possible is:
+
+```{r, echo=T}
+plnr::expand_list(
+  x = 1
+)
+```
+
+#### plnr::expand_list
+
+`plnr::expand_list` is esentially the same as `expand.grid`, except that its return values are lists instead of data.frame.
+
+The code above could be simplified as follows.
+
+```{r, echo=T}
+for_each_plan <- plnr::expand_list(
+  var_1 = c(1,2),
+  var_2 = c("a", "b")
+)
+for_each_plan
+```
+
+#### for_each_analysis
+
+`for_each_plan` expects a list, which will generate `length(for_each_plan)` plans.
+
+`for_each_analysis` is the same, except it will generate **analyses** within each of the plans.
+
+#### universal_argset
+
+A named list that will add the values to the argset of all the analyses.
+
+#### upsert_at_end_of_each_plan
+
+If `TRUE` and `schema` contains a schema called `output`, then the returned values of `action_fn` will be stored and upserted to `schema$output` at the end of each **plan**.
+
+If `TRUE` and the returned values of `action_fn` are named lists, then the values within the named lists will be stored and upserted to `schema$NAME_FROM_LIST` at the end of each **plan**.
+
+If you choose to upsert/insert manually from within `action_fn`, you can only do so at the end of each **analysis**.
+
+#### insert_at_end_of_each_plan
+
+If `TRUE` and `schema` contains a schema called `output`, then the returned values of `action_fn` will be stored and inserted to `schema$output` at the end of each **plan**.
+
+If `TRUE` and the returned values of `action_fn` are named lists, then the values within the named lists will be stored and inserted to `schema$NAME_FROM_LIST` at the end of each **plan**.
+
+If you choose to upsert/insert manually from within `action_fn`, you can only do so at the end of each **analysis**.
+
+#### action_fn_name
+
+A character string of the action_fn, preferably including the package name.
+
+#### data_selector_fn_name
+
+A character string of the data_selector_fn, preferably including the package name.
+
+#### schema
+
+A named list containing the schemas used in this task.
+
+### data_selector_fn
+
+Use the addins dropdown to easily add in boilerplate code.
+
+```{r, out.width = "100%", echo = FALSE}
+knitr::include_graphics(system.file("vignette_resources/tasks/addins_3.png",package="sc9"))
+```
+
+The `data_selector_fn` is used to extract the data for each plan.
+
+The lines inside `if(plnr::is_run_directly()){` are used to help developers. You can run the code manually/interactively to "load" the values of `argset` and `schema`.
+
+```
+index_plan <- 1
+
+argset <- sc::tm_get_argset("example_weather_import_data_from_api", index_plan = index_plan)
+schema <- sc::tm_get_schema("example_weather_import_data_from_api")
+
+print(argset)
+print(names(schema))
+```
+
+```
+# **** data_selector **** ----
+#' example_weather_import_data_from_api (data selector)
+#' @param argset Argset
+#' @param schema DB Schema
+#' @export
+example_weather_import_data_from_api_data_selector = function(argset, schema){
+  if(plnr::is_run_directly()){
+    # sc::tm_get_plans_argsets_as_dt("example_weather_import_data_from_api")
+
+    index_plan <- 1
+
+    argset <- sc::tm_get_argset("example_weather_import_data_from_api", index_plan = index_plan)
+    schema <- sc::tm_get_schema("example_weather_import_data_from_api")
+  }
+
+  # find the mid lat/long for the specified location_code
+  gps <- fhimaps::norway_nuts3_map_b2020_default_dt[location_code == argset$location_code,.(
+    lat = mean(lat),
+    long = mean(long)
+  )]
+  
+  # download the forecast for the specified location_code
+  d <- httr::GET(glue::glue("https://api.met.no/weatherapi/locationforecast/2.0/classic?lat={gps$lat}&lon={gps$long}"), httr::content_type_xml())
+  d <- xml2::read_xml(d$content)
+
+  # The variable returned must be a named list
+  retval <- list(
+    "data" = d
+  )
+  retval
+}
+```
+
+## action_fn
+
+The lines inside `if(plnr::is_run_directly()){` are used to help developers. You can run the code manually/interactively to "load" the values of `argset` and `schema`.
+
+```
+index_plan <- 1
+index_analysis <- 1
+
+data <- sc::tm_get_data("example_weather_import_data_from_api", index_plan = index_plan)
+argset <- sc::tm_get_argset("example_weather_import_data_from_api", index_plan = index_plan, index_analysis = index_analysis)
+schema <- sc::tm_get_schema("example_weather_import_data_from_api")
+
+print(data)
+print(argset)
+print(names(schema))
+```
+
+```
+# **** action **** ----
+#' example_weather_import_data_from_api (action)
+#' @param data Data
+#' @param argset Argset
+#' @param schema DB Schema
+#' @export
+example_weather_import_data_from_api_action <- function(data, argset, schema) {
+  # tm_run_task("example_weather_import_data_from_api")
+
+  if(plnr::is_run_directly()){
+    # sc::tm_get_plans_argsets_as_dt("example_weather_import_data_from_api")
+
+    index_plan <- 1
+    index_analysis <- 1
+
+    data <- sc::tm_get_data("example_weather_import_data_from_api", index_plan = index_plan)
+    argset <- sc::tm_get_argset("example_weather_import_data_from_api", index_plan = index_plan, index_analysis = index_analysis)
+    schema <- sc::tm_get_schema("example_weather_import_data_from_api")
+  }
+
+  # code goes here
+  # special case that runs before everything
+  if(argset$first_analysis == TRUE){
+
+  }
+  
+  a <- data$data
+  
+  baz <- xml2::xml_find_all(a, ".//maxTemperature")
+  res <- vector("list", length = length(baz))
+  for (i in seq_along(baz)) {
+    parent <- xml2::xml_parent(baz[[i]])
+    grandparent <- xml2::xml_parent(parent)
+    time_from <- xml2::xml_attr(grandparent, "from")
+    time_to <- xml2::xml_attr(grandparent, "to")
+    x <- xml2::xml_find_all(parent, ".//minTemperature")
+    temp_min <- xml2::xml_attr(x, "value")
+    x <- xml2::xml_find_all(parent, ".//maxTemperature")
+    temp_max <- xml2::xml_attr(x, "value")
+    x <- xml2::xml_find_all(parent, ".//precipitation")
+    precip <- xml2::xml_attr(x, "value")
+    res[[i]] <- data.frame(
+      time_from = as.character(time_from),
+      time_to = as.character(time_to),
+      tx = as.numeric(temp_max),
+      tn = as.numeric(temp_min),
+      rr = as.numeric(precip)
+    )
+  }
+  res <- rbindlist(res)
+  res <- res[stringr::str_sub(time_from, 12, 13) %in% c("00", "06", "12", "18")]
+  res[, date := as.Date(stringr::str_sub(time_from, 1, 10))]
+  res[, N := .N, by = date]
+  res <- res[N == 4]
+  res <- res[
+    , 
+    .(
+      tg = NA,
+      tx = max(tx),
+      tn = min(tn),
+      rr = sum(rr)
+    ),
+    keyby = .(date)
+  ]
+  
+  # we look at the downloaded data
+  print("Data after downloading")
+  print(res)
+  
+  # we now need to format it
+  res[, granularity_time := "day"]
+  res[, sex := "total"]
+  res[, age := "total"]
+  res[, location_code := argset$location_code]
+  
+  # fill in missing structural variables
+  sc::fill_in_missing_v8(res, border = 2020)
+  
+  # we look at the downloaded data
+  print("Data after missing structural variables filled in")
+  print(res)
+
+  # put data in db table
+  # schema$SCHEMA_NAME$insert_data(d)
+  schema$anon_example_weather$upsert_data(res)
+  # schema$SCHEMA_NAME$drop_all_rows_and_then_upsert_data(d)
+
+  # special case that runs after everything
+  # copy to anon_web?
+  if(argset$last_analysis == TRUE){
+    # sc::copy_into_new_table_where(
+    #   table_from = "anon_X",
+    #   table_to = "anon_webkht"
+    # )
+  }
+}
+```
+
+## Run the task
+
+```
+tm_run_task("example_weather_import_data_from_api")
+```
+
+## Examples of different types of tasks
+
+### Importing data
+
+```{r, out.width = "100%", echo = FALSE}
+knitr::include_graphics(system.file("vignette_resources/tasks/task_import_data.png",package="sc9"))
+```
+
+```
+sc::add_task_from_config_v8(
+  name_grouping = "example",
+  name_action = "import_data",
+  name_variant = NULL,
+  cores = 1,
+  plan_analysis_fn_name = NULL,
+  for_each_plan = plnr::expand_list(
+    x = 1
+  ),
+  for_each_analysis = NULL,
+  universal_argset = list(
+    folder = sc::path("input", "example")
+  ),
+  upsert_at_end_of_each_plan = FALSE,
+  insert_at_end_of_each_plan = FALSE,
+  action_fn_name = "example_import_data_action",
+  data_selector_fn_name = "example_import_data_data_selector",
+  schema = list(
+    # input
+
+    # output
+    "output" = sc::config$schemas$output
+  ),
+  info = "This task does..."
+)
+```
+
+### Analysis
+
+```{r, out.width = "100%", echo = FALSE}
+knitr::include_graphics(system.file("vignette_resources/tasks/task_analysis.png",package="sc9"))
+```
+
+```
+sc::add_task_from_config_v8(
+  name_grouping = "example",
+  name_action = "analysis",
+  name_variant = NULL,
+  cores = 1,
+  plan_analysis_fn_name = NULL, 
+  for_each_plan = plnr::expand_list(
+    location_code = fhidata::norway_locations_names()[granularity_geo %in% c("county")]$location_code
+  ),
+  for_each_analysis = NULL,
+  universal_argset = NULL,
+  upsert_at_end_of_each_plan = FALSE,
+  insert_at_end_of_each_plan = FALSE,
+  action_fn_name = "example_analysis_action",
+  data_selector_fn_name = "example_analysis_data_selector",
+  schema = list(
+    # input
+    "input" = sc::config$schemas$input,
+
+    # output
+    "output" = sc::config$schemas$output
+  ),
+  info = "This task does..."
+)
+```
+
+### Exporting multiple sets of results
+
+```{r, out.width = "100%", echo = FALSE}
+knitr::include_graphics(system.file("vignette_resources/tasks/task_export_multiple.png",package="sc9"))
+```
+
+```{r, echo=T, eval=F}
+sc::add_task_from_config_v8(
+  name_grouping = "example",
+  name_action = "export_results",
+  name_variant = NULL,
+  cores = 1,
+  plan_analysis_fn_name = NULL, 
+  for_each_plan = plnr::expand_list(
+    location_code = fhidata::norway_locations_names()[granularity_geo %in% c("county")]$location_code
+  ),
+  for_each_analysis = NULL,
+  universal_argset = list(
+    folder = sc::path("output", "example")
+  ),
+  upsert_at_end_of_each_plan = FALSE,
+  insert_at_end_of_each_plan = FALSE,
+  action_fn_name = "example_export_results_action",
+  data_selector_fn_name = "example_export_results_data_selector",
+  schema = list(
+    # input
+    "input" = sc::config$schemas$input
+
+    # output
+  ),
+  info = "This task does..."
+)
+```
+
+### Exporting combined results
+
+```{r, out.width = "100%", echo = FALSE}
+knitr::include_graphics(system.file("vignette_resources/tasks/task_export_combined.png",package="sc9"))
+```
+
+```{r, echo=T, eval=F}
+sc::add_task_from_config_v8(
+  name_grouping = "example",
+  name_action = "export_results",
+  name_variant = NULL,
+  cores = 1,
+  plan_analysis_fn_name = NULL, 
+  for_each_plan = plnr::expand_list(
+    x = 1
+  ),
+  for_each_analysis = NULL,
+  universal_argset = list(
+    folder = sc::path("output", "example"),
+    granularity_geos = c("nation", "county")
+  ),
+  upsert_at_end_of_each_plan = FALSE,
+  insert_at_end_of_each_plan = FALSE,
+  action_fn_name = "example_export_results_action",
+  data_selector_fn_name = "example_export_results_data_selector",
+  schema = list(
+    # input
+    "input" = sc::config$schemas$input
+
+    # output
+  ),
+  info = "This task does..."
+)
+```

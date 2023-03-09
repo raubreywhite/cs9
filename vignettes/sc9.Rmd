@@ -137,7 +137,7 @@ test_data_selector <- function(argset, tables) {
   retval
 }
 
-ss$shortcut_get_plans_argsets_as_dt("a_b")
+#ss$shortcut_get_plans_argsets_as_dt("a_b")
 r <- ss$run_task("a_b")
 
 get_config_data_hash_for_each_plan()

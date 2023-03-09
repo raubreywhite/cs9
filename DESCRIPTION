@@ -29,7 +29,8 @@ Suggests:
     testthat,
     knitr,
     usethis,
-    rmarkdown
+    rmarkdown,
+    fhiplot
 License: GPL-3 + file LICENSE
 LazyData: true
 Roxygen: list(markdown = TRUE)
