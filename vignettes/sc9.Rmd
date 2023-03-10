@@ -1,5 +1,5 @@
 ---
-title: "Tasks"
+title: "Introduction"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{Tasks}
@@ -13,7 +13,7 @@ editor_options:
 
 
 
-# Definitions
+## Definitions
 
 <table class='gmisc_table' style='border-collapse: collapse; width: 100%; border-collapse: separate;' >
 <thead>
@@ -86,13 +86,11 @@ We sometimes run the list of plans in parallel.</td>
 </tbody>
 </table>
 
-# Tasks
+## Tasks
 
 A task is the basic operational unit of sc9. It is based on [plnr](https://www.csids.no/plnr/).
 
 In short, you can think of a task as multiple [plnr plans](https://www.csids.no/plnr/) plus [csdb tables](https://www.csids.no/csdb/reference/DBTable_v9.html).
-
-## second
 
 <figure>
 <img src="sc9-task-general.png" width="100%" />
@@ -506,7 +504,7 @@ tables <- ss$shortcut_get_tables("example_weather_import_data_from_api")
 print(data)
 #> $data
 #> {xml_document}
-#> <weatherdata noNamespaceSchemaLocation="https://schema.api.met.no/schemas/weatherapi-0.4.xsd" created="2023-03-10T05:02:11Z" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+#> <weatherdata noNamespaceSchemaLocation="https://schema.api.met.no/schemas/weatherapi-0.4.xsd" created="2023-03-10T05:35:38Z" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 #> [1] <meta>\n  <model name="met_public_forecast" termin="2023-03-10T05:00:00Z" runended="2023-03-10T ...
 #> [2] <product class="pointData">\n  <time datatype="forecast" from="2023-03-10T05:00:00Z" to="2023-0 ...
 #> 
@@ -683,11 +681,13 @@ example_weather_import_data_from_api_action <- function(data, argset, tables) {
 
 ## Run the task
 
-```
-tm_run_task("example_weather_import_data_from_api")
+
+```r
+ss$run_task("example_weather_import_data_from_api")
+#> Error in eval(expr, envir, enclos): attempt to apply non-function
 ```
 
-## Examples of different types of tasks
+## Different types of tasks
 
 ### Importing data
 

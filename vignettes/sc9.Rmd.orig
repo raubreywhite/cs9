@@ -1,5 +1,5 @@
 ---
-title: "Tasks"
+title: "Introduction"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{Tasks}
@@ -22,7 +22,7 @@ library(data.table)
 library(magrittr)
 ```
 
-# Definitions
+## Definitions
 
 ```{r definitions, echo=FALSE}
 d <- rbindlist(list(
@@ -121,13 +121,11 @@ tab <- fhiplot::htmltable_quick_style(d, widths = c(20, 80)) %>%
 tab
 ```
 
-# Tasks
+## Tasks
 
 A task is the basic operational unit of sc9. It is based on [plnr](https://www.csids.no/plnr/).
 
 In short, you can think of a task as multiple [plnr plans](https://www.csids.no/plnr/) plus [csdb tables](https://www.csids.no/csdb/reference/DBTable_v9.html).
-
-## second
 
 <figure>
 <img src="sc9-task-general.png" width="100%" />
@@ -533,11 +531,11 @@ example_weather_import_data_from_api_action <- function(data, argset, tables) {
 
 ## Run the task
 
-```
-tm_run_task("example_weather_import_data_from_api")
+```{r}
+ss$run_task("example_weather_import_data_from_api")
 ```
 
-## Examples of different types of tasks
+## Different types of tasks
 
 ### Importing data
 
