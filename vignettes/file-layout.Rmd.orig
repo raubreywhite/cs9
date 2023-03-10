@@ -12,7 +12,7 @@ editor_options:
 ```{r, include = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
-  comment = "#>"
+  comment = ""
 )
 options(knitr.kable.NA = '')
 
@@ -44,7 +44,7 @@ https://github.com/csids/sc9example/blob/main/R/01_definitions.R
 
 ```{r, echo=FALSE}
 options(width = 150)
-x <- fhiplot::as_github_code("https://github.com/csids/sc9example/blob/main/R/01_definitions.R.r")
+x <- fhiplot::as_github_code("https://github.com/csids/sc9example/blob/main/R/01_definitions.R")
 print(x, include_url = TRUE)
 ```
 
@@ -88,23 +88,23 @@ x <- fhiplot::as_github_code("https://github.com/csids/sc9example/blob/main/R/05
 print(x, include_url = TRUE)
 ```
 
-## 08_onLoad.r
+## 10_onLoad.r
 
-https://github.com/csids/sc9example/blob/main/R/08_onLoad.R
+https://github.com/csids/sc9example/blob/main/R/10_onLoad.R
 
 ```{r, echo=FALSE}
 options(width = 150)
-x <- fhiplot::as_github_code("https://github.com/csids/sc9example/blob/main/R/08_onLoad.R")
+x <- fhiplot::as_github_code("https://github.com/csids/sc9example/blob/main/R/10_onLoad.R")
 print(x, include_url = TRUE)
 ```
 
-## 09_onAttach.r
+## 11_onAttach.r
 
-https://github.com/csids/sc9example/blob/main/R/09_onAttach.R
+https://github.com/csids/sc9example/blob/main/R/11_onAttach.R
 
 ```{r, echo=FALSE}
 options(width = 150)
-x <- fhiplot::as_github_code("https://github.com/csids/sc9example/blob/main/R/09_onAttach.R")
+x <- fhiplot::as_github_code("https://github.com/csids/sc9example/blob/main/R/11_onAttach.R")
 print(x, include_url = TRUE)
 ```
 
