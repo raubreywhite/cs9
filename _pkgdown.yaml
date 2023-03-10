@@ -22,3 +22,10 @@ authors:
   after: "See the [changelog](news/index.html) for other contributors. :pray:"
   Richard Aubrey White:
     href: "https://www.rwhite.no"
+
+articles:
+- title: Fundamentals
+  navbar: Fundamentals
+  contents:
+  - installation
+  - file-layout
