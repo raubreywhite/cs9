@@ -128,11 +128,11 @@ A task is the basic operational unit of sc9. It is based on [plnr](https://www.c
 In short, you can think of a task as multiple [plnr plans](https://www.csids.no/plnr/) plus [csdb tables](https://www.csids.no/csdb/reference/DBTable_v9.html).
 
 <figure>
-<img src="sc9-task-general.png" width="100%" />
+<img id="figure-1" src="sc9-task-general.png" width="100%" />
 <figcaption>Figure 1. A general task showing the many options of a task.</figcaption>
 </figure>
 
-Figure 1 shows us the full potential of a task.
+<a href="#figure-1">Figure 1</a> shows us the full potential of a task.
 
 Data can be read from any sources, then within a plan the data will be extracted **once** by `data_selector_fn` (i.e. "one data-pull"). The data will then be provided to each analysis, which will run `action_fn` on:
 
@@ -158,16 +158,16 @@ In general, a data-pull is slow and wastes time. This means that it is preferabl
 
 Obviously, if a plan's data-pull is larger, it will use more RAM. If you need to conserve RAM, then you should use a plan-heavy approach.
 
-Figure 1 shows only 2 location based analyses, but in reality there are 356 municipalities in Norway in 2021. If figure 1 had 2 plans (1 for 2021 data, 1 for 2020 data) and 356 analyses for each plan (1 for each location_code) then we would be taking an analysis-heavy approach.
+<a href="#figure-1">Figure 1</a> shows only 2 location based analyses, but in reality there are 356 municipalities in Norway in 2021. If <a href="#figure-1">figure 1</a> had 2 plans (1 for 2021 data, 1 for 2020 data) and 356 analyses for each plan (1 for each location_code) then we would be taking an analysis-heavy approach.
 
 ## Putting it together
 
 <figure>
-<img src="sc9-file-locations.png" width="100%" />
+<img id="figure-2" src="sc9-file-locations.png" width="100%" />
 <figcaption>Figure 2. A typical file setup for an implementation of Surveillance Core 9. $plan_argset_fn$ is rarely used, and is therefore shown as blacked out in the most of the tasks..</figcaption>
 </figure>
 
-Figure 2 shows a typical implementation of Surveillance Core 9.
+<a href="#figure-2">Figure 2</a> shows a typical implementation of Surveillance Core 9.
 
 `config_db.r` contains all of the [Surveillance Core 9 db tables](analytics_db_schemas_introduction.html) definitions. i.e. A long list of `sc::add_schema_v8` commands.
 
@@ -175,13 +175,13 @@ Figure 2 shows a typical implementation of Surveillance Core 9.
 
 Then we have a one file for each task that contains the `action_fn`, `data_selector_fn` and other functions that are relevant to the task at hand.
 
-## Weather example
+## Example
 
 We will now go through an example of how a person would design and implement tasks relating to weather
 
 ### Surveillance system
 
-We begin by creating a surveillance system
+We begin by creating a surveillance system. This is the hub that coordinates everything.
 
 ```{r}
 ss <- sc9::SurveillanceSystem_v9$new()

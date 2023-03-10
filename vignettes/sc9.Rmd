@@ -93,11 +93,11 @@ A task is the basic operational unit of sc9. It is based on [plnr](https://www.c
 In short, you can think of a task as multiple [plnr plans](https://www.csids.no/plnr/) plus [csdb tables](https://www.csids.no/csdb/reference/DBTable_v9.html).
 
 <figure>
-<img src="sc9-task-general.png" width="100%" />
+<img id="figure-1" src="sc9-task-general.png" width="100%" />
 <figcaption>Figure 1. A general task showing the many options of a task.</figcaption>
 </figure>
 
-Figure 1 shows us the full potential of a task.
+<a href="#figure-1">Figure 1</a> shows us the full potential of a task.
 
 Data can be read from any sources, then within a plan the data will be extracted **once** by `data_selector_fn` (i.e. "one data-pull"). The data will then be provided to each analysis, which will run `action_fn` on:
 
@@ -123,16 +123,16 @@ In general, a data-pull is slow and wastes time. This means that it is preferabl
 
 Obviously, if a plan's data-pull is larger, it will use more RAM. If you need to conserve RAM, then you should use a plan-heavy approach.
 
-Figure 1 shows only 2 location based analyses, but in reality there are 356 municipalities in Norway in 2021. If figure 1 had 2 plans (1 for 2021 data, 1 for 2020 data) and 356 analyses for each plan (1 for each location_code) then we would be taking an analysis-heavy approach.
+<a href="#figure-1">Figure 1</a> shows only 2 location based analyses, but in reality there are 356 municipalities in Norway in 2021. If <a href="#figure-1">figure 1</a> had 2 plans (1 for 2021 data, 1 for 2020 data) and 356 analyses for each plan (1 for each location_code) then we would be taking an analysis-heavy approach.
 
 ## Putting it together
 
 <figure>
-<img src="sc9-file-locations.png" width="100%" />
+<img id="figure-2" src="sc9-file-locations.png" width="100%" />
 <figcaption>Figure 2. A typical file setup for an implementation of Surveillance Core 9. $plan_argset_fn$ is rarely used, and is therefore shown as blacked out in the most of the tasks..</figcaption>
 </figure>
 
-Figure 2 shows a typical implementation of Surveillance Core 9.
+<a href="#figure-2">Figure 2</a> shows a typical implementation of Surveillance Core 9.
 
 `config_db.r` contains all of the [Surveillance Core 9 db tables](analytics_db_schemas_introduction.html) definitions. i.e. A long list of `sc::add_schema_v8` commands.
 
@@ -140,13 +140,13 @@ Figure 2 shows a typical implementation of Surveillance Core 9.
 
 Then we have a one file for each task that contains the `action_fn`, `data_selector_fn` and other functions that are relevant to the task at hand.
 
-## Weather example
+## Example
 
 We will now go through an example of how a person would design and implement tasks relating to weather
 
 ### Surveillance system
 
-We begin by creating a surveillance system
+We begin by creating a surveillance system. This is the hub that coordinates everything.
 
 
 ```r
@@ -497,15 +497,16 @@ index_plan <- 1
 index_analysis <- 1
 
 data <- ss$shortcut_get_data("example_weather_import_data_from_api", index_plan = index_plan)
+#> Creating table anon_example_weather
 argset <- ss$shortcut_get_argset("example_weather_import_data_from_api", index_plan = index_plan, index_analysis = index_analysis)
 tables <- ss$shortcut_get_tables("example_weather_import_data_from_api")
 
 print(data)
 #> $data
 #> {xml_document}
-#> <weatherdata noNamespaceSchemaLocation="https://schema.api.met.no/schemas/weatherapi-0.4.xsd" created="2023-03-10T05:35:38Z" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-#> [1] <meta>\n  <model name="met_public_forecast" termin="2023-03-10T05:00:00Z" runended="2023-03-10T ...
-#> [2] <product class="pointData">\n  <time datatype="forecast" from="2023-03-10T05:00:00Z" to="2023-0 ...
+#> <weatherdata noNamespaceSchemaLocation="https://schema.api.met.no/schemas/weatherapi-0.4.xsd" created="2023-03-10T06:06:15Z" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+#> [1] <meta>\n  <model name="met_public_forecast" termin="2023-03-10T06:00:00Z" runended="2023-03-10T ...
+#> [2] <product class="pointData">\n  <time datatype="forecast" from="2023-03-10T06:00:00Z" to="2023-0 ...
 #> 
 #> $hash
 #> $hash$current
@@ -683,7 +684,66 @@ example_weather_import_data_from_api_action <- function(data, argset, tables) {
 
 ```r
 ss$run_task("example_weather_import_data_from_api")
-#> Error in eval(expr, envir, enclos): attempt to apply non-function
+#> task: example_weather_import_data_from_api
+#> Running task=example_weather_import_data_from_api with plans=1 and analyses=1
+#> plans=sequential, argset=sequential with cores=1
+#> Creating table config_data_hash_for_each_plan
+#> [1] "Data after downloading"
+#>          date tg   tx    tn
+#> 1: 2023-03-11 NA  0.9 -10.2
+#> 2: 2023-03-12 NA  1.4  -9.5
+#> 3: 2023-03-13 NA  0.2  -8.7
+#> 4: 2023-03-14 NA -0.1  -2.6
+#> 5: 2023-03-15 NA  3.1  -4.8
+#> 6: 2023-03-16 NA  1.3  -7.2
+#> 7: 2023-03-17 NA  2.0  -2.7
+#> 8: 2023-03-18 NA  4.1  -1.0
+#> 9: 2023-03-19 NA  3.4  -3.9
+#> [1] "Data after missing structural variables filled in"
+#>             [unified]         [unified]      [unified]       [unified]   [unified]     [unified]
+#>           <character>       <character>    <character>     <character>   <integer>   <character>
+#>                NA=0 %            NA=0 %         NA=0 %          NA=0 %      NA=0 %        NA=0 %
+#>      granularity_time   granularity_geo   country_iso3   location_code      border           age
+#> 1:                day            county            nor        county03        2020         total
+#> 2:                day            county            nor        county03        2020         total
+#> 3:                day            county            nor        county03        2020         total
+#> 4:                day            county            nor        county03        2020         total
+#> 5:                day            county            nor        county03        2020         total
+#> 6:                day            county            nor        county03        2020         total
+#> 7:                day            county            nor        county03        2020         total
+#> 8:                day            county            nor        county03        2020         total
+#> 9:                day            county            nor        county03        2020         total
+#> 
+#>        [unified]   [unified]   [unified]     [unified]     [unified]    [unified]   [unified]
+#>      <character>   <integer>   <integer>   <character>   <character>    <numeric>   <integer>
+#>           NA=0 %      NA=0 %      NA=0 %        NA=0 %        NA=0 %       NA=0 %      NA=0 %
+#>              sex     isoyear     isoweek   isoyearweek        season   seasonweek     calyear
+#> 1:         total        2023          10       2023-10     2022/2023           33        2023
+#> 2:         total        2023          10       2023-10     2022/2023           33        2023
+#> 3:         total        2023          11       2023-11     2022/2023           34        2023
+#> 4:         total        2023          11       2023-11     2022/2023           34        2023
+#> 5:         total        2023          11       2023-11     2022/2023           34        2023
+#> 6:         total        2023          11       2023-11     2022/2023           34        2023
+#> 7:         total        2023          11       2023-11     2022/2023           34        2023
+#> 8:         total        2023          11       2023-11     2022/2023           34        2023
+#> 9:         total        2023          11       2023-11     2022/2023           34        2023
+#> 
+#>      [unified]      [unified]    [unified]   [context]   [context]   [context]
+#>      <integer>    <character>       <Date>   <logical>   <numeric>   <numeric>
+#>         NA=0 %         NA=0 %       NA=0 %    NA=100 %      NA=0 %      NA=0 %
+#>       calmonth   calyearmonth         date          tg          tx          tn
+#> 1:           3       2023-M03   2023-03-11          NA         0.9       -10.2
+#> 2:           3       2023-M03   2023-03-12          NA         1.4        -9.5
+#> 3:           3       2023-M03   2023-03-13          NA         0.2        -8.7
+#> 4:           3       2023-M03   2023-03-14          NA        -0.1        -2.6
+#> 5:           3       2023-M03   2023-03-15          NA         3.1        -4.8
+#> 6:           3       2023-M03   2023-03-16          NA         1.3        -7.2
+#> 7:           3       2023-M03   2023-03-17          NA           2        -2.7
+#> 8:           3       2023-M03   2023-03-18          NA         4.1          -1
+#> 9:           3       2023-M03   2023-03-19          NA         3.4        -3.9
+#> Creating table config_tables_last_updated
+#> Task ran in 0 mins
+#> Creating table config_tasks_stats
 ```
 
 ## Different types of tasks
