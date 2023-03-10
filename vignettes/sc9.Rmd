@@ -95,7 +95,7 @@ In short, you can think of a task as multiple [plnr plans](https://www.csids.no/
 ## second
 
 <figure>
-<img src="tasks-task-general.png" width="100%" />
+<img src="sc9-task-general.png" width="100%" />
 <figcaption>Figure 1. A general task showing the many options of a task.</figcaption>
 </figure>
 
@@ -691,7 +691,7 @@ tm_run_task("example_weather_import_data_from_api")
 
 ### Importing data
 
-<img src="tasks-task-import-data.png" width="100%" />
+<img src="sc9-task-import-data.png" width="100%" />
 
 ```
 ss$add_task(
@@ -723,7 +723,7 @@ ss$add_task(
 
 ### Analysis
 
-<img src="tasks-task-analysis.png" width="100%" />
+<img src="sc9-task-analysis.png" width="100%" />
 
 ```
 sc::add_task_from_config_v8(
@@ -754,7 +754,7 @@ sc::add_task_from_config_v8(
 
 ### Exporting multiple sets of results
 
-<img src="tasks-task-export-multiple-results.png" width="100%" />
+<img src="sc9-task-export-multiple-results.png" width="100%" />
 
 
 ```r
@@ -787,7 +787,7 @@ sc::add_task_from_config_v8(
 
 ### Exporting combined results
 
-<img src="tasks-task-export-combined-results.png" width="100%" />
+<img src="sc9-task-export-combined-results.png" width="100%" />
 
 
 ```r
