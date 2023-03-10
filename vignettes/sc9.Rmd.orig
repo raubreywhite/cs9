@@ -169,7 +169,7 @@ Figure 1 shows only 2 location based analyses, but in reality there are 356 muni
 
 Figure 2 shows a typical implementation of Surveillance Core 9.
 
-`config_db.r` contains all of the [Surveillance Core 9 db schemas](analytics_db_schemas_introduction.html) definitions. i.e. A long list of `sc::add_schema_v8` commands.
+`config_db.r` contains all of the [Surveillance Core 9 db tables](analytics_db_schemas_introduction.html) definitions. i.e. A long list of `sc::add_schema_v8` commands.
 
 `config_tasks.r` contains all of the task definitions. i.e. A long list of `sc::add_task_from_config_v8` commands.
 
@@ -187,9 +187,9 @@ We begin by creating a surveillance system
 ss <- sc9::SurveillanceSystem_v9$new()
 ```
 
-### db schema
+### add_table
 
-As documented in more detail [here](analytics_db_schemas_introduction.html), we create a db schema that fits our needs (recording weather data).
+As documented in more detail [here](analytics_db_schemas_introduction.html), we create a database table that fits our needs (recording weather data), and we then add it to the surveillance system.
 
 ```{r, out.width = "100%", echo = FALSE}
 knitr::include_graphics(system.file("vignette_resources/tasks/addins_1.png",package="sc9"))
@@ -237,14 +237,13 @@ ss$add_table(
 )
 ```
 
-### task_from_config_v8
+### add_task
 
 To "register" our task, we use the RStudio addin `task_from_config`.
 
 ```{r, out.width = "100%", echo = FALSE}
 knitr::include_graphics(system.file("vignette_resources/tasks/addins_2.png",package="sc9"))
 ```
-
 
 ```{r}
 # tm_run_task("example_weather_import_data_from_api")
@@ -334,17 +333,17 @@ A named list that will add the values to the argset of all the analyses.
 
 #### upsert_at_end_of_each_plan
 
-If `TRUE` and `schema` contains a schema called `output`, then the returned values of `action_fn` will be stored and upserted to `schema$output` at the end of each **plan**.
+If `TRUE` and `tables` contains a table called `output`, then the returned values of `action_fn` will be stored and upserted to `tables$output` at the end of each **plan**.
 
-If `TRUE` and the returned values of `action_fn` are named lists, then the values within the named lists will be stored and upserted to `schema$NAME_FROM_LIST` at the end of each **plan**.
+If `TRUE` and the returned values of `action_fn` are named lists, then the values within the named lists will be stored and upserted to `tables$NAME_FROM_LIST` at the end of each **plan**.
 
 If you choose to upsert/insert manually from within `action_fn`, you can only do so at the end of each **analysis**.
 
 #### insert_at_end_of_each_plan
 
-If `TRUE` and `schema` contains a schema called `output`, then the returned values of `action_fn` will be stored and inserted to `schema$output` at the end of each **plan**.
+If `TRUE` and `tables` contains a table called `output`, then the returned values of `action_fn` will be stored and inserted to `tables$output` at the end of each **plan**.
 
-If `TRUE` and the returned values of `action_fn` are named lists, then the values within the named lists will be stored and inserted to `schema$NAME_FROM_LIST` at the end of each **plan**.
+If `TRUE` and the returned values of `action_fn` are named lists, then the values within the named lists will be stored and inserted to `tables$NAME_FROM_LIST` at the end of each **plan**.
 
 If you choose to upsert/insert manually from within `action_fn`, you can only do so at the end of each **analysis**.
 
@@ -386,7 +385,7 @@ print(tables)
 # **** data_selector **** ----
 #' example_weather_import_data_from_api (data selector)
 #' @param argset Argset
-#' @param schema DB Schema
+#' @param tables DB tables
 #' @export
 example_weather_import_data_from_api_data_selector = function(argset, tables){
   if(plnr::is_run_directly()){
@@ -416,7 +415,7 @@ example_weather_import_data_from_api_data_selector = function(argset, tables){
 }
 ```
 
-## action_fn
+### action_fn
 
 The lines inside `if(plnr::is_run_directly()){` are used to help developers. You can run the code manually/interactively to "load" the values of `argset` and `schema`.
 
@@ -438,7 +437,7 @@ print(tables)
 #' example_weather_import_data_from_api (action)
 #' @param data Data
 #' @param argset Argset
-#' @param schema DB Schema
+#' @param tables DB tables
 #' @export
 example_weather_import_data_from_api_action <- function(data, argset, tables) {
   # tm_run_task("example_weather_import_data_from_api")
@@ -514,22 +513,22 @@ example_weather_import_data_from_api_action <- function(data, argset, tables) {
   print(res)
 
   # put data in db table
-  # schema$SCHEMA_NAME$insert_data(d)
+  # tables$TABLE_NAME$insert_data(d)
   tables$anon_example_weather$upsert_data(res)
-  # schema$SCHEMA_NAME$drop_all_rows_and_then_upsert_data(d)
+  # tables$TABLE_NAME$drop_all_rows_and_then_upsert_data(d)
 
   # special case that runs after everything
   # copy to anon_web?
   if(argset$last_analysis == TRUE){
     # sc::copy_into_new_table_where(
     #   table_from = "anon_X",
-    #   table_to = "anon_webkht"
+    #   table_to = "anon_web_X"
     # )
   }
 }
 ```
 
-## Run the task
+### Run the task
 
 ```{r}
 ss$run_task("example_weather_import_data_from_api")
@@ -541,7 +540,7 @@ ss$run_task("example_weather_import_data_from_api")
 
 <img src="sc9-task-import-data.png" width="100%" />
 
-```
+```{r, echo=T, eval=F}
 ss$add_task(
   name_grouping = "example",
   name_action = "import_data",
@@ -553,7 +552,7 @@ ss$add_task(
   ),
   for_each_analysis = NULL,
   universal_argset = list(
-    # folder = sc9::path("input", "example")
+    folder = sc9::path("input", "example")
   ),
   upsert_at_end_of_each_plan = FALSE,
   insert_at_end_of_each_plan = FALSE,
@@ -564,8 +563,7 @@ ss$add_task(
 
     # output
     "output" = ss$tables$output
-  ),
-  info = "This task does..."
+  )
 )
 ```
 
@@ -573,15 +571,15 @@ ss$add_task(
 
 <img src="sc9-task-analysis.png" width="100%" />
 
-```
-sc::add_task_from_config_v8(
+```{r, echo=T, eval=F}
+ss$add_task(
   name_grouping = "example",
   name_action = "analysis",
   name_variant = NULL,
   cores = 1,
   plan_analysis_fn_name = NULL,
   for_each_plan = plnr::expand_list(
-    location_code = fhidata::norway_locations_names()[granularity_geo %in% c("county")]$location_code
+    location_code = csdata::nor_locations_names()[granularity_geo %in% c("county")]$location_code
   ),
   for_each_analysis = NULL,
   universal_argset = NULL,
@@ -589,14 +587,13 @@ sc::add_task_from_config_v8(
   insert_at_end_of_each_plan = FALSE,
   action_fn_name = "example_analysis_action",
   data_selector_fn_name = "example_analysis_data_selector",
-  schema = list(
+  tables = list(
     # input
-    "input" = sc::config$schemas$input,
+    "input" = ss$tables$input,
 
     # output
-    "output" = sc::config$schemas$output
-  ),
-  info = "This task does..."
+    "output" = ss$tables
+  )
 )
 ```
 
@@ -605,18 +602,18 @@ sc::add_task_from_config_v8(
 <img src="sc9-task-export-multiple-results.png" width="100%" />
 
 ```{r, echo=T, eval=F}
-sc::add_task_from_config_v8(
+ss$add_task(
   name_grouping = "example",
   name_action = "export_results",
   name_variant = NULL,
   cores = 1,
   plan_analysis_fn_name = NULL,
   for_each_plan = plnr::expand_list(
-    location_code = fhidata::norway_locations_names()[granularity_geo %in% c("county")]$location_code
+    location_code = csdata::nor_locations_names()[granularity_geo %in% c("county")]$location_code
   ),
   for_each_analysis = NULL,
   universal_argset = list(
-    folder = sc::path("output", "example")
+    folder = sc9::path("output", "example")
   ),
   upsert_at_end_of_each_plan = FALSE,
   insert_at_end_of_each_plan = FALSE,
@@ -624,11 +621,10 @@ sc::add_task_from_config_v8(
   data_selector_fn_name = "example_export_results_data_selector",
   tables = list(
     # input
-    "input" = sc::config$schemas$input
+    "input" = ss$tables$input
 
     # output
-  ),
-  info = "This task does..."
+  )
 )
 ```
 
@@ -637,7 +633,7 @@ sc::add_task_from_config_v8(
 <img src="sc9-task-export-combined-results.png" width="100%" />
 
 ```{r, echo=T, eval=F}
-sc::add_task_from_config_v8(
+ss$tables(
   name_grouping = "example",
   name_action = "export_results",
   name_variant = NULL,
@@ -648,19 +644,18 @@ sc::add_task_from_config_v8(
   ),
   for_each_analysis = NULL,
   universal_argset = list(
-    folder = sc::path("output", "example"),
+    folder = sc9::path("output", "example"),
     granularity_geos = c("nation", "county")
   ),
   upsert_at_end_of_each_plan = FALSE,
   insert_at_end_of_each_plan = FALSE,
   action_fn_name = "example_export_results_action",
   data_selector_fn_name = "example_export_results_data_selector",
-  schema = list(
+  tables = list(
     # input
-    "input" = sc::config$schemas$input
+    "input" = ss$tables$input
 
     # output
-  ),
-  info = "This task does..."
+  )
 )
 ```
