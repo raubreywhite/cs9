@@ -20,7 +20,7 @@ library(data.table)
 library(magrittr)
 ```
 
-Implementing Surveillance Core 9 requires a number of functions to be called in the correct order. To make this as simple as possible, we have provided a skeleton implementation at https://github.com/csids/sc9example/
+Implementing sc9 requires a number of functions to be called in the correct order. To make this as simple as possible, we have provided a skeleton implementation at https://github.com/csids/sc9example/
 
 We suggest that you clone this GitHub repo to your server, and then do a global find/replace on `sc9example` with the name you want for your R package.
 
@@ -56,7 +56,7 @@ x <- fhiplot::as_github_code("https://github.com/csids/sc9example/blob/main/R/02
 print(x, include_url = TRUE)
 ```
 
-## 03_tables.r
+## 03_tables.R
 
 https://github.com/csids/sc9example/blob/main/R/03_tables.R
 
@@ -66,7 +66,7 @@ x <- fhiplot::as_github_code("https://github.com/csids/sc9example/blob/main/R/03
 print(x, include_url = TRUE)
 ```
 
-## 04_tasks.r
+## 04_tasks.R
 
 https://github.com/csids/sc9example/blob/main/R/04_tasks.R
 
@@ -86,7 +86,7 @@ x <- fhiplot::as_github_code("https://github.com/csids/sc9example/blob/main/R/05
 print(x, include_url = TRUE)
 ```
 
-## 10_onLoad.r
+## 10_onLoad.R
 
 https://github.com/csids/sc9example/blob/main/R/10_onLoad.R
 
@@ -96,7 +96,7 @@ x <- fhiplot::as_github_code("https://github.com/csids/sc9example/blob/main/R/10
 print(x, include_url = TRUE)
 ```
 
-## 11_onAttach.r
+## 11_onAttach.R
 
 https://github.com/csids/sc9example/blob/main/R/11_onAttach.R
 
@@ -108,9 +108,9 @@ print(x, include_url = TRUE)
 
 ## Task files
 
-Task files are placed in .r files under their own names.
+Task files are placed in .R files under their own names.
 
-### weather_download_and_import_rawdata.r
+### weather_download_and_import_rawdata.R
 
 https://github.com/csids/sc9example/blob/main/R/weather_download_and_import_rawdata.R
 
@@ -120,7 +120,7 @@ x <- fhiplot::as_github_code("https://github.com/csids/sc9example/blob/main/R/we
 print(x, include_url = TRUE)
 ```
 
-### weather_clean_data.r
+### weather_clean_data.R
 
 https://github.com/csids/sc9example/blob/main/R/weather_clean_data.R
 ```{r, echo=FALSE}
@@ -129,7 +129,7 @@ x <- fhiplot::as_github_code("https://github.com/csids/sc9example/blob/main/R/we
 print(x, include_url = TRUE)
 ```
 
-### weather_export_weather_plots.r
+### weather_export_weather_plots.R
 
 https://github.com/csids/sc9example/blob/main/R/weather_export_plots.R
 
