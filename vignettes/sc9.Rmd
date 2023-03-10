@@ -1,35 +1,176 @@
 ---
-title: "sc9"
+title: "Tasks"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{sc9}
+  %\VignetteIndexEntry{Tasks}
   %\VignetteEncoding{UTF-8}
   %\VignetteEngine{knitr::rmarkdown}
-editor_options: 
+editor_options:
   chunk_output_type: console
 ---
 
-```{r, include = FALSE}
-knitr::opts_chunk$set(
-  collapse = TRUE,
-  comment = "#>"
-)
-```
 
-http://github.com/csids/sc9example is an example surveillance system that can be used as a template.
 
-```
-library(sc9)
 
+
+# Definitions
+
+<table class='gmisc_table' style='border-collapse: collapse; width: 100%; border-collapse: separate;' >
+<thead>
+<tr>
+<th style='font-size: 16px; font-weight: bold; border-top: 2px solid grey; border-bottom: 1px solid grey; border-left: 1px solid black; border-right: 1px solid black; text-align: left;'>Object</th>
+<th style='font-size: 16px; font-weight: bold; border-top: 2px solid grey; border-bottom: 1px solid grey; border-right: 1px solid black; text-align: left;'>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style='padding-left: .4em; padding-right: .2em; padding-top: .4em; padding-bottom: .4em; font-size: 14px; border-bottom: 1px dashed grey; width: 20%; border-left: 1px solid black; border-right: 1px solid black; text-align: left;'>argset</td>
+<td style='padding-left: .4em; padding-right: .2em; padding-top: .4em; padding-bottom: .4em; font-size: 14px; border-bottom: 1px dashed grey; width: 80%; border-right: 1px solid black; text-align: left;'>A named list containing arguments.</td>
+</tr>
+<tr>
+<td style='padding-left: .4em; padding-right: .2em; padding-top: .4em; padding-bottom: .4em; font-size: 14px; border-bottom: 1px dashed grey; width: 20%; border-left: 1px solid black; border-right: 1px solid black; text-align: left;'>plnr analysis</td>
+<td style='padding-left: .4em; padding-right: .2em; padding-top: .4em; padding-bottom: .4em; font-size: 14px; border-bottom: 1px dashed grey; width: 80%; border-right: 1px solid black; text-align: left;'>These are the fundamental units that are scheduled in plnr:
+<ul>
+  <li>1 argset</li>
+  <li>1 function that takes two (or more) arguments:
+    <ul>
+      <li>data (named list)</li>
+      <li>argset (named list)</li>
+      <li>... (optional arguments)</li>
+    </ul>
+  </li>
+</ul></td>
+</tr>
+<tr>
+<td style='padding-left: .4em; padding-right: .2em; padding-top: .4em; padding-bottom: .4em; font-size: 14px; border-bottom: 1px dashed grey; width: 20%; border-left: 1px solid black; border-right: 1px solid black; text-align: left;'>data_selector_fn</td>
+<td style='padding-left: .4em; padding-right: .2em; padding-top: .4em; padding-bottom: .4em; font-size: 14px; border-bottom: 1px dashed grey; width: 80%; border-right: 1px solid black; text-align: left;'>A function that takes two arguments:
+<ul>
+  <li>argset (named list)</li>
+  <li>tables (named list)</li>
+</ul>
+This function provides a named list to be used as the `data` argument to `action_fn`</td>
+</tr>
+<tr>
+<td style='padding-left: .4em; padding-right: .2em; padding-top: .4em; padding-bottom: .4em; font-size: 14px; border-bottom: 1px dashed grey; width: 20%; border-left: 1px solid black; border-right: 1px solid black; text-align: left;'>action_fn</td>
+<td style='padding-left: .4em; padding-right: .2em; padding-top: .4em; padding-bottom: .4em; font-size: 14px; border-bottom: 1px dashed grey; width: 80%; border-right: 1px solid black; text-align: left;'>A function that takes three arguments:
+<ul>
+  <li>data (named list, returned from data_selector_fn)</li>
+  <li>argset (named list)</li>
+  <li>tables (named list)</li>
+</ul>
+This is the thing that **'does stuff'** in Surveillance Core 9.</td>
+</tr>
+<tr>
+<td style='padding-left: .4em; padding-right: .2em; padding-top: .4em; padding-bottom: .4em; font-size: 14px; border-bottom: 1px dashed grey; width: 20%; border-left: 1px solid black; border-right: 1px solid black; text-align: left;'>sc analysis</td>
+<td style='padding-left: .4em; padding-right: .2em; padding-top: .4em; padding-bottom: .4em; font-size: 14px; border-bottom: 1px dashed grey; width: 80%; border-right: 1px solid black; text-align: left;'>A `sc analysis` is essentially a `plnr analysis` with database tables:
+<ul>
+  <li>1 argset</li>
+  <li>1 action_fn</li>
+</ul></td>
+</tr>
+<tr>
+<td style='padding-left: .4em; padding-right: .2em; padding-top: .4em; padding-bottom: .4em; font-size: 14px; border-bottom: 1px dashed grey; width: 20%; border-left: 1px solid black; border-right: 1px solid black; text-align: left;'>plan</td>
+<td style='padding-left: .4em; padding-right: .2em; padding-top: .4em; padding-bottom: .4em; font-size: 14px; border-bottom: 1px dashed grey; width: 80%; border-right: 1px solid black; text-align: left;'><ul>
+  <li>1 data-pull (using data_selector_fn)</li>
+  <li>1 list of sc analyses</li>
+</ul></td>
+</tr>
+<tr>
+<td style='padding-left: .4em; padding-right: .2em; padding-top: .4em; padding-bottom: .4em; font-size: 14px; border-bottom: 2px solid grey; width: 20%; border-left: 1px solid black; border-right: 1px solid black; text-align: left;'>task</td>
+<td style='padding-left: .4em; padding-right: .2em; padding-top: .4em; padding-bottom: .4em; font-size: 14px; border-bottom: 2px solid grey; width: 80%; border-right: 1px solid black; text-align: left;'>This is is the unit that Airflow schedules.
+<ul>
+  <li>1 list of plans</li>
+</ul>
+We sometimes run the list of plans in parallel.</td>
+</tr>
+</tbody>
+</table>
+
+# Tasks
+
+A task is the basic operational unit of sc9. It is based on [plnr](https://www.csids.no/plnr/).
+
+In short, you can think of a task as multiple [plnr plans](https://www.csids.no/plnr/) plus [csdb tables](https://www.csids.no/csdb/reference/DBTable_v9.html).
+
+## second
+
+<figure>
+<img src="tasks-task-general.png" width="100%" />
+<figcaption>Figure 1. A general task showing the many options of a task.</figcaption>
+</figure>
+
+Figure 1 shows us the full potential of a task.
+
+Data can be read from any sources, then within a plan the data will be extracted **once** by `data_selector_fn` (i.e. "one data-pull"). The data will then be provided to each analysis, which will run `action_fn` on:
+
+- The provided data
+- The provided argset
+- The provided tables
+
+The `action_fn` can then:
+
+- Write data/results to db tables
+- Send emails
+- Export graphs, excel files, reports, or other physical files
+
+Typically only a subset of this would be done in a single task.
+
+### Plan-heavy or analysis-heavy tasks?
+
+A plan-heavy task is one that has many plans and a few analyses per plan.
+
+An analysis-heavy task is one that has few plans and many analyses per plan.
+
+In general, a data-pull is slow and wastes time. This means that it is preferable to reduce the number of data-pulls performed by having each data-pull extract larger quantities of data. The analysis can then subset the data as required (identifed via argsets). i.e. If possible, an analysis-heavy task is preferable because it will be faster (at the cost of needing more RAM).
+
+Obviously, if a plan's data-pull is larger, it will use more RAM. If you need to conserve RAM, then you should use a plan-heavy approach.
+
+Figure 1 shows only 2 location based analyses, but in reality there are 356 municipalities in Norway in 2021. If figure 1 had 2 plans (1 for 2021 data, 1 for 2020 data) and 356 analyses for each plan (1 for each location_code) then we would be taking an analysis-heavy approach.
+
+## Putting it together
+
+<figure>
+<img src="sc9-file-locations.png" width="100%" />
+<figcaption>Figure 2. A typical file setup for an implementation of Surveillance Core 9. $plan_argset_fn$ is rarely used, and is therefore shown as blacked out in the most of the tasks..</figcaption>
+</figure>
+
+Figure 2 shows a typical implementation of Surveillance Core 9.
+
+`config_db.r` contains all of the [Surveillance Core 9 db schemas](analytics_db_schemas_introduction.html) definitions. i.e. A long list of `sc::add_schema_v8` commands.
+
+`config_tasks.r` contains all of the task definitions. i.e. A long list of `sc::add_task_from_config_v8` commands.
+
+Then we have a one file for each task that contains the `action_fn`, `data_selector_fn` and other functions that are relevant to the task at hand.
+
+## Weather example
+
+We will now go through an example of how a person would design and implement tasks relating to weather
+
+### Surveillance system
+
+We begin by creating a surveillance system
+
+
+```r
 ss <- sc9::SurveillanceSystem_v9$new()
-ss$tables
-ss$tasks
+```
 
+### db schema
+
+As documented in more detail [here](analytics_db_schemas_introduction.html), we create a db schema that fits our needs (recording weather data).
+
+
+```
+#> Error in knitr::include_graphics(system.file("vignette_resources/tasks/addins_1.png", : Cannot find the file(s): ""
+```
+
+
+```r
 ss$add_table(
-  name_access = "anon",
-  name_grouping = "test",
+  name_access = c("anon"),
+  name_grouping = "example_weather",
   name_variant = NULL,
-  field_types = c(
+  field_types =  c(
     "granularity_time" = "TEXT",
     "granularity_geo" = "TEXT",
     "country_iso3" = "TEXT",
@@ -37,17 +178,22 @@ ss$add_table(
     "border" = "INTEGER",
     "age" = "TEXT",
     "sex" = "TEXT",
+
     "isoyear" = "INTEGER",
     "isoweek" = "INTEGER",
     "isoyearweek" = "TEXT",
     "season" = "TEXT",
     "seasonweek" = "DOUBLE",
+
     "calyear" = "INTEGER",
     "calmonth" = "INTEGER",
     "calyearmonth" = "TEXT",
+
     "date" = "DATE",
-    "covid19_cases_testdate_n" = "INTEGER",
-    "covid19_cases_testdate_pr100000" = "DOUBLE"
+
+    "tg" = "DOUBLE",
+    "tx" = "DOUBLE",
+    "tn" = "DOUBLE"
   ),
   keys = c(
     "granularity_time",
@@ -56,79 +202,285 @@ ss$add_table(
     "age",
     "sex"
   ),
-  indexes = list(
-    "ind1" = c("granularity_time", "granularity_geo", "country_iso3", "location_code", "border", "age", "sex", "date", "isoyear", "isoweek", "isoyearweek")
-  ),
   validator_field_types = csdb::validator_field_types_csfmt_rts_data_v1,
   validator_field_contents = csdb::validator_field_contents_csfmt_rts_data_v1
 )
+```
 
-ss$tables$anon_test$tbl()
-ss$tables$anon_test$upsert_data(csdb::nor_covid19_cases_by_time_location)
-ss$tables$anon_test$tbl() %>% colnames()
-print(ss$tables$anon_test$tbl(), n = 2, width=10000)
+### task_from_config_v8
 
+To "register" our task, we use the RStudio addin `task_from_config`.
+
+
+```
+#> Error in knitr::include_graphics(system.file("vignette_resources/tasks/addins_2.png", : Cannot find the file(s): ""
+```
+
+
+
+```r
+# tm_run_task("example_weather_import_data_from_api")
 ss$add_task(
-  name_grouping = "a",
-  name_action = "b",
+  name_grouping = "example_weather",
+  name_action = "import_data_from_api",
   name_variant = NULL,
   cores = 1,
-  plan_analysis_fn_name = NULL,
+  plan_analysis_fn_name = NULL, # "PACKAGE::TASK_NAME_plan_analysis"
   for_each_plan = plnr::expand_list(
-    x = 1
+    location_code = "county03" # fhidata::norway_locations_names()[granularity_geo %in% c("county")]$location_code
   ),
   for_each_analysis = NULL,
   universal_argset = NULL,
   upsert_at_end_of_each_plan = FALSE,
   insert_at_end_of_each_plan = FALSE,
-  action_fn_name = "test_action",
-  data_selector_fn_name = "test_data_selector",
+  action_fn_name = "example_weather_import_data_from_api_action",
+  data_selector_fn_name = "example_weather_import_data_from_api_data_selector",
   tables = list(
     # input
 
     # output
-    "test" = ss$tables$anon_test
+    "anon_example_weather" = ss$tables$anon_example_weather
   )
 )
+```
 
-test_action <- function(data, argset, tables) {
-  # tm_run_task("skuhr_create_alerts")
-  # Rscript -e '.libPaths("/home/RIWH/R/x86_64-pc-linux-gnu-library/4.0");analytics::tm_run_task("skuhr_create_alerts")'
+There are a number of important things in this code that need highlighting.
 
-  if (plnr::is_run_directly()) {
-    # sc8::tm_get_plans_argsets_as_dt("skuhr_create_alerts")
+#### for_each_plan
+
+`for_each_plan` expects a list. Each component of the list will correspond to a plan, with the values added to the argset of all the analyses inside the plan.
+
+For example, the following code would give 4 plans, with 1 analysis per each plan, with each analysis containing `argset$var_1` and `argset$var_2` as appropriate.
+
+
+```r
+for_each_plan <- list()
+for_each_plan[[1]] <- list(
+  var_1 = 1,
+  var_2 = "a"
+)
+for_each_plan[[2]] <- list(
+  var_1 = 2,
+  var_2 = "b"
+)
+for_each_plan[[3]] <- list(
+  var_1 = 1,
+  var_2 = "a"
+)
+for_each_plan[[4]] <- list(
+  var_1 = 2,
+  var_2 = "b"
+)
+```
+
+You **always** need at least 1 plan. The most simple plan possible is:
+
+
+```r
+plnr::expand_list(
+  x = 1
+)
+#> [[1]]
+#> [[1]]$x
+#> [1] 1
+```
+
+#### plnr::expand_list
+
+`plnr::expand_list` is esentially the same as `expand.grid`, except that its return values are lists instead of data.frame.
+
+The code above could be simplified as follows.
+
+
+```r
+for_each_plan <- plnr::expand_list(
+  var_1 = c(1,2),
+  var_2 = c("a", "b")
+)
+for_each_plan
+#> [[1]]
+#> [[1]]$var_1
+#> [1] 1
+#> 
+#> [[1]]$var_2
+#> [1] "a"
+#> 
+#> 
+#> [[2]]
+#> [[2]]$var_1
+#> [1] 2
+#> 
+#> [[2]]$var_2
+#> [1] "a"
+#> 
+#> 
+#> [[3]]
+#> [[3]]$var_1
+#> [1] 1
+#> 
+#> [[3]]$var_2
+#> [1] "b"
+#> 
+#> 
+#> [[4]]
+#> [[4]]$var_1
+#> [1] 2
+#> 
+#> [[4]]$var_2
+#> [1] "b"
+```
+
+#### for_each_analysis
+
+`for_each_plan` expects a list, which will generate `length(for_each_plan)` plans.
+
+`for_each_analysis` is the same, except it will generate **analyses** within each of the plans.
+
+#### universal_argset
+
+A named list that will add the values to the argset of all the analyses.
+
+#### upsert_at_end_of_each_plan
+
+If `TRUE` and `schema` contains a schema called `output`, then the returned values of `action_fn` will be stored and upserted to `schema$output` at the end of each **plan**.
+
+If `TRUE` and the returned values of `action_fn` are named lists, then the values within the named lists will be stored and upserted to `schema$NAME_FROM_LIST` at the end of each **plan**.
+
+If you choose to upsert/insert manually from within `action_fn`, you can only do so at the end of each **analysis**.
+
+#### insert_at_end_of_each_plan
+
+If `TRUE` and `schema` contains a schema called `output`, then the returned values of `action_fn` will be stored and inserted to `schema$output` at the end of each **plan**.
+
+If `TRUE` and the returned values of `action_fn` are named lists, then the values within the named lists will be stored and inserted to `schema$NAME_FROM_LIST` at the end of each **plan**.
+
+If you choose to upsert/insert manually from within `action_fn`, you can only do so at the end of each **analysis**.
+
+#### action_fn_name
+
+A character string of the action_fn, preferably including the package name.
+
+#### data_selector_fn_name
+
+A character string of the data_selector_fn, preferably including the package name.
+
+#### schema
+
+A named list containing the schemas used in this task.
+
+### data_selector_fn
+
+Use the addins dropdown to easily add in boilerplate code.
+
+
+```
+#> Error in knitr::include_graphics(system.file("vignette_resources/tasks/addins_3.png", : Cannot find the file(s): ""
+```
+
+The `data_selector_fn` is used to extract the data for each plan.
+
+The lines inside `if(plnr::is_run_directly()){` are used to help developers. You can run the code manually/interactively to "load" the values of `argset` and `schema`.
+
+
+```r
+index_plan <- 1
+
+argset <- ss$shortcut_get_argset("example_weather_import_data_from_api", index_plan = index_plan)
+tables <- ss$shortcut_get_tables("example_weather_import_data_from_api")
+
+print(argset)
+#> $`**universal**`
+#> [1] "*"
+#> 
+#> $`**plan**`
+#> [1] "*"
+#> 
+#> $location_code
+#> [1] "county03"
+#> 
+#> $`**analysis**`
+#> [1] "*"
+#> 
+#> $`**automatic**`
+#> [1] "*"
+#> 
+#> $index
+#> [1] 1
+#> 
+#> $today
+#> [1] "2023-03-10"
+#> 
+#> $yesterday
+#> [1] "2023-03-09"
+#> 
+#> $index_plan
+#> [1] 1
+#> 
+#> $index_analysis
+#> [1] 1
+#> 
+#> $first_analysis
+#> [1] TRUE
+#> 
+#> $last_analysis
+#> [1] TRUE
+#> 
+#> $within_plan_first_analysis
+#> [1] TRUE
+#> 
+#> $within_plan_last_analysis
+#> [1] TRUE
+print(tables)
+#> $anon_example_weather
+#> [sc_interactive_anon].[dbo].[anon_example_weather] (disconnected)
+#> 
+#>   1: granularity_time (TEXT) (KEY)
+#>   2: granularity_geo (TEXT) 
+#>   3: country_iso3 (TEXT) 
+#>   4: location_code (TEXT) (KEY)
+#>   5: border (INTEGER) 
+#>   6: age (TEXT) (KEY)
+#>   7: sex (TEXT) (KEY)
+#>   8: isoyear (INTEGER) 
+#>   9: isoweek (INTEGER) 
+#>  10: isoyearweek (TEXT) 
+#>  11: season (TEXT) 
+#>  12: seasonweek (DOUBLE) 
+#>  13: calyear (INTEGER) 
+#>  14: calmonth (INTEGER) 
+#>  15: calyearmonth (TEXT) 
+#>  16: date (DATE) (KEY)
+#>  17: tg (DOUBLE) 
+#>  18: tx (DOUBLE) 
+#>  19: tn (DOUBLE)
+```
+
+
+```r
+# **** data_selector **** ----
+#' example_weather_import_data_from_api (data selector)
+#' @param argset Argset
+#' @param schema DB Schema
+#' @export
+example_weather_import_data_from_api_data_selector = function(argset, tables){
+  if(plnr::is_run_directly()){
+    # sc::tm_get_plans_argsets_as_dt("example_weather_import_data_from_api")
 
     index_plan <- 1
-    index_analysis <- 1
 
-    data <- ss$shortcut_get_data("a_b", index_plan = index_plan)
-    argset <- ss$shortcut_get_argset("a_b", index_plan = index_plan, index_analysis = index_analysis)
-    tables <- ss$shortcut_get_tables("a_b")
-
-    # pryr::object_size(data)
-  }
-  return(data$data)
-}
-
-test_data_selector <- function(argset, tables) {
-  if (plnr::is_run_directly()) {
-    # sc8::tm_get_plans_argsets_as_dt("skuhr_create_alerts")
-
-    index_plan <- 1
-
-    argset <- ss$shortcut_get_argset("a_b", index_plan = index_plan, index_analysis = index_analysis)
-    tables <- ss$shortcut_get_tables("a_b")
+    argset <- ss$shortcut_get_argset("example_weather_import_data_from_api", index_plan = index_plan)
+    tables <- ss$shortcut_get_tables("example_weather_import_data_from_api")
   }
 
-  # The database tables can be accessed here
-  d <- tables$test$tbl() %>%
-    head(1) %>% 
-    dplyr::collect() %>%
-    as.data.table() %>%
-    setorder(
-      location_code,
-      date
-    )
+  # find the mid lat/long for the specified location_code
+  gps <- fhimaps::norway_nuts3_map_b2020_default_dt[location_code == argset$location_code,.(
+    lat = mean(lat),
+    long = mean(long)
+  )]
+
+  # download the forecast for the specified location_code
+  d <- httr::GET(glue::glue("https://api.met.no/weatherapi/locationforecast/2.0/classic?lat={gps$lat}&lon={gps$long}"), httr::content_type_xml())
+  d <- xml2::read_xml(d$content)
 
   # The variable returned must be a named list
   retval <- list(
@@ -136,16 +488,333 @@ test_data_selector <- function(argset, tables) {
   )
   retval
 }
+```
 
-#ss$shortcut_get_plans_argsets_as_dt("a_b")
-r <- ss$run_task("a_b")
+## action_fn
 
-get_config_data_hash_for_each_plan()
-get_config_last_updated()
+The lines inside `if(plnr::is_run_directly()){` are used to help developers. You can run the code manually/interactively to "load" the values of `argset` and `schema`.
+
+
+```r
+index_plan <- 1
+index_analysis <- 1
+
+data <- ss$shortcut_get_data("example_weather_import_data_from_api", index_plan = index_plan)
+argset <- ss$shortcut_get_argset("example_weather_import_data_from_api", index_plan = index_plan, index_analysis = index_analysis)
+tables <- ss$shortcut_get_tables("example_weather_import_data_from_api")
+
+print(data)
+#> $data
+#> {xml_document}
+#> <weatherdata noNamespaceSchemaLocation="https://schema.api.met.no/schemas/weatherapi-0.4.xsd" created="2023-03-10T05:02:11Z" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+#> [1] <meta>\n  <model name="met_public_forecast" termin="2023-03-10T05:00:00Z" runended="2023-03-10T ...
+#> [2] <product class="pointData">\n  <time datatype="forecast" from="2023-03-10T05:00:00Z" to="2023-0 ...
+#> 
+#> $hash
+#> $hash$current
+#> [1] "fa7c1fd90a6d9bf24040ae24919e6972"
+#> 
+#> $hash$current_elements
+#> $hash$current_elements$data
+#> [1] "edf868d91cd1f5fe47b57b2aeb1d010d"
+print(argset)
+#> $`**universal**`
+#> [1] "*"
+#> 
+#> $`**plan**`
+#> [1] "*"
+#> 
+#> $location_code
+#> [1] "county03"
+#> 
+#> $`**analysis**`
+#> [1] "*"
+#> 
+#> $`**automatic**`
+#> [1] "*"
+#> 
+#> $index
+#> [1] 1
+#> 
+#> $today
+#> [1] "2023-03-10"
+#> 
+#> $yesterday
+#> [1] "2023-03-09"
+#> 
+#> $index_plan
+#> [1] 1
+#> 
+#> $index_analysis
+#> [1] 1
+#> 
+#> $first_analysis
+#> [1] TRUE
+#> 
+#> $last_analysis
+#> [1] TRUE
+#> 
+#> $within_plan_first_analysis
+#> [1] TRUE
+#> 
+#> $within_plan_last_analysis
+#> [1] TRUE
+print(tables)
+#> $anon_example_weather
+#> [sc_interactive_anon].[dbo].[anon_example_weather] (disconnected)
+#> 
+#>   1: granularity_time (TEXT) (KEY)
+#>   2: granularity_geo (TEXT) 
+#>   3: country_iso3 (TEXT) 
+#>   4: location_code (TEXT) (KEY)
+#>   5: border (INTEGER) 
+#>   6: age (TEXT) (KEY)
+#>   7: sex (TEXT) (KEY)
+#>   8: isoyear (INTEGER) 
+#>   9: isoweek (INTEGER) 
+#>  10: isoyearweek (TEXT) 
+#>  11: season (TEXT) 
+#>  12: seasonweek (DOUBLE) 
+#>  13: calyear (INTEGER) 
+#>  14: calmonth (INTEGER) 
+#>  15: calyearmonth (TEXT) 
+#>  16: date (DATE) (KEY)
+#>  17: tg (DOUBLE) 
+#>  18: tx (DOUBLE) 
+#>  19: tn (DOUBLE)
 ```
 
 
+```r
+# **** action **** ----
+#' example_weather_import_data_from_api (action)
+#' @param data Data
+#' @param argset Argset
+#' @param schema DB Schema
+#' @export
+example_weather_import_data_from_api_action <- function(data, argset, tables) {
+  # tm_run_task("example_weather_import_data_from_api")
+
+  if(plnr::is_run_directly()){
+    # sc::tm_get_plans_argsets_as_dt("example_weather_import_data_from_api")
+
+    index_plan <- 1
+    index_analysis <- 1
+
+    data <- ss$shortcut_get_data("example_weather_import_data_from_api", index_plan = index_plan)
+    argset <- ss$shortcut_get_argset("example_weather_import_data_from_api", index_plan = index_plan, index_analysis = index_analysis)
+    tables <- ss$shortcut_get_tables("example_weather_import_data_from_api")
+  }
+
+  # code goes here
+  # special case that runs before everything
+  if(argset$first_analysis == TRUE){
+
+  }
+
+  a <- data$data
+
+  baz <- xml2::xml_find_all(a, ".//maxTemperature")
+  res <- vector("list", length = length(baz))
+  for (i in seq_along(baz)) {
+    parent <- xml2::xml_parent(baz[[i]])
+    grandparent <- xml2::xml_parent(parent)
+    time_from <- xml2::xml_attr(grandparent, "from")
+    time_to <- xml2::xml_attr(grandparent, "to")
+    x <- xml2::xml_find_all(parent, ".//minTemperature")
+    temp_min <- xml2::xml_attr(x, "value")
+    x <- xml2::xml_find_all(parent, ".//maxTemperature")
+    temp_max <- xml2::xml_attr(x, "value")
+    res[[i]] <- data.frame(
+      time_from = as.character(time_from),
+      time_to = as.character(time_to),
+      tx = as.numeric(temp_max),
+      tn = as.numeric(temp_min)
+    )
+  }
+  res <- rbindlist(res)
+  res <- res[stringr::str_sub(time_from, 12, 13) %in% c("00", "06", "12", "18")]
+  res[, date := as.Date(stringr::str_sub(time_from, 1, 10))]
+  res[, N := .N, by = date]
+  res <- res[N == 4]
+  res <- res[
+    ,
+    .(
+      tg = NA,
+      tx = max(tx),
+      tn = min(tn)
+    ),
+    keyby = .(date)
+  ]
+
+  # we look at the downloaded data
+  print("Data after downloading")
+  print(res)
+
+  # we now need to format it
+  res[, granularity_time := "day"]
+  res[, sex := "total"]
+  res[, age := "total"]
+  res[, location_code := argset$location_code]
+  res[, border := 2020]
+
+  # fill in missing structural variables
+  cstidy::set_csfmt_rts_data_v1(res)
+
+  # we look at the downloaded data
+  print("Data after missing structural variables filled in")
+  print(res)
+
+  # put data in db table
+  # schema$SCHEMA_NAME$insert_data(d)
+  tables$anon_example_weather$upsert_data(res)
+  # schema$SCHEMA_NAME$drop_all_rows_and_then_upsert_data(d)
+
+  # special case that runs after everything
+  # copy to anon_web?
+  if(argset$last_analysis == TRUE){
+    # sc::copy_into_new_table_where(
+    #   table_from = "anon_X",
+    #   table_to = "anon_webkht"
+    # )
+  }
+}
+```
+
+## Run the task
+
+```
+tm_run_task("example_weather_import_data_from_api")
+```
+
+## Examples of different types of tasks
+
+### Importing data
+
+<img src="tasks-task-import-data.png" width="100%" />
+
+```
+ss$add_task(
+  name_grouping = "example",
+  name_action = "import_data",
+  name_variant = NULL,
+  cores = 1,
+  plan_analysis_fn_name = NULL,
+  for_each_plan = plnr::expand_list(
+    x = 1
+  ),
+  for_each_analysis = NULL,
+  universal_argset = list(
+    # folder = sc9::path("input", "example")
+  ),
+  upsert_at_end_of_each_plan = FALSE,
+  insert_at_end_of_each_plan = FALSE,
+  action_fn_name = "example_import_data_action",
+  data_selector_fn_name = "example_import_data_data_selector",
+  tables = list(
+    # input
+
+    # output
+    "output" = ss$tables$output
+  ),
+  info = "This task does..."
+)
+```
+
+### Analysis
+
+<img src="tasks-task-analysis.png" width="100%" />
+
+```
+sc::add_task_from_config_v8(
+  name_grouping = "example",
+  name_action = "analysis",
+  name_variant = NULL,
+  cores = 1,
+  plan_analysis_fn_name = NULL,
+  for_each_plan = plnr::expand_list(
+    location_code = fhidata::norway_locations_names()[granularity_geo %in% c("county")]$location_code
+  ),
+  for_each_analysis = NULL,
+  universal_argset = NULL,
+  upsert_at_end_of_each_plan = FALSE,
+  insert_at_end_of_each_plan = FALSE,
+  action_fn_name = "example_analysis_action",
+  data_selector_fn_name = "example_analysis_data_selector",
+  schema = list(
+    # input
+    "input" = sc::config$schemas$input,
+
+    # output
+    "output" = sc::config$schemas$output
+  ),
+  info = "This task does..."
+)
+```
+
+### Exporting multiple sets of results
+
+<img src="tasks-task-export-multiple-results.png" width="100%" />
 
 
+```r
+sc::add_task_from_config_v8(
+  name_grouping = "example",
+  name_action = "export_results",
+  name_variant = NULL,
+  cores = 1,
+  plan_analysis_fn_name = NULL,
+  for_each_plan = plnr::expand_list(
+    location_code = fhidata::norway_locations_names()[granularity_geo %in% c("county")]$location_code
+  ),
+  for_each_analysis = NULL,
+  universal_argset = list(
+    folder = sc::path("output", "example")
+  ),
+  upsert_at_end_of_each_plan = FALSE,
+  insert_at_end_of_each_plan = FALSE,
+  action_fn_name = "example_export_results_action",
+  data_selector_fn_name = "example_export_results_data_selector",
+  tables = list(
+    # input
+    "input" = sc::config$schemas$input
+
+    # output
+  ),
+  info = "This task does..."
+)
+```
+
+### Exporting combined results
+
+<img src="tasks-task-export-combined-results.png" width="100%" />
 
 
+```r
+sc::add_task_from_config_v8(
+  name_grouping = "example",
+  name_action = "export_results",
+  name_variant = NULL,
+  cores = 1,
+  plan_analysis_fn_name = NULL,
+  for_each_plan = plnr::expand_list(
+    x = 1
+  ),
+  for_each_analysis = NULL,
+  universal_argset = list(
+    folder = sc::path("output", "example"),
+    granularity_geos = c("nation", "county")
+  ),
+  upsert_at_end_of_each_plan = FALSE,
+  insert_at_end_of_each_plan = FALSE,
+  action_fn_name = "example_export_results_action",
+  data_selector_fn_name = "example_export_results_data_selector",
+  schema = list(
+    # input
+    "input" = sc::config$schemas$input
+
+    # output
+  ),
+  info = "This task does..."
+)
+```

@@ -22,13 +22,7 @@ library(data.table)
 library(magrittr)
 ```
 
-## Introduction
-
-A task is the basic operational unit of sc9. It is based on [plnr](https://www.csids.no/plnr/).
-
-In short, you can think of a task as multiple [plnr plans](https://www.csids.no/plnr/) plus [csdb tables](https://www.csids.no/csdb/reference/DBTable_v9.html).
-
-## Definitions
+# Definitions
 
 ```{r definitions, echo=FALSE}
 d <- rbindlist(list(
@@ -127,7 +121,13 @@ tab <- fhiplot::htmltable_quick_style(d, widths = c(20, 80)) %>%
 tab
 ```
 
-## General tasks
+# Tasks
+
+A task is the basic operational unit of sc9. It is based on [plnr](https://www.csids.no/plnr/).
+
+In short, you can think of a task as multiple [plnr plans](https://www.csids.no/plnr/) plus [csdb tables](https://www.csids.no/csdb/reference/DBTable_v9.html).
+
+## second
 
 <figure>
 <img src="tasks-task-general.png" width="100%" />
@@ -165,7 +165,7 @@ Figure 1 shows only 2 location based analyses, but in reality there are 356 muni
 ## Putting it together
 
 <figure>
-<img src="tasks-file-locations.png" width="100%" />
+<img src="sc9-file-locations.png" width="100%" />
 <figcaption>Figure 2. A typical file setup for an implementation of Surveillance Core 9. $plan_argset_fn$ is rarely used, and is therefore shown as blacked out in the most of the tasks..</figcaption>
 </figure>
 
@@ -507,7 +507,7 @@ example_weather_import_data_from_api_action <- function(data, argset, tables) {
   res[, age := "total"]
   res[, location_code := argset$location_code]
   res[, border := 2020]
-  
+
   # fill in missing structural variables
   cstidy::set_csfmt_rts_data_v1(res)
 
