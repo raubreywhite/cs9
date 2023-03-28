@@ -1,6 +1,6 @@
 Package: sc9
 Title: Real-time analysis and disease surveillance system
-Version: 9.0.0
+Version: 9.0.1
 Authors@R: c(
   person(c("Richard","Aubrey"), "White", email = "hello@rwhite.no", role = c("aut", "cre"),
     comment = c(ORCID = "0000-0002-6747-1726")
