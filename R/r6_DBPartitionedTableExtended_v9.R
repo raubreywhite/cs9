@@ -119,6 +119,6 @@ DBPartitionedTableExtended_v9 <- R6::R6Class(
       if(sum(!partitions_in_use %in% self$partitions)){
         stop("Some partitions exist in the data that do not exist in the partion")
       }
-    },
+    }
   )
 )
