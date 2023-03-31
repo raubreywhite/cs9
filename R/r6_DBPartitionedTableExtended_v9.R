@@ -49,6 +49,7 @@ DBPartitionedTableExtended_v9 <- R6::R6Class(
       private$check_for_correct_partitions_in_data(newdata)
 
       partitions_in_use <- unique(newdata[[self$column_name_partition]])
+      partitions_in_use <- sample(partitions_in_use, length(partitions_in_use)) # randomize order
       for(i in partitions_in_use){
         index <- newdata[[self$column_name_partition]] == i
         self$tables[[i]]$insert_data(newdata[index,], verbose)
@@ -58,30 +59,31 @@ DBPartitionedTableExtended_v9 <- R6::R6Class(
       private$check_for_correct_partitions_in_data(newdata)
 
       partitions_in_use <- unique(newdata[[self$column_name_partition]])
+      partitions_in_use <- unique(newdata[[self$column_name_partition]])
       for(i in partitions_in_use){
         index <- newdata[[self$column_name_partition]] == i
         self$tables[[i]]$upsert_data(newdata[index,], drop_indexes, verbose)
       }
     },
     drop_all_rows = function(){
-      for(i in self$partitions){
+      for(i in active$partitions_randomized){
         self$tables[[i]]$drop_all_rows()
       }
     },
     drop_rows_where = function(condition){
-      for(i in self$partitions){
+      for(i in active$partitions_randomized){
         self$tables[[i]]$drop_rows_where(condition)
       }
     },
     keep_rows_where = function(condition){
-      for(i in self$partitions){
+      for(i in active$partitions_randomized){
         self$tables[[i]]$keep_rows_where(condition)
       }
     },
     drop_all_rows_and_then_upsert_data = function(newdata, drop_indexes = names(self$indexes), verbose = TRUE) {
       private$check_for_correct_partitions_in_data(newdata)
 
-      for(i in self$partitions){
+      for(i in active$partitions_randomized){
         index <- newdata[[self$column_name_partition]] == i
         self$tables[[i]]$drop_all_rows_and_then_upsert_data(newdata[index,], drop_indexes, verbose)
       }
@@ -89,10 +91,16 @@ DBPartitionedTableExtended_v9 <- R6::R6Class(
     drop_all_rows_and_then_insert_data = function(newdata, verbose = TRUE) {
       private$check_for_correct_partitions_in_data(newdata)
 
-      for(i in self$partitions){
+      for(i in active$partitions_randomized){
         index <- newdata[[self$column_name_partition]] == i
         self$tables[[i]]$drop_all_rows_and_then_insert_data(newdata[index,], verbose)
       }
+    }
+  ),
+  active = list(
+    # sometimes we want this in a randomized order, so that the SQL table isnt locked and blocked
+    partitions_randomized = function(){
+      sample(self$partitions, length(self$partitions))
     }
   ),
   private = list(
@@ -101,6 +109,6 @@ DBPartitionedTableExtended_v9 <- R6::R6Class(
       if(sum(!partitions_in_use %in% self$partitions)){
         stop("Some partitions exist in the data that do not exist in the partion")
       }
-    }
+    },
   )
 )

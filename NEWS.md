@@ -2,6 +2,7 @@
 
 * `DBTableExtended_v9` now automatically includes a column for all tables, called `auto_last_updated_datetime`, which is automatically calculated each time that row is changed.
 * Creation of `DBPartitionedTableExtended_v9`, which allows for one dataset to be partitioned amongst multiple SQL tables automatically.
+* Inclusion of `partitions_randomized` in `DBPartitionedTableExtended_v9` so that when running in parallel, the database tables don't get locked.
 
 # Version 2023.3.8
 
