@@ -95,6 +95,16 @@ DBPartitionedTableExtended_v9 <- R6::R6Class(
         index <- newdata[[self$column_name_partition]] == i
         self$tables[[i]]$drop_all_rows_and_then_insert_data(newdata[index,], verbose)
       }
+    },
+    drop_indexes = function(){
+      for(i in active$partitions_randomized){
+        self$tables[[i]]$drop_indexes()
+      }
+    },
+    add_indexes = function(){
+      for(i in active$partitions_randomized){
+        self$tables[[i]]$add_indexes()
+      }
     }
   ),
   active = list(
