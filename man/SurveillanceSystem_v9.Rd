@@ -41,6 +41,7 @@ A TaskManager is:
 \itemize{
 \item \href{#method-SurveillanceSystem_v9-new}{\code{SurveillanceSystem_v9$new()}}
 \item \href{#method-SurveillanceSystem_v9-add_table}{\code{SurveillanceSystem_v9$add_table()}}
+\item \href{#method-SurveillanceSystem_v9-add_partitionedtable}{\code{SurveillanceSystem_v9$add_partitionedtable()}}
 \item \href{#method-SurveillanceSystem_v9-add_task}{\code{SurveillanceSystem_v9$add_task()}}
 \item \href{#method-SurveillanceSystem_v9-get_task}{\code{SurveillanceSystem_v9$get_task()}}
 \item \href{#method-SurveillanceSystem_v9-run_task}{\code{SurveillanceSystem_v9$run_task()}}
@@ -69,6 +70,26 @@ A TaskManager is:
   name_access,
   name_grouping = NULL,
   name_variant = NULL,
+  field_types,
+  keys,
+  indexes = NULL,
+  validator_field_types = csdb::validator_field_types_blank,
+  validator_field_contents = csdb::validator_field_contents_blank
+)}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-SurveillanceSystem_v9-add_partitionedtable"></a>}}
+\if{latex}{\out{\hypertarget{method-SurveillanceSystem_v9-add_partitionedtable}{}}}
+\subsection{Method \code{add_partitionedtable()}}{
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{SurveillanceSystem_v9$add_partitionedtable(
+  name_access,
+  name_grouping = NULL,
+  name_variant = NULL,
+  name_partitions = "default",
+  column_name_partition = "partition",
   field_types,
   keys,
   indexes = NULL,

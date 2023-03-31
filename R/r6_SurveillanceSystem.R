@@ -29,6 +29,7 @@ SurveillanceSystem_v9 <- R6::R6Class(
   "SurveillanceSystem_v9",
   public = list(
     tables = list(),
+    partitionedtables = list(),
     tasks = list(),
     implementation_version = NULL,
     initialize = function(
@@ -68,6 +69,45 @@ SurveillanceSystem_v9 <- R6::R6Class(
       )
 
       self$tables[[table_name]] <- dbtable
+    },
+    add_partitionedtable = function(
+      name_access,
+      name_grouping = NULL,
+      name_variant = NULL,
+      name_partitions = "default",
+      column_name_partition = "partition",
+      field_types,
+      keys,
+      indexes = NULL,
+      validator_field_types = csdb::validator_field_types_blank,
+      validator_field_contents = csdb::validator_field_contents_blank
+    ){
+      force(name_access)
+      force(name_grouping)
+      force(name_variant)
+      force(name_partitions)
+      force(column_name_partition)
+      force(field_types)
+      force(keys)
+      force(indexes)
+      force(validator_field_types)
+      force(validator_field_contents)
+
+      table_name_base <- paste0(c(name_access, name_grouping, name_variant), collapse = "_")
+
+      dbtable <- DBPartitionedTableExtended_v9$new(
+        dbconfig = config$dbconfigs[[name_access]],
+        table_name_base = table_name_base,
+        table_name_partitions = name_partitions,
+        column_name_partition = column_name_partition,
+        field_types = field_types,
+        keys = keys,
+        indexes = indexes,
+        validator_field_types = validator_field_types,
+        validator_field_contents = validator_field_contents
+      )
+
+      self$partitionedtables[[table_name_base]] <- dbtable
     },
     #' add_task_from_config
     #' @param name_grouping Name of the task (grouping)
@@ -193,8 +233,8 @@ generic_data_function_factory_v9 <- function(tables, argset, fn_name) {
   force(argset)
   force(fn_name)
   function() {
-    for (i in tables) i$connect()
-    on.exit(for (i in tables) i$disconnect())
+    # for (i in tables) i$connect()
+    # on.exit(for (i in tables) i$disconnect())
     fn <- plnr::get_anything(fn_name)
     fn(argset, tables)
   }
@@ -212,8 +252,8 @@ generic_list_plan_function_factory_v9 <- function(universal_argset,
   force(data_selector_fn_name)
 
   function() {
-    for (i in tables) i$connect()
-    on.exit(for (i in tables) i$disconnect())
+    # for (i in tables) i$connect()
+    # on.exit(for (i in tables) i$disconnect())
 
     fn <- plnr::get_anything(plan_analysis_fn_name)
     plan_analysis <- fn(universal_argset, tables)

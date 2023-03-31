@@ -314,7 +314,7 @@ Task <- R6::R6Class(
   ),
   private = list(
     run_sequential = function(plans_index, tables, upsert_at_end_of_each_plan, insert_at_end_of_each_plan, pb = NULL, cores) {
-      for (s in tables) s$connect()
+      # for (s in tables) s$connect()
       for (i in seq_along(self$plans[plans_index])) {
         if (!is.null(pb)) self$plans[plans_index][[i]]$set_progressor(pb)
         config$plan_attempt_index <- 1
@@ -358,7 +358,7 @@ Task <- R6::R6Class(
         )
         rm("data")
       }
-      for (s in tables) s$disconnect()
+      # for (s in tables) s$disconnect()
     },
     run_parallel_plans = function(plans_index, tables, upsert_at_end_of_each_plan, insert_at_end_of_each_plan, cores) {
       y <- pbmcapply::pbmclapply(
@@ -374,7 +374,7 @@ Task <- R6::R6Class(
 
             catch_result <- tryCatch(
               {
-                for (s in tables) s$connect()
+                # for (s in tables) s$connect()
                 data <- x$get_data()
                 hashes <- data$hash
                 last_run_hashes <- get_last_run_data_hash_split_into_plnr_format(task = self$name, index_plan = x$get_argset(1)$index_plan, expected_element_tags = names(data$hash$current_elements))
@@ -420,7 +420,7 @@ Task <- R6::R6Class(
                 ))
               }
             )
-            for (s in tables) s$disconnect()
+            # for (s in tables) s$disconnect()
 
             # if the plan executed without any errors
             # then break the loop
@@ -525,7 +525,7 @@ Task <- R6::R6Class(
         function(x, tables, upsert_at_end_of_each_plan, insert_at_end_of_each_plan, pb) {
           data.table::setDTthreads(1)
 
-          for (s in tables) s$connect()
+          # for (s in tables) s$connect()
           x$set_progressor(pb)
           retval <- x$run_all(tables = tables)
 
@@ -539,7 +539,7 @@ Task <- R6::R6Class(
             tables$output$insert_data(retval, verbose = F)
           }
           rm("retval")
-          for (s in tables) s$db_disconnect()
+          # for (s in tables) s$db_disconnect()
 
           # ***************************** #
           # NEVER DELETE gc()             #

@@ -1,3 +1,8 @@
+# Version 2023.3.31
+
+* `DBTableExtended_v9` now automatically includes a column for all tables, called `auto_last_updated_datetime`, which is automatically calculated each time that row is changed.
+* Creation of `DBPartitionedTableExtended_v9`, which allows for one dataset to be partitioned amongst multiple SQL tables automatically.
+
 # Version 2023.3.8
 
 * `SurveillanceSystem_v9` constructor now takes in an argument called `implementation_version`, which can be used to identify what version of analytics code is currently being run.
