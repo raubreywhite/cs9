@@ -203,6 +203,16 @@ SurveillanceSystem_v9 <- R6::R6Class(
   )
 )
 
+analyses_to_dt <- function(analyses) {
+  retval <- lapply(analyses, function(x) {
+    data.table(t(x$argset))
+  })
+  retval <- rbindlist(retval)
+  # retval[, index_analysis := 1:.N]
+
+  return(retval)
+}
+
 #' Run a task sequentially as an RStudio job
 #'
 #' Description
