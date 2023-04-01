@@ -1,6 +1,7 @@
 # Version 2023.4.1
 
 * Inclusion of `partitions_randomized` in `DBPartitionedTableExtended_v9` so that when running in parallel, the database tables don't get locked.
+* Inclusion of `remove_table` in `DBPartitionedTableExtended_v9`
 
 # Version 2023.3.31
 
