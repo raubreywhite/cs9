@@ -266,9 +266,6 @@ Task <- R6::R6Class(
         b0 <- Sys.time()
         message("\nPlan 1 ran in ", round(as.numeric(difftime(b0, a0, units = "mins")), 1), " mins\n")
 
-        ram_max_used_mb <- gc(reset = FALSE)[,6]|>sum()
-        ram_max_used_mb <- ram_max_used_mb * length(self$plans)
-
         message("*****")
         message("*****")
         message("***** Running plans 2:", (length(self$plans) - 1), " in parallel at ", lubridate::now(), " *****")
@@ -294,6 +291,9 @@ Task <- R6::R6Class(
         )
         b1 <- Sys.time()
         message("\nPlan ", length(self$plans), " ran in ", round(as.numeric(difftime(b1, a1, units = "mins")), 1), " mins")
+
+        ram_max_used_mb <- gc(reset = FALSE)[,6]|>sum()
+        ram_max_used_mb <- ram_max_used_mb * cores
       }
 
       b1 <- Sys.time()
