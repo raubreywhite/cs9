@@ -66,43 +66,43 @@ DBPartitionedTableExtended_v9 <- R6::R6Class(
       }
     },
     drop_all_rows = function(){
-      for(i in active$partitions_randomized){
+      for(i in self$partitions_randomized){
         self$tables[[i]]$drop_all_rows()
       }
     },
     drop_rows_where = function(condition){
-      for(i in active$partitions_randomized){
+      for(i in self$partitions_randomized){
         self$tables[[i]]$drop_rows_where(condition)
       }
     },
     keep_rows_where = function(condition){
-      for(i in active$partitions_randomized){
+      for(i in self$partitions_randomized){
         self$tables[[i]]$keep_rows_where(condition)
       }
     },
     drop_all_rows_and_then_upsert_data = function(newdata, drop_indexes = names(self$indexes), verbose = TRUE) {
       private$check_for_correct_partitions_in_data(newdata)
 
-      for(i in active$partitions_randomized){
-        index <- newdata[[self$column_name_partition]] == i
+      for(i in self$partitions_randomized){
+        index <- self[[self$column_name_partition]] == i
         self$tables[[i]]$drop_all_rows_and_then_upsert_data(newdata[index,], drop_indexes, verbose)
       }
     },
     drop_all_rows_and_then_insert_data = function(newdata, verbose = TRUE) {
       private$check_for_correct_partitions_in_data(newdata)
 
-      for(i in active$partitions_randomized){
+      for(i in self$partitions_randomized){
         index <- newdata[[self$column_name_partition]] == i
         self$tables[[i]]$drop_all_rows_and_then_insert_data(newdata[index,], verbose)
       }
     },
     drop_indexes = function(){
-      for(i in active$partitions_randomized){
+      for(i in self$partitions_randomized){
         self$tables[[i]]$drop_indexes()
       }
     },
     add_indexes = function(){
-      for(i in active$partitions_randomized){
+      for(i in self$partitions_randomized){
         self$tables[[i]]$add_indexes()
       }
     }
