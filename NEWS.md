@@ -2,6 +2,7 @@
 
 * Inclusion of `partitions_randomized` in `DBPartitionedTableExtended_v9` so that when running in parallel, the database tables don't get locked.
 * Inclusion of `remove_table` in `DBPartitionedTableExtended_v9`
+* Fixed an error in RAM calculation in parallel for `get_config_tasks_stats`
 
 # Version 2023.3.31
 
