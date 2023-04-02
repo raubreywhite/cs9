@@ -76,6 +76,7 @@ SurveillanceSystem_v9 <- R6::R6Class(
       name_variant = NULL,
       name_partitions = "default",
       column_name_partition = "partition",
+      value_generator_partition = NULL,
       field_types,
       keys,
       indexes = NULL,
@@ -87,6 +88,7 @@ SurveillanceSystem_v9 <- R6::R6Class(
       force(name_variant)
       force(name_partitions)
       force(column_name_partition)
+      force(value_generator_partition)
       force(field_types)
       force(keys)
       force(indexes)
@@ -100,6 +102,7 @@ SurveillanceSystem_v9 <- R6::R6Class(
         table_name_base = table_name_base,
         table_name_partitions = name_partitions,
         column_name_partition = column_name_partition,
+        value_generator_partition = value_generator_partition,
         field_types = field_types,
         keys = keys,
         indexes = indexes,

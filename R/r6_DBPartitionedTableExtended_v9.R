@@ -4,11 +4,13 @@ DBPartitionedTableExtended_v9 <- R6::R6Class(
     tables = list(),
     partitions = c(),
     column_name_partition = "",
+    value_generator_partition = NULL,
     initialize = function(
     dbconfig,
     table_name_base,
     table_name_partitions,
     column_name_partition,
+    value_generator_partition = NULL,
     field_types,
     keys,
     indexes = NULL,
@@ -20,6 +22,9 @@ DBPartitionedTableExtended_v9 <- R6::R6Class(
 
       force(column_name_partition)
       self$column_name_partition <- column_name_partition
+
+      force(value_generator_partition)
+      self$value_generator_partition <- value_generator_partition
 
       # ensure that partition name is last in dataset
       if(column_name_partition %in% names(field_types)){
@@ -46,6 +51,10 @@ DBPartitionedTableExtended_v9 <- R6::R6Class(
       }
     },
     insert_data = function(newdata, verbose = TRUE){
+      if(!is.null(self$value_generator_partition)){
+        part <- do.call(self$value_generator_partition, newdata)
+        newdata[, .(self$column_name_partition) := part]
+      }
       private$check_for_correct_partitions_in_data(newdata)
 
       partitions_in_use <- unique(newdata[[self$column_name_partition]])
@@ -56,6 +65,10 @@ DBPartitionedTableExtended_v9 <- R6::R6Class(
       }
     },
     upsert_data = function(newdata, drop_indexes = names(self$indexes), verbose = TRUE){
+      if(!is.null(self$value_generator_partition)){
+        part <- do.call(self$value_generator_partition, newdata)
+        newdata[, .(self$column_name_partition) := part]
+      }
       private$check_for_correct_partitions_in_data(newdata)
 
       partitions_in_use <- unique(newdata[[self$column_name_partition]])
@@ -81,6 +94,10 @@ DBPartitionedTableExtended_v9 <- R6::R6Class(
       }
     },
     drop_all_rows_and_then_upsert_data = function(newdata, drop_indexes = names(self$indexes), verbose = TRUE) {
+      if(!is.null(self$value_generator_partition)){
+        part <- do.call(self$value_generator_partition, newdata)
+        newdata[, .(self$column_name_partition) := part]
+      }
       private$check_for_correct_partitions_in_data(newdata)
 
       for(i in self$partitions_randomized){
@@ -89,6 +106,10 @@ DBPartitionedTableExtended_v9 <- R6::R6Class(
       }
     },
     drop_all_rows_and_then_insert_data = function(newdata, verbose = TRUE) {
+      if(!is.null(self$value_generator_partition)){
+        part <- do.call(self$value_generator_partition, newdata)
+        newdata[, .(self$column_name_partition) := part]
+      }
       private$check_for_correct_partitions_in_data(newdata)
 
       for(i in self$partitions_randomized){
@@ -110,6 +131,19 @@ DBPartitionedTableExtended_v9 <- R6::R6Class(
       for(i in self$partitions_randomized){
         self$tables[[i]]$add_indexes()
       }
+    },
+    nrow = function(){
+      table_rows <- self$tables[[1]]$dbconnection$autoconnection %>%
+        DBI::dbGetQuery("select o.name as table_name, i.rowcnt as n from sys.objects o join sys.sysindexes i on o.object_id = i.id where o.is_ms_shipped = 0 and i.rowcnt > 0 order by o.name") %>%
+        setDT()
+      table_rows[, keep := FALSE]
+      for(i in self$partitions_randomized){
+        table_rows[table_name==self$tables[[i]]$table_name, keep := TRUE]
+      }
+      table_rows <- table_rows[keep == T]
+      table_rows[, keep := FALSE]
+      data.table::shouldPrint(table_rows)
+      return(table_rows)
     }
   ),
   active = list(
