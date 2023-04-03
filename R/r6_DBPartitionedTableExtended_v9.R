@@ -135,13 +135,13 @@ DBPartitionedTableExtended_v9 <- R6::R6Class(
     nrow = function(){
       table_rows <- self$tables[[1]]$dbconnection$autoconnection %>%
         DBI::dbGetQuery("select o.name as table_name, i.rowcnt as n from sys.objects o join sys.sysindexes i on o.object_id = i.id where o.is_ms_shipped = 0 and i.rowcnt > 0 order by o.name") %>%
-        setDT()
+        setDT() %>% unique()
       table_rows[, keep := FALSE]
       for(i in self$partitions_randomized){
         table_rows[table_name==self$tables[[i]]$table_name, keep := TRUE]
       }
       table_rows <- table_rows[keep == T]
-      table_rows[, keep := FALSE]
+      table_rows[, keep := NULL]
       data.table::shouldPrint(table_rows)
       return(table_rows)
     }
