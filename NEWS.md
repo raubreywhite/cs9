@@ -1,3 +1,7 @@
+# Version 2023.4.3
+
+* Bug fix in `DBPartitionedTableExtended_v9$nrow()`
+
 # Version 2023.4.2
 
 * Extension of `DBPartitionedTableExtended_v9` so that it is easier to use multiple partitioning variables 
