@@ -2,8 +2,6 @@ url: https://www.csids.no/sc9/
 
 template:
   package: csidstemplatepkgdown
-  includes:
-    in_header: <script data-goatcounter="https://csidsno.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
 
 articles:
 - title: Fundamentals
