@@ -4,7 +4,7 @@
 
 # Version 2023.4.2
 
-* Extension of `DBPartitionedTableExtended_v9` so that it is easier to use multiple partitioning variables 
+* Extension of `DBPartitionedTableExtended_v9` so that it is easier to use multiple partitioning variables.
 
 # Version 2023.4.1
 
