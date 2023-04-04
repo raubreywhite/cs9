@@ -24,7 +24,7 @@
 #' - A list of plnr::Plan's
 #'
 #' @import R6
-#' @export SurveillanceSystem_v9
+#' @export
 SurveillanceSystem_v9 <- R6::R6Class(
   "SurveillanceSystem_v9",
   public = list(
@@ -32,11 +32,64 @@ SurveillanceSystem_v9 <- R6::R6Class(
     partitionedtables = list(),
     tasks = list(),
     implementation_version = NULL,
+    #' Initialize
+    #' @param implementation_version A string that the user may choose to use to track performance metrics (runtime and RAM usage)
     initialize = function(
       implementation_version = "unspecified"
     ) {
       self$implementation_version <- implementation_version
     },
+    #' Add a table
+    #' @param name_access First part of table name, corresponding to the database where it will be stored.
+    #' @param name_grouping Second part of table name, corresponding to some sort of grouping.
+    #' @param name_variant Final part of table name, corresponding to a distinguishing variant.
+    #' @param field_types Named character vector, where the names are the column names, and the values are the column types. Valid types are BOOLEAN, CHARACTER, INTEGER, DOUBLE, DATE, DATETIME
+    #' @param keys Character vector, containing the column names that uniquely identify a row of data.
+    #' @param indexes Named list, containing indexes.
+    #' @param validator_field_types Function corresponding to a validator for the field types.
+    #' @param validator_field_contents Function corresponding to a validator for the field contents.
+    #' @examples
+    #' \dontrun{
+    #' global$ss$add_table(
+    #'   name_access = c("anon"),
+    #'   name_grouping = "example_weather",
+    #'   name_variant = "data",
+    #'   field_types =  c(
+    #'     "granularity_time" = "TEXT",
+    #'     "granularity_geo" = "TEXT",
+    #'     "country_iso3" = "TEXT",
+    #'     "location_code" = "TEXT",
+    #'     "border" = "INTEGER",
+    #'     "age" = "TEXT",
+    #'     "sex" = "TEXT",
+    #'
+    #'     "isoyear" = "INTEGER",
+    #'     "isoweek" = "INTEGER",
+    #'     "isoyearweek" = "TEXT",
+    #'     "season" = "TEXT",
+    #'     "seasonweek" = "DOUBLE",
+    #'
+    #'     "calyear" = "INTEGER",
+    #'     "calmonth" = "INTEGER",
+    #'     "calyearmonth" = "TEXT",
+    #'
+    #'     "date" = "DATE",
+    #'
+    #'     "temp_max" = "DOUBLE",
+    #'     "temp_min" = "DOUBLE",
+    #'     "precip" = "DOUBLE"
+    #'   ),
+    #'   keys = c(
+    #'     "granularity_time",
+    #'     "location_code",
+    #'     "date",
+    #'     "age",
+    #'     "sex"
+    #'   ),
+    #'   validator_field_types = csdb::validator_field_types_csfmt_rts_data_v1,
+    #'   validator_field_contents = csdb::validator_field_contents_csfmt_rts_data_v1
+    #'   )
+    #' }
     add_table = function(
       name_access,
       name_grouping = NULL,

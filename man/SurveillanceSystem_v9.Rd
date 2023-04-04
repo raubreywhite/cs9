@@ -36,6 +36,55 @@ A TaskManager is:
 \item A list of plnr::Plan's
 }
 }
+\examples{
+
+## ------------------------------------------------
+## Method `SurveillanceSystem_v9$add_table`
+## ------------------------------------------------
+
+\dontrun{
+global$ss$add_table(
+  name_access = c("anon"),
+  name_grouping = "example_weather",
+  name_variant = "data",
+  field_types =  c(
+    "granularity_time" = "TEXT",
+    "granularity_geo" = "TEXT",
+    "country_iso3" = "TEXT",
+    "location_code" = "TEXT",
+    "border" = "INTEGER",
+    "age" = "TEXT",
+    "sex" = "TEXT",
+
+    "isoyear" = "INTEGER",
+    "isoweek" = "INTEGER",
+    "isoyearweek" = "TEXT",
+    "season" = "TEXT",
+    "seasonweek" = "DOUBLE",
+
+    "calyear" = "INTEGER",
+    "calmonth" = "INTEGER",
+    "calyearmonth" = "TEXT",
+
+    "date" = "DATE",
+
+    "temp_max" = "DOUBLE",
+    "temp_min" = "DOUBLE",
+    "precip" = "DOUBLE"
+  ),
+  keys = c(
+    "granularity_time",
+    "location_code",
+    "date",
+    "age",
+    "sex"
+  ),
+  validator_field_types = csdb::validator_field_types_csfmt_rts_data_v1,
+  validator_field_contents = csdb::validator_field_contents_csfmt_rts_data_v1
+  )
+}
+add_task_from_config
+}
 \section{Methods}{
 \subsection{Public methods}{
 \itemize{
@@ -60,6 +109,14 @@ A TaskManager is:
 \if{html}{\out{<div class="r">}}\preformatted{SurveillanceSystem_v9$new(implementation_version = "unspecified")}\if{html}{\out{</div>}}
 }
 
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{implementation_version}}{A string that the user may choose to use to track performance metrics (runtime and RAM usage)
+Add a table}
+}
+\if{html}{\out{</div>}}
+}
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-SurveillanceSystem_v9-add_table"></a>}}
@@ -78,6 +135,76 @@ A TaskManager is:
 )}\if{html}{\out{</div>}}
 }
 
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{name_access}}{First part of table name, corresponding to the database where it will be stored.}
+
+\item{\code{name_grouping}}{Second part of table name, corresponding to some sort of grouping.}
+
+\item{\code{name_variant}}{Final part of table name, corresponding to a distinguishing variant.}
+
+\item{\code{field_types}}{Named character vector, where the names are the column names, and the values are the column types. Valid types are BOOLEAN, CHARACTER, INTEGER, DOUBLE, DATE, DATETIME}
+
+\item{\code{keys}}{Character vector, containing the column names that uniquely identify a row of data.}
+
+\item{\code{indexes}}{Named list, containing indexes.}
+
+\item{\code{validator_field_types}}{Function corresponding to a validator for the field types.}
+
+\item{\code{validator_field_contents}}{Function corresponding to a validator for the field contents.}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Examples}{
+\if{html}{\out{<div class="r example copy">}}
+\preformatted{\dontrun{
+global$ss$add_table(
+  name_access = c("anon"),
+  name_grouping = "example_weather",
+  name_variant = "data",
+  field_types =  c(
+    "granularity_time" = "TEXT",
+    "granularity_geo" = "TEXT",
+    "country_iso3" = "TEXT",
+    "location_code" = "TEXT",
+    "border" = "INTEGER",
+    "age" = "TEXT",
+    "sex" = "TEXT",
+
+    "isoyear" = "INTEGER",
+    "isoweek" = "INTEGER",
+    "isoyearweek" = "TEXT",
+    "season" = "TEXT",
+    "seasonweek" = "DOUBLE",
+
+    "calyear" = "INTEGER",
+    "calmonth" = "INTEGER",
+    "calyearmonth" = "TEXT",
+
+    "date" = "DATE",
+
+    "temp_max" = "DOUBLE",
+    "temp_min" = "DOUBLE",
+    "precip" = "DOUBLE"
+  ),
+  keys = c(
+    "granularity_time",
+    "location_code",
+    "date",
+    "age",
+    "sex"
+  ),
+  validator_field_types = csdb::validator_field_types_csfmt_rts_data_v1,
+  validator_field_contents = csdb::validator_field_contents_csfmt_rts_data_v1
+  )
+}
+add_task_from_config
+}
+\if{html}{\out{</div>}}
+
+}
+
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-SurveillanceSystem_v9-add_partitionedtable"></a>}}
@@ -90,6 +217,7 @@ A TaskManager is:
   name_variant = NULL,
   name_partitions = "default",
   column_name_partition = "partition",
+  value_generator_partition = NULL,
   field_types,
   keys,
   indexes = NULL,
