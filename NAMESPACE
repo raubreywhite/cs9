@@ -2,7 +2,6 @@
 
 S3method(collect,sc_tbl_v8)
 export("%>%")
-export(Initialize)
 export(SurveillanceSystem_v9)
 export(config)
 export(create_folder_if_doesnt_exist)

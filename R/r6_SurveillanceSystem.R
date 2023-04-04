@@ -24,7 +24,7 @@
 #' - A list of plnr::Plan's
 #'
 #' @import R6
-#' @export
+#' @export SurveillanceSystem_v9
 SurveillanceSystem_v9 <- R6::R6Class(
   "SurveillanceSystem_v9",
   public = list(
@@ -32,7 +32,7 @@ SurveillanceSystem_v9 <- R6::R6Class(
     partitionedtables = list(),
     tasks = list(),
     implementation_version = NULL,
-    #' Initialize
+    #' Constructor
     #' @param implementation_version A string that the user may choose to use to track performance metrics (runtime and RAM usage)
     initialize = function(
       implementation_version = "unspecified"
