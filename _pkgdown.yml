@@ -11,7 +11,3 @@ articles:
   contents:
   - installation
   - file-layout
-  - creating-a-task
-
-news:
-  cran_dates: false
