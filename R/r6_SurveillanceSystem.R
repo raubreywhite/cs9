@@ -1,27 +1,7 @@
-#' Surveillance System
+#' @title A Surveillance System Object
 #'
-#' An R6 Action class contains a function called 'run' that takes three arguments:
-#' - data (list)
-#' - arg (list)
-#' - tables (list)
-#'
-#' An action is (note: we dont explicitly create these):
-#' - one R6 Action class
-#' - A plnr::Plan that provide
-#'   a) data (from the plan -- `get_data`)
-#'   b) arguments (from the plan -- `get_argset`)
-#' to the R6 action class
-#'
-#' A task is:
-#' - one R6 Action class
-#' - A plnr::Plan that provide
-#'   a) data (from the plan -- `get_data`)
-#'   b) arguments (from the plan -- `get_argset`)
-#' to the R6 action class
-#'
-#' A TaskManager is:
-#' - one R6 Action class
-#' - A list of plnr::Plan's
+#' @description
+#' An abstract class that holds an entire surveillance system.
 #'
 #' @import R6
 #' @export SurveillanceSystem_v9
@@ -39,6 +19,7 @@ SurveillanceSystem_v9 <- R6::R6Class(
     ) {
       self$implementation_version <- implementation_version
     },
+    #' @description
     #' Add a table
     #' @param name_access First part of table name, corresponding to the database where it will be stored.
     #' @param name_grouping Second part of table name, corresponding to some sort of grouping.
@@ -88,7 +69,7 @@ SurveillanceSystem_v9 <- R6::R6Class(
     #'   ),
     #'   validator_field_types = csdb::validator_field_types_csfmt_rts_data_v1,
     #'   validator_field_contents = csdb::validator_field_contents_csfmt_rts_data_v1
-    #'   )
+    #' )
     #' }
     add_table = function(
       name_access,
@@ -165,6 +146,7 @@ SurveillanceSystem_v9 <- R6::R6Class(
 
       self$partitionedtables[[table_name_base]] <- dbtable
     },
+    #' @description
     #' add_task_from_config
     #' @param name_grouping Name of the task (grouping)
     #' @param name_action Name of the task (action)

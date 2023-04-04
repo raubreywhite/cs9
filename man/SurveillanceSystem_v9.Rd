@@ -2,39 +2,9 @@
 % Please edit documentation in R/r6_SurveillanceSystem.R
 \name{SurveillanceSystem_v9}
 \alias{SurveillanceSystem_v9}
-\title{Surveillance System}
+\title{A Surveillance System Object}
 \description{
-An R6 Action class contains a function called 'run' that takes three arguments:
-\itemize{
-\item data (list)
-\item arg (list)
-\item tables (list)
-}
-}
-\details{
-An action is (note: we dont explicitly create these):
-\itemize{
-\item one R6 Action class
-\item A plnr::Plan that provide
-a) data (from the plan -- \code{get_data})
-b) arguments (from the plan -- \code{get_argset})
-to the R6 action class
-}
-
-A task is:
-\itemize{
-\item one R6 Action class
-\item A plnr::Plan that provide
-a) data (from the plan -- \code{get_data})
-b) arguments (from the plan -- \code{get_argset})
-to the R6 action class
-}
-
-A TaskManager is:
-\itemize{
-\item one R6 Action class
-\item A list of plnr::Plan's
-}
+An abstract class that holds an entire surveillance system.
 }
 \examples{
 
@@ -81,9 +51,8 @@ global$ss$add_table(
   ),
   validator_field_types = csdb::validator_field_types_csfmt_rts_data_v1,
   validator_field_contents = csdb::validator_field_contents_csfmt_rts_data_v1
-  )
+)
 }
-add_task_from_config
 }
 \section{Methods}{
 \subsection{Public methods}{
@@ -112,8 +81,7 @@ add_task_from_config
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{implementation_version}}{A string that the user may choose to use to track performance metrics (runtime and RAM usage)
-Add a table}
+\item{\code{implementation_version}}{A string that the user may choose to use to track performance metrics (runtime and RAM usage)}
 }
 \if{html}{\out{</div>}}
 }
@@ -122,6 +90,7 @@ Add a table}
 \if{html}{\out{<a id="method-SurveillanceSystem_v9-add_table"></a>}}
 \if{latex}{\out{\hypertarget{method-SurveillanceSystem_v9-add_table}{}}}
 \subsection{Method \code{add_table()}}{
+Add a table
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{SurveillanceSystem_v9$add_table(
   name_access,
@@ -197,9 +166,8 @@ global$ss$add_table(
   ),
   validator_field_types = csdb::validator_field_types_csfmt_rts_data_v1,
   validator_field_contents = csdb::validator_field_contents_csfmt_rts_data_v1
-  )
+)
 }
-add_task_from_config
 }
 \if{html}{\out{</div>}}
 
@@ -231,6 +199,7 @@ add_task_from_config
 \if{html}{\out{<a id="method-SurveillanceSystem_v9-add_task"></a>}}
 \if{latex}{\out{\hypertarget{method-SurveillanceSystem_v9-add_task}{}}}
 \subsection{Method \code{add_task()}}{
+add_task_from_config
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{SurveillanceSystem_v9$add_task(
   name_grouping = NULL,
