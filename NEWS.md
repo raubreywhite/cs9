@@ -1,3 +1,8 @@
+# Version 2023.4.12
+
+* `DBPartitionedTableExtended_v9$nrow()` now has a new argument `collapse=FALSE` that provides partion-specific results
+* `DBPartitionedTableExtended_v9$info()` now includes sizes in MB
+
 # Version 2023.4.3
 
 * Bug fix in `DBPartitionedTableExtended_v9$nrow()`
