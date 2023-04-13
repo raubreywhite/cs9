@@ -262,8 +262,7 @@ analyses_to_dt <- function(analyses) {
 #' @export
 run_task_sequentially_as_rstudio_job_using_load_all <- function(
     task_name,
-    ss_prefix = "global$ss",
-    verbose = FALSE
+    ss_prefix = "global$ss"
     ){
 
   tempfile <- fs::path(tempdir(check = T), paste0(task_name, ".R"))

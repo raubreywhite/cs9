@@ -6,8 +6,7 @@
 \usage{
 run_task_sequentially_as_rstudio_job_using_load_all(
   task_name,
-  ss_prefix = "global$ss",
-  verbose = FALSE
+  ss_prefix = "global$ss"
 )
 }
 \arguments{
