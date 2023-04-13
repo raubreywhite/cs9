@@ -166,8 +166,7 @@ DBPartitionedTableExtended_v9 <- R6::R6Class(
             size_data_gb = sum(size_data_gb),
             size_index_gb = sum(size_index_gb),
             nrow = sum(nrow)
-          ),
-          keyby = table_name
+          )
         ]
       }
       data.table::shouldPrint(table_rows)
