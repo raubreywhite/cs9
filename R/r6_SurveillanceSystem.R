@@ -305,6 +305,7 @@ run_task_sequentially_as_rstudio_job_using_load_all <- function(
         stop = function(id){
           pid <- readLines(paste0("/tmp/",task_name,".pid"))
           tools::pskill(pid)
+          rstudioapi::jobSetState(id, "cancelled")
         }
       )
     )
