@@ -283,22 +283,21 @@ run_task_sequentially_as_rstudio_job_using_load_all <- function(
       workingDir = getwd(),
     )
   } else {
-
+    wd <- getwd()
     # get number of progressUnits (i.e. num analyses)
     cat(glue::glue(
       "
-          # devtools::load_all('.')
-          # x <- {ss_prefix}$shortcut_get_num_analyses('{task_name}')
-          # cat('\\n',x)
-          cat('\\n',3)
+          devtools::load_all('.')
+          x <- {ss_prefix}$shortcut_get_num_analyses('{task_name}')
+          cat('\\n',x)
+          # cat('\\n',3)
       "
     ), file = tempfile)
 
-    progressUnits <- system(
+    progressUnits <- system2(
       glue::glue("Rscript '{tempfile}' | tail -n 1"),
-      intern = TRUE,
-      ignore.stdout = TRUE,
-      ignore.stderr = TRUE
+      stdout = TRUE,
+      stderr = FALSE
       ) %>%
       stringr::str_remove_all(" ") %>%
       as.integer()
