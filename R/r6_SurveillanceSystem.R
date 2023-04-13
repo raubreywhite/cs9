@@ -294,12 +294,9 @@ run_task_sequentially_as_rstudio_job_using_load_all <- function(
       "
     ), file = tempfile)
 
-    progressUnits <- system(glue::glue("Rscript '{tempfile}' | tail -n 1"), intern = TRUE)
-    print(progressUnits)
-    progressUnits %<>%
+    progressUnits <- system(glue::glue("Rscript '{tempfile}' | tail -n 1"), intern = TRUE) %>%
       stringr::str_remove_all(" ") %>%
-      as.numeric()
-    print(progressUnits)
+      as.integer()
 
     rstudiojobid <- rstudioapi::jobAdd(
       task_name,
