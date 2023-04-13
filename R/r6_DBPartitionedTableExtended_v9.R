@@ -132,6 +132,11 @@ DBPartitionedTableExtended_v9 <- R6::R6Class(
         self$tables[[i]]$add_indexes()
       }
     },
+    confirm_indexes = function(){
+      for(i in self$partitions_randomized){
+        self$tables[[i]]$confirm_indexes()
+      }
+    },
     nrow = function(collapse = TRUE){
       table_rows <- self$tables[[1]]$dbconnection$autoconnection %>%
         csdb::get_table_names_and_info()

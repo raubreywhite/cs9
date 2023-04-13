@@ -6,13 +6,16 @@
 \usage{
 run_task_sequentially_as_rstudio_job_using_load_all(
   task_name,
-  ss_prefix = "global$ss"
+  ss_prefix = "global$ss",
+  verbose = FALSE
 )
 }
 \arguments{
 \item{task_name}{Task name}
 
 \item{ss_prefix}{The prefix that locates the surveillance system}
+
+\item{verbose}{If TRUE, then uses rstudioapi::jobRunScript to capture all output. Otherwise only captures the progress.}
 }
 \description{
 Description

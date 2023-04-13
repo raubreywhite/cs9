@@ -217,9 +217,9 @@ SurveillanceSystem_v9 <- R6::R6Class(
       retval$update_plans()
       retval
     },
-    run_task = function(task_name){
+    run_task = function(task_name, rstudiojobid = NULL){
       task <- self$get_task(task_name)
-      task$run(log = FALSE)
+      task$run(rstudiojobid = rstudiojobid)
     },
     shortcut_get_tables = function(task_name){
       self$get_task(task_name)$tables
@@ -237,6 +237,9 @@ SurveillanceSystem_v9 <- R6::R6Class(
       retval <- rbindlist(retval)
       setcolorder(retval, c("index_plan", "index_analysis"))
       retval
+    },
+    shortcut_get_num_analyses = function(task_name){
+      self$get_task(task_name)$plans[[index_plan]]$num_analyses()
     }
   )
 )
@@ -256,24 +259,69 @@ analyses_to_dt <- function(analyses) {
 #' Description
 #' @param task_name Task name
 #' @param ss_prefix The prefix that locates the surveillance system
+#' @param verbose If TRUE, then uses rstudioapi::jobRunScript to capture all output. Otherwise only captures the progress.
 #' @export
 run_task_sequentially_as_rstudio_job_using_load_all <- function(
     task_name,
-    ss_prefix = "global$ss"
+    ss_prefix = "global$ss",
+    verbose = FALSE
     ){
+
   tempfile <- fs::path(tempdir(check = T), paste0(task_name, ".R"))
-  cat(glue::glue(
-    "
-        devtools::load_all('.')
-        {ss_prefix}$tasks[['{task_name}']]$cores <- 1
-        {ss_prefix}$run_task('{task_name}')
-    "
-  ), file = tempfile)
-  rstudioapi::jobRunScript(
-    path = tempfile,
-    name = task_name,
-    workingDir = getwd(),
-  )
+
+  if(verbose){
+    cat(glue::glue(
+      "
+          devtools::load_all('.')
+          {ss_prefix}$tasks[['{task_name}']]$cores <- 1
+          {ss_prefix}$run_task('{task_name}')
+      "
+    ), file = tempfile)
+    rstudioapi::jobRunScript(
+      path = tempfile,
+      name = task_name,
+      workingDir = getwd(),
+    )
+  } else {
+
+    # get number of progressUnits (i.e. num analyses)
+    cat(glue::glue(
+      "
+          devtools::load_all('.')
+          {ss_prefix}$tasks[['{task_name}']]$cores <- 1
+          x <- {ss_prefix}$shortcut_get_num_analyses('{task_name}')
+          cat('\n',x)
+      "
+    ), file = tempfile)
+
+    progressUnits <- glue::glue("Rscript '{tempfile}' | tail -n 1") %>%
+      system(intern = TRUE) %>%
+      stringr::str_remove_all(" ") %>%
+      as.numeric()
+
+    cat(glue::glue(
+      "
+          Sys.sleep(2)
+          devtools::load_all('.')
+          {ss_prefix}$tasks[['{task_name}']]$cores <- 1
+          {ss_prefix}$run_task('{task_name}', rstudiojobid = '{rstudiojobid}')
+      "
+    ), file = tempfile)
+    ps_before <- ps::ps() %>% setDT()
+    system(glue::glue("Rscript {tempfile}"), wait = FALSE, ignore.stdout = TRUE, ignore.stderr = TRUE)
+    ps_after <- ps::ps() %>% setDT()
+    ps_new <- ps_after[!pid %in% ps_before$pid & name=="R"]$pid
+
+    rstudiojobid <- rstudioapi::jobAdd(
+      task_name,
+      progressUnits = progressUnits,
+      actions = list(
+        stop = function(id){
+          tools::pskill(ps_new)
+        }
+      )
+    )
+  }
 }
 
 generic_data_function_factory_v9 <- function(tables, argset, fn_name) {
