@@ -239,7 +239,7 @@ SurveillanceSystem_v9 <- R6::R6Class(
       retval
     },
     shortcut_get_num_analyses = function(task_name){
-      self$get_task(task_name)$plans[[index_plan]]$num_analyses()
+      self$get_task(task_name)$num_analyses()
     }
   )
 )
@@ -288,39 +288,43 @@ run_task_sequentially_as_rstudio_job_using_load_all <- function(
     cat(glue::glue(
       "
           devtools::load_all('.')
-          {ss_prefix}$tasks[['{task_name}']]$cores <- 1
           x <- {ss_prefix}$shortcut_get_num_analyses('{task_name}')
-          cat('\n',x)
+          cat('\\n',x)
+          # cat('\\n',3)
       "
     ), file = tempfile)
 
-    progressUnits <- glue::glue("Rscript '{tempfile}' | tail -n 1") %>%
-      system(intern = TRUE) %>%
+    progressUnits <- system(glue::glue("Rscript '{tempfile}' | tail -n 1"), intern = TRUE)
+    print(progressUnits)
+    progressUnits %<>%
       stringr::str_remove_all(" ") %>%
       as.numeric()
-
-    cat(glue::glue(
-      "
-          Sys.sleep(2)
-          devtools::load_all('.')
-          {ss_prefix}$tasks[['{task_name}']]$cores <- 1
-          {ss_prefix}$run_task('{task_name}', rstudiojobid = '{rstudiojobid}')
-      "
-    ), file = tempfile)
-    ps_before <- ps::ps() %>% setDT()
-    system(glue::glue("Rscript {tempfile}"), wait = FALSE, ignore.stdout = TRUE, ignore.stderr = TRUE)
-    ps_after <- ps::ps() %>% setDT()
-    ps_new <- ps_after[!pid %in% ps_before$pid & name=="R"]$pid
+    print(progressUnits)
 
     rstudiojobid <- rstudioapi::jobAdd(
       task_name,
       progressUnits = progressUnits,
       actions = list(
         stop = function(id){
-          tools::pskill(ps_new)
+          pid <- readLines(paste0("/tmp/",task_name,".pid"))
+          tools::pskill(pid)
         }
       )
     )
+
+    cat(glue::glue(
+      "
+          devtools::load_all('.')
+          {ss_prefix}$tasks[['{task_name}']]$cores <- 1
+          {ss_prefix}$run_task('{task_name}', rstudiojobid = '{rstudiojobid}')
+      "
+    ), file = tempfile)
+
+    ps_before <- ps::ps() %>% setDT()
+    system(glue::glue("Rscript {tempfile}"), wait = FALSE, ignore.stdout = TRUE, ignore.stderr = TRUE)
+    ps_after <- ps::ps() %>% setDT()
+    ps_new <- ps_after[!pid %in% ps_before$pid & name=="R"]$pid
+    cat(ps_new, "\n", file=paste0("/tmp/",task_name,".pid"))
   }
 }
 
