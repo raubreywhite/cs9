@@ -14,8 +14,6 @@ run_task_sequentially_as_rstudio_job_using_load_all(
 \item{task_name}{Task name}
 
 \item{ss_prefix}{The prefix that locates the surveillance system}
-
-\item{verbose}{If TRUE, then uses rstudioapi::jobRunScript to capture all output. Otherwise only captures the progress.}
 }
 \description{
 Description

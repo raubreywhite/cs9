@@ -268,7 +268,7 @@ add_task_from_config
 \if{latex}{\out{\hypertarget{method-SurveillanceSystem_v9-run_task}{}}}
 \subsection{Method \code{run_task()}}{
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{SurveillanceSystem_v9$run_task(task_name, rstudiojobid = NULL)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{SurveillanceSystem_v9$run_task(task_name)}\if{html}{\out{</div>}}
 }
 
 }
