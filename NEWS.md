@@ -2,7 +2,6 @@
 
 * `DBPartitionedTableExtended_v9$info()` bug fixed with argument `collapse=TRUE`.
 * Inclusion of `confirm_indexes` in `DBPartitionedTableExtended_v9`
-* Inclusion of `verbose` argument in `SurveillanceSystem_v9$run_task_sequentially_as_rstudio_job_using_load_all`
 
 # Version 2023.4.12
 

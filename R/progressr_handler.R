@@ -1,4 +1,4 @@
-progressr_handler <- function(interval = 10, clear = FALSE, rstudiojobid = NULL, ...) {
+progressr_handler <- function(interval = 10, clear = FALSE, ...) {
   reporter <- local({
     start_time <- NULL
     list(
@@ -21,7 +21,6 @@ progressr_handler <- function(interval = 10, clear = FALSE, rstudiojobid = NULL,
         f_current_step <- formatC(state$step, width = log10(config$max_steps)+1, digits = 0, format="f")
 
         cat(glue::glue("{f_current_step} / {config$max_steps} = {f_perc}%     {f_remaining_time}m -> {f_time_so_far}m = {f_total_time}m"), "\n")
-        if(!is.null(rstudiojobid)) rstudioapi::jobSetProgress(rstudiojobid, state$step)
       },
 
       finish = function(...) {

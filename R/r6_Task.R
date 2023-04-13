@@ -116,7 +116,7 @@ Task <- R6::R6Class(
       }
       return(retval)
     },
-    run = function(cores = self$cores, rstudiojobid = NULL) {
+    run = function(cores = self$cores) {
 
       status <- "failed"
       start_datetime <- lubridate::now()
@@ -133,8 +133,6 @@ Task <- R6::R6Class(
           ram_all_cores_mb = round(ram_max_used_mb, 1),
           ram_per_core_mb = round(ram_max_used_mb/cores, 1),
           status = status)
-
-        if(!is.null(rstudiojobid)) rstudioapi::jobSetState(rstudiojobid, state = status)
       })
 
       # task <- tm_get_task("analysis_norsyss_qp_gastro")
@@ -195,7 +193,7 @@ Task <- R6::R6Class(
               cores = cores
             )
           },
-          handlers = progressr_handler(rstudiojobid = rstudiojobid),
+          handlers = progressr_handler(),
           interval = 10,
           delay_stdout = FALSE,
           delay_conditions = ""

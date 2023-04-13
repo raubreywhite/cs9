@@ -217,9 +217,9 @@ SurveillanceSystem_v9 <- R6::R6Class(
       retval$update_plans()
       retval
     },
-    run_task = function(task_name, rstudiojobid = NULL){
+    run_task = function(task_name){
       task <- self$get_task(task_name)
-      task$run(rstudiojobid = rstudiojobid)
+      task$run()
     },
     shortcut_get_tables = function(task_name){
       self$get_task(task_name)$tables
@@ -259,7 +259,6 @@ analyses_to_dt <- function(analyses) {
 #' Description
 #' @param task_name Task name
 #' @param ss_prefix The prefix that locates the surveillance system
-#' @param verbose If TRUE, then uses rstudioapi::jobRunScript to capture all output. Otherwise only captures the progress.
 #' @export
 run_task_sequentially_as_rstudio_job_using_load_all <- function(
     task_name,
@@ -269,64 +268,18 @@ run_task_sequentially_as_rstudio_job_using_load_all <- function(
 
   tempfile <- fs::path(tempdir(check = T), paste0(task_name, ".R"))
 
-  if(verbose){
-    cat(glue::glue(
-      "
-          devtools::load_all('.')
-          {ss_prefix}$tasks[['{task_name}']]$cores <- 1
-          {ss_prefix}$run_task('{task_name}')
-      "
-    ), file = tempfile)
-    rstudioapi::jobRunScript(
-      path = tempfile,
-      name = task_name,
-      workingDir = getwd(),
-    )
-  } else {
-    wd <- getwd()
-    # get number of progressUnits (i.e. num analyses)
-    cat(glue::glue(
-      "
-          devtools::load_all('.')
-          x <- {ss_prefix}$shortcut_get_num_analyses('{task_name}')
-          cat('\\n',x)
-          # cat('\\n',3)
-      "
-    ), file = tempfile)
-
-    progressUnits <- system2("Rscript", tempfile, stdout = T, stderr = F)
-    progressUnits <- progressUnits[length(progressUnits)] %>%
-      stringr::str_remove_all(" ") %>%
-      as.integer()
-
-    rstudiojobid <- rstudioapi::jobAdd(
-      task_name,
-      progressUnits = progressUnits,
-      actions = list(
-        stop = function(id){
-          pid <- readLines(paste0("/tmp/",task_name,".pid"))
-          tools::pskill(pid)
-          rstudioapi::jobSetState(id, "cancelled")
-        }
-      ),
-      running = TRUE,
-      show = FALSE
-    )
-
-    cat(glue::glue(
-      "
-          devtools::load_all('.')
-          {ss_prefix}$tasks[['{task_name}']]$cores <- 1
-          {ss_prefix}$run_task('{task_name}', rstudiojobid = '{rstudiojobid}')
-      "
-    ), file = tempfile)
-
-    ps_before <- ps::ps() %>% setDT()
-    system2("Rscript", tempfile)
-    ps_after <- ps::ps() %>% setDT()
-    ps_new <- ps_after[!pid %in% ps_before$pid & name=="R"]$pid
-    cat(ps_new, "\n", file=paste0("/tmp/",task_name,".pid"))
-  }
+  cat(glue::glue(
+    "
+        devtools::load_all('.')
+        {ss_prefix}$tasks[['{task_name}']]$cores <- 1
+        {ss_prefix}$run_task('{task_name}')
+    "
+  ), file = tempfile)
+  rstudioapi::jobRunScript(
+    path = tempfile,
+    name = task_name,
+    workingDir = getwd(),
+  )
 }
 
 generic_data_function_factory_v9 <- function(tables, argset, fn_name) {
