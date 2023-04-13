@@ -287,10 +287,10 @@ run_task_sequentially_as_rstudio_job_using_load_all <- function(
     # get number of progressUnits (i.e. num analyses)
     cat(glue::glue(
       "
-          devtools::load_all('.')
-          x <- {ss_prefix}$shortcut_get_num_analyses('{task_name}')
-          cat('\\n',x)
-          # cat('\\n',3)
+          # devtools::load_all('.')
+          # x <- {ss_prefix}$shortcut_get_num_analyses('{task_name}')
+          # cat('\\n',x)
+          cat('\\n',3)
       "
     ), file = tempfile)
 
