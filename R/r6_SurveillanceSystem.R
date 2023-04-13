@@ -294,7 +294,12 @@ run_task_sequentially_as_rstudio_job_using_load_all <- function(
       "
     ), file = tempfile)
 
-    progressUnits <- system(glue::glue("Rscript '{tempfile}' | tail -n 1"), intern = TRUE) %>%
+    progressUnits <- system(
+      glue::glue("Rscript '{tempfile}' | tail -n 1"),
+      intern = TRUE,
+      ignore.stdout = TRUE,
+      ignore.stderr = TRUE
+      ) %>%
       stringr::str_remove_all(" ") %>%
       as.integer()
 
@@ -307,7 +312,8 @@ run_task_sequentially_as_rstudio_job_using_load_all <- function(
           tools::pskill(pid)
           rstudioapi::jobSetState(id, "cancelled")
         }
-      )
+      ),
+      show = FALSE
     )
 
     cat(glue::glue(
