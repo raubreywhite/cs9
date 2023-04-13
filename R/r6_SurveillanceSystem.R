@@ -309,6 +309,7 @@ run_task_sequentially_as_rstudio_job_using_load_all <- function(
           rstudioapi::jobSetState(id, "cancelled")
         }
       ),
+      running = TRUE,
       show = FALSE
     )
 
@@ -321,7 +322,7 @@ run_task_sequentially_as_rstudio_job_using_load_all <- function(
     ), file = tempfile)
 
     ps_before <- ps::ps() %>% setDT()
-    system(glue::glue("Rscript {tempfile}"), wait = FALSE, ignore.stdout = TRUE, ignore.stderr = TRUE)
+    system2("Rscript", tempfile)
     ps_after <- ps::ps() %>% setDT()
     ps_new <- ps_after[!pid %in% ps_before$pid & name=="R"]$pid
     cat(ps_new, "\n", file=paste0("/tmp/",task_name,".pid"))
