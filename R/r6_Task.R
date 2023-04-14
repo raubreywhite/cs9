@@ -363,7 +363,7 @@ Task <- R6::R6Class(
 
                 return(list(
                   error = FALSE,
-                  msg = "success"
+                  msg = "succeeded"
                 ))
               },
               error = function(e) {

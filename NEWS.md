@@ -1,3 +1,7 @@
+# Version 2023.4.14
+
+* Changed "success" to "succeeded" in `update_config_tasks_stats`
+
 # Version 2023.4.13
 
 * `DBPartitionedTableExtended_v9$info()` bug fixed with argument `collapse=TRUE`.
