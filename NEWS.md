@@ -1,7 +1,7 @@
 # Version 2023.4.13
 
 * `DBPartitionedTableExtended_v9$info()` bug fixed with argument `collapse=TRUE`.
-* Inclusion of `confirm_indexes` in `DBPartitionedTableExtended_v9`
+* Inclusion of `confirm_indexes` in `DBPartitionedTableExtended_v9`.
 
 # Version 2023.4.12
 
