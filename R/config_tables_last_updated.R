@@ -3,7 +3,7 @@ update_config_tables_last_updated <- function(table_name, date = NULL, datetime 
 
   if (is.null(date) & is.null(datetime)) {
     date <- lubridate::today()
-    datetime <- as.character(cstime::now_c())
+    datetime <- cstime::now_c()
   }
   if (is.null(date) & !is.null(datetime)) {
     date <- stringr::str_sub(datetime, 1, 10)

@@ -5,7 +5,7 @@ update_config_data_hash_for_each_plan <- function(task, index_plan, element_tag,
 
   if (is.null(date) & is.null(datetime)) {
     date <- lubridate::today()
-    datetime <- as.character(lubridate::now())
+    datetime <- cstime::now_c()
   }
   if (is.null(date) & !is.null(datetime)) {
     date <- stringr::str_sub(datetime, 1, 10)
