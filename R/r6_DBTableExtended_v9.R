@@ -25,12 +25,12 @@ DBTableExtended_v9 <- R6::R6Class(
       )
     },
     insert_data = function(newdata, verbose = TRUE){
-      newdata[, auto_last_updated_datetime := lubridate::now()]
+      newdata[, auto_last_updated_datetime := cstime::now_c()]
       super$insert_data(newdata, verbose)
       update_config_tables_last_updated(table_name = self$table_name)
     },
     upsert_data = function(newdata, drop_indexes = names(self$indexes), verbose = TRUE){
-      newdata[, auto_last_updated_datetime := lubridate::now()]
+      newdata[, auto_last_updated_datetime := cstime::now_c()]
       super$upsert_data(newdata, drop_indexes, verbose)
       update_config_tables_last_updated(table_name = self$table_name)
     },
@@ -47,12 +47,12 @@ DBTableExtended_v9 <- R6::R6Class(
       update_config_tables_last_updated(table_name = self$table_name)
     },
     drop_all_rows_and_then_upsert_data = function(newdata, drop_indexes = names(self$indexes), verbose = TRUE) {
-      newdata[, auto_last_updated_datetime := lubridate::now()]
+      newdata[, auto_last_updated_datetime := cstime::now_c()]
       super$drop_all_rows_and_then_upsert_data(newdata, drop_indexes, verbose)
       update_config_tables_last_updated(table_name = self$table_name)
     },
     drop_all_rows_and_then_insert_data = function(newdata, verbose = TRUE) {
-      newdata[, auto_last_updated_datetime := lubridate::now()]
+      newdata[, auto_last_updated_datetime := cstime::now_c()]
       super$drop_all_rows_and_then_insert_data(newdata, verbose)
       update_config_tables_last_updated(table_name = self$table_name)
     }

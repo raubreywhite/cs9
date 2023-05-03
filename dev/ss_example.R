@@ -162,7 +162,7 @@ example_weather_import_data_from_api_action <- function(data, argset, tables) {
   print(res)
 
   # we now need to format it
-  res[, granularity_time := "day"]
+  res[, granularity_time := "date"]
   res[, sex := "total"]
   res[, age := "total"]
   res[, location_code := argset$location_code]
@@ -170,6 +170,7 @@ example_weather_import_data_from_api_action <- function(data, argset, tables) {
 
   # fill in missing structural variables
   cstidy::set_csfmt_rts_data_v1(res)
+  cstidy::remove_class_csfmt_rts_data(res)
 
   # we look at the downloaded data
   print("Data after missing structural variables filled in")
@@ -189,3 +190,8 @@ example_weather_import_data_from_api_action <- function(data, argset, tables) {
     # )
   }
 }
+
+library(data.table)
+library(magrittr)
+ss$run_task("example_weather_import_data_from_api")
+ss$tables$anon_example_weather$tbl() %>% dplyr::collect() %>% data.table()

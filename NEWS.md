@@ -1,3 +1,7 @@
+# Version 2023.5.3
+
+* In R 4.3.0 `as.character(lubridate::now())` adds microseconds, which breaks the SQL upload. This is now replaced by `cstime::now_c()`.
+
 # Version 2023.4.14
 
 * Changed "success" to "succeeded" in `update_config_tasks_stats`
