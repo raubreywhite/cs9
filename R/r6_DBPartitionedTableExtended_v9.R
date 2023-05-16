@@ -132,16 +132,48 @@ DBPartitionedTableExtended_v9 <- R6::R6Class(
         self$tables[[i]]$add_indexes()
       }
     },
-    nrow = function(){
+    confirm_indexes = function(){
+      for(i in self$partitions_randomized){
+        self$tables[[i]]$confirm_indexes()
+      }
+    },
+    nrow = function(collapse = TRUE){
       table_rows <- self$tables[[1]]$dbconnection$autoconnection %>%
-        DBI::dbGetQuery("select o.name as table_name, i.rowcnt as n from sys.objects o join sys.sysindexes i on o.object_id = i.id where o.is_ms_shipped = 0 and i.rowcnt > 0 order by o.name") %>%
-        setDT() %>% unique()
+        csdb::get_table_names_and_info()
+      table_rows[, keep := FALSE]
+      for(i in self$partitions_randomized){
+        table_rows[table_name==self$tables[[i]]$table_name, keep := TRUE]
+      }
+      table_rows <- table_rows[keep == T,.(
+        table_name,
+        nrow
+      )]
+      if(collapse) return(sum(table_rows$nrow))
+
+      data.table::shouldPrint(table_rows)
+      return(table_rows)
+    },
+    info = function(collapse = FALSE){
+      table_rows <- self$tables[[1]]$dbconnection$autoconnection %>%
+        csdb::get_table_names_and_info()
       table_rows[, keep := FALSE]
       for(i in self$partitions_randomized){
         table_rows[table_name==self$tables[[i]]$table_name, keep := TRUE]
       }
       table_rows <- table_rows[keep == T]
       table_rows[, keep := NULL]
+
+      if(collapse){
+        table_rows <- table_rows[
+          ,
+          .(
+            size_total_gb = sum(size_total_gb),
+            size_data_gb = sum(size_data_gb),
+            size_index_gb = sum(size_index_gb),
+            nrow = sum(nrow)
+          )
+        ]
+      }
       data.table::shouldPrint(table_rows)
       return(table_rows)
     }

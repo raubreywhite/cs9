@@ -12,6 +12,7 @@ Depends:
   R (>= 4.1.0)
 Imports:
   csdb,
+  cstime (>= 2023.5.3),
   data.table,
   dplyr,
   fs,

@@ -10,15 +10,15 @@ update_config_tasks_stats <- function(
     ram_per_core_mb,
     status
 ) {
-  stopifnot(status %in% c("success", "failed"))
-
-  start_datetime <- as.character(start_datetime)
-  start_date <- stringr::str_sub(start_datetime, 1, 10)
-
-  stop_datetime <- as.character(stop_datetime)
-  stop_date <- stringr::str_sub(stop_datetime, 1, 10)
+  stopifnot(status %in% c("succeeded", "failed"))
 
   runtime_minutes <- round(as.numeric(difftime(stop_datetime, start_datetime, units = "min")), 2)
+
+  start_datetime <- format(start_datetime, "%Y-%m-%d %H:%M:%S")
+  start_date <- stringr::str_sub(start_datetime, 1, 10)
+
+  stop_datetime <- format(stop_datetime, "%Y-%m-%d %H:%M:%S")
+  stop_date <- stringr::str_sub(stop_datetime, 1, 10)
 
   to_upload <- data.table(
     task = task,

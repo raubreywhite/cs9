@@ -1,3 +1,21 @@
+# Version 2023.5.3
+
+* In R 4.3.0 `as.character(lubridate::now())` adds microseconds, which breaks the SQL upload. This is now replaced by `cstime::now_c()`.
+
+# Version 2023.4.14
+
+* Changed "success" to "succeeded" in `update_config_tasks_stats`
+
+# Version 2023.4.13
+
+* `DBPartitionedTableExtended_v9$info()` bug fixed with argument `collapse=TRUE`.
+* Inclusion of `confirm_indexes` in `DBPartitionedTableExtended_v9`.
+
+# Version 2023.4.12
+
+* `DBPartitionedTableExtended_v9$nrow()` now has a new argument `collapse=FALSE` that provides partion-specific results
+* `DBPartitionedTableExtended_v9$info()` now includes sizes in MB
+
 # Version 2023.4.3
 
 * Bug fix in `DBPartitionedTableExtended_v9$nrow()`

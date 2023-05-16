@@ -219,7 +219,7 @@ SurveillanceSystem_v9 <- R6::R6Class(
     },
     run_task = function(task_name){
       task <- self$get_task(task_name)
-      task$run(log = FALSE)
+      task$run()
     },
     shortcut_get_tables = function(task_name){
       self$get_task(task_name)$tables
@@ -237,6 +237,9 @@ SurveillanceSystem_v9 <- R6::R6Class(
       retval <- rbindlist(retval)
       setcolorder(retval, c("index_plan", "index_analysis"))
       retval
+    },
+    shortcut_get_num_analyses = function(task_name){
+      self$get_task(task_name)$num_analyses()
     }
   )
 )
@@ -261,7 +264,9 @@ run_task_sequentially_as_rstudio_job_using_load_all <- function(
     task_name,
     ss_prefix = "global$ss"
     ){
+
   tempfile <- fs::path(tempdir(check = T), paste0(task_name, ".R"))
+
   cat(glue::glue(
     "
         devtools::load_all('.')

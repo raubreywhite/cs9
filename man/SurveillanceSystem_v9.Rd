@@ -67,6 +67,7 @@ global$ss$add_table(
 \item \href{#method-SurveillanceSystem_v9-shortcut_get_argset}{\code{SurveillanceSystem_v9$shortcut_get_argset()}}
 \item \href{#method-SurveillanceSystem_v9-shortcut_get_data}{\code{SurveillanceSystem_v9$shortcut_get_data()}}
 \item \href{#method-SurveillanceSystem_v9-shortcut_get_plans_argsets_as_dt}{\code{SurveillanceSystem_v9$shortcut_get_plans_argsets_as_dt()}}
+\item \href{#method-SurveillanceSystem_v9-shortcut_get_num_analyses}{\code{SurveillanceSystem_v9$shortcut_get_num_analyses()}}
 \item \href{#method-SurveillanceSystem_v9-clone}{\code{SurveillanceSystem_v9$clone()}}
 }
 }
@@ -308,6 +309,15 @@ add_task_from_config
 \subsection{Method \code{shortcut_get_plans_argsets_as_dt()}}{
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{SurveillanceSystem_v9$shortcut_get_plans_argsets_as_dt(task_name)}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-SurveillanceSystem_v9-shortcut_get_num_analyses"></a>}}
+\if{latex}{\out{\hypertarget{method-SurveillanceSystem_v9-shortcut_get_num_analyses}{}}}
+\subsection{Method \code{shortcut_get_num_analyses()}}{
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{SurveillanceSystem_v9$shortcut_get_num_analyses(task_name)}\if{html}{\out{</div>}}
 }
 
 }

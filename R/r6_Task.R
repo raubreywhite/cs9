@@ -116,7 +116,7 @@ Task <- R6::R6Class(
       }
       return(retval)
     },
-    run = function(log = TRUE, cores = self$cores) {
+    run = function(cores = self$cores) {
 
       status <- "failed"
       start_datetime <- lubridate::now()
@@ -165,13 +165,6 @@ Task <- R6::R6Class(
         run_type <- "sequential"
         run_description <- "plans=sequential, argset=sequential"
         cores <- 1
-
-        message("\n***** MULTICORE DOES NOT WORK IN INTERACTIVE MODE *****")
-        message("***** YOU MUST DO THE FOLLOWING: *****")
-        message("***** 1. INSTALL THE PACKAGE (SYKDOMSPULSEN) *****")
-        message("***** 2. RUN THE FOLLOWING FROM THE TERMINAL: *****")
-        message("\nRscript -e 'sykdomspulsen::tm_run_task(\"", self$name, "\")'\n")
-        message("***** GOOD LUCK!! *****\n")
       } else {
         run_type <- "parallel_plans"
         run_description <- "plans=multicore, analyses=sequential"
@@ -181,33 +174,6 @@ Task <- R6::R6Class(
         message("Running action_before_fn")
         self$action_before_fn()
       }
-      #
-      #       if (!run_sequential) {
-      #         if(!interactive()) options("future.fork.enable"=TRUE)
-      #         doFuture::registerDoFuture()
-      #         #doMC::registerDoMC(2)
-      #
-      #         if (length(self$plans) == 1) {
-      #           # parallelize the inner loop
-      #           future::plan(list(
-      #             future::sequential,
-      #             future::multicore,
-      #             workers = cores,
-      #             earlySignal = TRUE
-      #           ))
-      #
-      #           parallel <- "plans=sequential, argset=multicore"
-      #         } else {
-      #           # parallelize the outer loop
-      #           future::plan(future::multicore, workers = cores)
-      #
-      #           parallel <- "plans=multicore, argset=sequential"
-      #         }
-      #       } else {
-      #         data.table::setDTthreads()
-      #
-      #         parallel <- "plans=sequential, argset=sequential"
-      #       }
 
       message(glue::glue("{run_description} with cores={cores}"))
 
@@ -228,18 +194,6 @@ Task <- R6::R6Class(
             )
           },
           handlers = progressr_handler(),
-          # handlers = progressr::handler_progress(
-          #   format = ifelse(
-          #     interactive(),
-          #     "[:bar] :current/:total (:percent) in :elapsedfull, eta: :eta",
-          #     "[:bar] :current/:total (:percent) in :elapsedfull, eta: :eta\n"
-          #   ),
-          #   interval = 10.0,
-          #   clear = FALSE
-          # ),
-          # handlers = progressr::handler_rstudio(
-          #   title = self$name
-          # ),
           interval = 10,
           delay_stdout = FALSE,
           delay_conditions = ""
@@ -308,7 +262,7 @@ Task <- R6::R6Class(
         self$action_after_fn()
       }
 
-    status <- "success"
+      status <- "succeeded"
       if (!is.null(self$permission)) self$permission$revoke_permission()
     }
   ),
@@ -325,7 +279,6 @@ Task <- R6::R6Class(
           verbose <- FALSE
         }
 
-        # self$plans[plans_index][[i]]$set_verbose(FALSE)
         data <- self$plans[plans_index][[i]]$get_data()
         hashes <- data$hash
         last_run_hashes <- get_last_run_data_hash_split_into_plnr_format(task = self$name, index_plan = i, expected_element_tags = names(data$hash$current_elements))
@@ -410,7 +363,7 @@ Task <- R6::R6Class(
 
                 return(list(
                   error = FALSE,
-                  msg = "success"
+                  msg = "succeeded"
                 ))
               },
               error = function(e) {
