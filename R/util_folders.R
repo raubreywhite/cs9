@@ -1,30 +1,22 @@
 #' This function gets the right folder for results
-#' @param type input, output
 #' @param ... Second level and beyond
 #' @param create_dir create directory if it does not exist
 #' @param trailing_slash do you want a trailing /?
 #' @param auto Is this running in auto (then the base directory is used) or interactive ("/test")?
 #' @export
-path <- function(type = "output", ..., create_dir = FALSE, trailing_slash = FALSE, auto = config$is_production) {
-  stopifnot(type %in% c("input", "output"))
-
-  start_location <- dplyr::case_when(
-    type == "input" ~ config$path_input,
-    type == "output" ~ config$path_output
-  )
-
+path <- function(..., create_dir = FALSE, trailing_slash = FALSE, auto = config$is_production) {
   end_location <- glue::glue(fs::path(...), .envir = parent.frame(n = 1))
   end_location <- stringr::str_split(end_location, "/")[[1]]
   end_location <- end_location[end_location != ""]
   if (!auto) {
     if (length(end_location) == 1) {
-      end_location <- c(end_location[1], "test")
+      end_location <- c(end_location[1], "interactive")
     } else if (length(end_location) >= 2) {
       end_location <- c(end_location[1], "test", end_location[2:length(end_location)])
     }
   }
 
-  retval <- paste0(c(start_location, end_location), collapse = "/")
+  retval <- paste0(c(config$path, end_location), collapse = "/")
   if (create_dir) {
     if (!fs::dir_exists(retval)) dir.create(retval, showWarnings = FALSE, recursive = TRUE)
   }
