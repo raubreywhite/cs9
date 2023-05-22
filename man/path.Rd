@@ -8,7 +8,7 @@ path(
   ...,
   create_dir = FALSE,
   trailing_slash = FALSE,
-  auto = config$is_production
+  auto = sc9::config$is_auto
 )
 }
 \arguments{
@@ -18,7 +18,7 @@ path(
 
 \item{trailing_slash}{do you want a trailing /?}
 
-\item{auto}{Is this running in auto (then the base directory is used) or interactive ("/test")?}
+\item{auto}{Is this running in auto (then the base directory is used) or interactive ("/interactive")?}
 }
 \description{
 This function gets the right folder for results

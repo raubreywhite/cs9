@@ -2,9 +2,9 @@
 #' @param ... Second level and beyond
 #' @param create_dir create directory if it does not exist
 #' @param trailing_slash do you want a trailing /?
-#' @param auto Is this running in auto (then the base directory is used) or interactive ("/test")?
+#' @param auto Is this running in auto (then the base directory is used) or interactive ("/interactive")?
 #' @export
-path <- function(..., create_dir = FALSE, trailing_slash = FALSE, auto = config$is_production) {
+path <- function(..., create_dir = FALSE, trailing_slash = FALSE, auto = sc9::config$is_auto) {
   end_location <- glue::glue(fs::path(...), .envir = parent.frame(n = 1))
   end_location <- stringr::str_split(end_location, "/")[[1]]
   end_location <- end_location[end_location != ""]
