@@ -5,4 +5,5 @@ nul
 dev
 _pkgdown.yaml
 @eaDir
+LICENSE.md
 vignettes/resources
