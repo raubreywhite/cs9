@@ -1,5 +1,5 @@
 Package: sc9
-Title: Real-time analysis and disease surveillance system
+Title: A Framework for Real-time Analysis and Disease Surveillance
 Version: 9.0.1
 Authors@R: c(
   person(c("Richard","Aubrey"), "White", email = "hello@rwhite.no", role = c("aut", "cre"),
