@@ -269,8 +269,10 @@ run_task_sequentially_as_rstudio_job_using_load_all <- function(
 
   cat(glue::glue(
     "
+        cat('\n**devtools::load_all**\n\n')
         devtools::load_all('.')
         {ss_prefix}$tasks[['{task_name}']]$cores <- 1
+        cat('\n**run_task**\n\n')
         {ss_prefix}$run_task('{task_name}')
     "
   ), file = tempfile)
