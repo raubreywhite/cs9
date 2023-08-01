@@ -10,9 +10,9 @@ path <- function(..., create_dir = FALSE, trailing_slash = FALSE, auto = sc9::co
   end_location <- end_location[end_location != ""]
   if (!auto) {
     if (length(end_location) == 1) {
-      end_location <- c(end_location[1], "interactive")
+      end_location <- c(end_location[1], "_interactive")
     } else if (length(end_location) >= 2) {
-      end_location <- c(end_location[1], "interactive", end_location[2:length(end_location)])
+      end_location <- c(end_location[1], "_interactive", end_location[2:length(end_location)])
     }
   }
 
