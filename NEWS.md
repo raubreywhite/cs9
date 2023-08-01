@@ -1,3 +1,7 @@
+# Version 2023.8.1
+
+- sc9::path now uses _interactive instead of interactive.
+
 # Version 2023.5.3
 
 * In R 4.3.0 `as.character(lubridate::now())` adds microseconds, which breaks the SQL upload. This is now replaced by `cstime::now_c()`.
