@@ -87,7 +87,7 @@ DBPartitionedTableExtended_v9 <- R6::R6Class(
       partition <- 0
       for(i in self$partitions_randomized){
         partition <- partition + 1
-        if(verbose) message("Partition ", partition,"/",length(self$partitions))
+        if(verbose) message("Deleting inside partition ", partition,"/",length(self$partitions))
         self$tables[[i]]$drop_rows_where(condition)
       }
     },
