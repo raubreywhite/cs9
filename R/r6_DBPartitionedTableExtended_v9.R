@@ -83,12 +83,15 @@ DBPartitionedTableExtended_v9 <- R6::R6Class(
         self$tables[[i]]$drop_all_rows()
       }
     },
-    drop_rows_where = function(condition){
+    drop_rows_where = function(condition, verbose = FALSE){
+      partition <- 0
       for(i in self$partitions_randomized){
+        partition <- partition + 1
+        if(verbose) cat("Partition ", partition,"/",length(self$partitions))
         self$tables[[i]]$drop_rows_where(condition)
       }
     },
-    keep_rows_where = function(condition){
+    keep_rows_where = function(condition, verbose = FALSE){
       for(i in self$partitions_randomized){
         self$tables[[i]]$keep_rows_where(condition)
       }
