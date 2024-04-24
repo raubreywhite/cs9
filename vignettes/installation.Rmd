@@ -30,6 +30,7 @@ The following environmental variables must be available from within R. R only lo
 | SC9_DBCONFIG_USER               | 'SA'                            |                                                                       |
 | SC9_DBCONFIG_PASSWORD           | 'yourStrongPassword100'         |                                                                       |
 | SC9_DBCONFIG_TRUSTED_CONNECTION | 'no'                            |                                                                       |
+| SC9_DBCONFIG_SSLMODE | 'no'                            |                                                                       |
 | SC9_DBCONFIG_SERVER             | 'dm-prod'                       |                                                                       |
 |                                 |                                 |                                                                       |
 | SC9_DBCONFIG_SCHEMA_CONFIG      | 'dbo'                           |                                                                       |
@@ -41,3 +42,7 @@ The following environmental variables must be available from within R. R only lo
 |                                 |                                 |                                                                       |
 
 ## Docker
+
+An example docker-compose file is available [here](https://github.com/csids/docker-examples-csids/blob/main/csids-sc9-single-user-docker-compose/docker-compose.yml).
+
+

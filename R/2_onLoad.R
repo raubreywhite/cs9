@@ -93,6 +93,7 @@ get_db_from_env <- function(access) {
     user = Sys.getenv("SC9_DBCONFIG_USER"),
     password = Sys.getenv("SC9_DBCONFIG_PASSWORD"),
     trusted_connection = Sys.getenv("SC9_DBCONFIG_TRUSTED_CONNECTION"),
+    sslmode = Sys.getenv("SC9_DBCONFIG_SSLMODE"),
     server = Sys.getenv("SC9_DBCONFIG_SERVER"),
     schema = Sys.getenv(paste0("SC9_DBCONFIG_SCHEMA_", toupper(access))),
     db = Sys.getenv(paste0("SC9_DBCONFIG_DB_", toupper(access)))
