@@ -1,3 +1,7 @@
+# Version 2024.3.7
+
+- Including confirm_insert_via_nrow in DBtables. Checks nrow() before insert and after insert. If nrow() has not increased sufficiently, then attempt an upsert.
+
 # Version 2023.8.1
 
 - sc9::path now uses _interactive instead of interactive.

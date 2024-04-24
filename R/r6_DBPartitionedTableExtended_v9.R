@@ -50,7 +50,7 @@ DBPartitionedTableExtended_v9 <- R6::R6Class(
         self$tables[[i]] <- dbtable
       }
     },
-    insert_data = function(newdata, verbose = TRUE){
+    insert_data = function(newdata, confirm_insert_via_nrow = FALSE, verbose = TRUE){
       if(!is.null(self$value_generator_partition)){
         part <- do.call(self$value_generator_partition, newdata)
         newdata[, .(self$column_name_partition) := part]
@@ -61,7 +61,7 @@ DBPartitionedTableExtended_v9 <- R6::R6Class(
       partitions_in_use <- sample(partitions_in_use, length(partitions_in_use)) # randomize order
       for(i in partitions_in_use){
         index <- newdata[[self$column_name_partition]] == i
-        self$tables[[i]]$insert_data(newdata[index,], verbose)
+        self$tables[[i]]$insert_data(newdata[index,], confirm_insert_via_nrow, verbose)
       }
     },
     upsert_data = function(newdata, drop_indexes = names(self$indexes), verbose = TRUE){
@@ -83,12 +83,15 @@ DBPartitionedTableExtended_v9 <- R6::R6Class(
         self$tables[[i]]$drop_all_rows()
       }
     },
-    drop_rows_where = function(condition){
+    drop_rows_where = function(condition, verbose = FALSE){
+      partition <- 0
       for(i in self$partitions_randomized){
+        partition <- partition + 1
+        if(verbose) message("Deleting inside partition ", partition,"/",length(self$partitions))
         self$tables[[i]]$drop_rows_where(condition)
       }
     },
-    keep_rows_where = function(condition){
+    keep_rows_where = function(condition, verbose = FALSE){
       for(i in self$partitions_randomized){
         self$tables[[i]]$keep_rows_where(condition)
       }
@@ -105,7 +108,7 @@ DBPartitionedTableExtended_v9 <- R6::R6Class(
         self$tables[[i]]$drop_all_rows_and_then_upsert_data(newdata[index,], drop_indexes, verbose)
       }
     },
-    drop_all_rows_and_then_insert_data = function(newdata, verbose = TRUE) {
+    drop_all_rows_and_then_insert_data = function(newdata, confirm_insert_via_nrow = FALSE, verbose = TRUE) {
       if(!is.null(self$value_generator_partition)){
         part <- do.call(self$value_generator_partition, newdata)
         newdata[, .(self$column_name_partition) := part]
@@ -114,7 +117,7 @@ DBPartitionedTableExtended_v9 <- R6::R6Class(
 
       for(i in self$partitions_randomized){
         index <- newdata[[self$column_name_partition]] == i
-        self$tables[[i]]$drop_all_rows_and_then_insert_data(newdata[index,], verbose)
+        self$tables[[i]]$drop_all_rows_and_then_insert_data(newdata[index,], confirm_insert_via_nrow, verbose)
       }
     },
     remove_table = function(){

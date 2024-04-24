@@ -24,9 +24,9 @@ DBTableExtended_v9 <- R6::R6Class(
         validator_field_contents
       )
     },
-    insert_data = function(newdata, verbose = TRUE){
+    insert_data = function(newdata, confirm_insert_via_nrow = FALSE, verbose = TRUE){
       newdata[, auto_last_updated_datetime := cstime::now_c()]
-      super$insert_data(newdata, verbose)
+      super$insert_data(newdata, confirm_insert_via_nrow = confirm_insert_via_nrow, verbose)
       update_config_tables_last_updated(table_name = self$table_name)
     },
     upsert_data = function(newdata, drop_indexes = names(self$indexes), verbose = TRUE){
@@ -51,9 +51,9 @@ DBTableExtended_v9 <- R6::R6Class(
       super$drop_all_rows_and_then_upsert_data(newdata, drop_indexes, verbose)
       update_config_tables_last_updated(table_name = self$table_name)
     },
-    drop_all_rows_and_then_insert_data = function(newdata, verbose = TRUE) {
+    drop_all_rows_and_then_insert_data = function(newdata, confirm_insert_via_nrow = FALSE, verbose = TRUE) {
       newdata[, auto_last_updated_datetime := cstime::now_c()]
-      super$drop_all_rows_and_then_insert_data(newdata, verbose)
+      super$drop_all_rows_and_then_insert_data(newdata, confirm_insert_via_nrow = confirm_insert_via_nrow, verbose)
       update_config_tables_last_updated(table_name = self$table_name)
     }
   )
