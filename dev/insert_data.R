@@ -4,11 +4,11 @@ system("/bin/authenticate.sh")
 
 
 # anon_GROUPING_VARIANT ----
-sc9::add_schema_v8(
+cs9::add_schema_v8(
   name_access = c("anon"),
   name_grouping = "test",
   name_variant = NULL,
-  db_configs = sc9::config$db_configs,
+  db_configs = cs9::config$db_configs,
   field_types =  c(
     "uuid" = "INTEGER",
     "n" = "INTEGER"
@@ -23,31 +23,31 @@ sc9::add_schema_v8(
   info = "This db table is used for..."
 )
 
-sc9::config$schemas$anon_test$get_config_last_updated()
+cs9::config$schemas$anon_test$get_config_last_updated()
 
 d = data.table(uuid = 1:10000)
 d$n = 1
 d[, n:=as.character(n)]
 d[10, n := "a"]
 
-sc9::config$schemas$anon_test$tbl()
-sc9::tbl("anon_test")
+cs9::config$schemas$anon_test$tbl()
+cs9::tbl("anon_test")
 # setkey(d, uuid)
 #setorder(d, -uuid)
 a <- Sys.time()
-sc9::config$schemas$anon_test$drop_all_rows_and_then_insert_data(d)
+cs9::config$schemas$anon_test$drop_all_rows_and_then_insert_data(d)
 b <- Sys.time()
 
 b - a
 
-sc9::config$schemas$anon_test$tbl() %>%dplyr::collect() |> setDT() -> f
+cs9::config$schemas$anon_test$tbl() %>%dplyr::collect() |> setDT() -> f
 
 
-sc9::config$schemas$anon_test$tbl()
-sc9::tbl("anon_test")
-sc9::print_tables()
+cs9::config$schemas$anon_test$tbl()
+cs9::tbl("anon_test")
+cs9::print_tables()
 
-sc9::config$schemas$anon_test$tbl() %>% dplyr::summarize(n()) %>% dplyr::collect()
+cs9::config$schemas$anon_test$tbl() %>% dplyr::summarize(n()) %>% dplyr::collect()
 
 
 
@@ -97,8 +97,8 @@ CREATE TABLE dbo.anon_persons (
     City varchar(255)
 );")
 DBI::dbExecute(pools$`dm-prod/sykdomspulsen_interactive_anon`, sql)
-sc9::tbl("anon_persons")
-sc9::print_tables()
+cs9::tbl("anon_persons")
+cs9::print_tables()
 
 sql <- glue::glue("
 CREATE TABLE [FHI\\AK_Sykdomspulsen].anon_persons (
@@ -109,8 +109,8 @@ CREATE TABLE [FHI\\AK_Sykdomspulsen].anon_persons (
     City varchar(255)
 );")
 DBI::dbExecute(pools$`dm-prod/sykdomspulsen_interactive_anon`, sql)
-sc9::tbl("anon_persons")
-sc9::print_tables()
+cs9::tbl("anon_persons")
+cs9::print_tables()
 
 
 sql <- glue::glue("SELECT SUSER_NAME() ")

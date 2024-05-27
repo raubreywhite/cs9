@@ -10,5 +10,5 @@ config$tables <- list()
 # When running plans in parallel, if a plan fails it is retried five times.
 # This lets a user track which attempt they are on.
 # This is mostly useful so that emails and smses are only sent when
-# sc9::config$plan_attempt_index==1
+# cs9::config$plan_attempt_index==1
 config$plan_attempt_index <- 1

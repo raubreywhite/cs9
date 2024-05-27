@@ -8,11 +8,11 @@ addin_task_inline_v1_copy_to_db <- function() {
   rstudioapi::insertText(
     '
 # TASK_NAME ----
-sc9::add_task(
-  sc9::task_inline_v1(
+cs9::add_task(
+  cs9::task_inline_v1(
     name = "TASK_NAME",
     action_fn = function(data, argset, schema){
-      sc9::copy_into_new_table_where(
+      cs9::copy_into_new_table_where(
         table_from = "TABLE",
         table_to = "web_TABLE",
         condition = "1=1"
@@ -28,8 +28,8 @@ addin_add_task_from_config_v8_basic <- function() {
   rstudioapi::insertText(
     '
 # TASK_NAME ----
-# sc9::tm_run_task("TASK_NAME", run_as_rstudio_job_loading_from_devtools = TRUE)
-sc9::add_task_from_config_v8(
+# cs9::tm_run_task("TASK_NAME", run_as_rstudio_job_loading_from_devtools = TRUE)
+cs9::add_task_from_config_v8(
   name_grouping = "TASK_GROUPING",
   name_action = "TASK_ACTION",
   name_variant = "TASK_VARIANT",
@@ -47,10 +47,10 @@ sc9::add_task_from_config_v8(
   data_selector_fn_name = "PACKAGE::TASK_NAME_data_selector",
   schema = list(
     # input
-    "SCHEMA_NAME_1" = sc9::config$schemas$SCHEMA_NAME_1,
+    "SCHEMA_NAME_1" = cs9::config$schemas$SCHEMA_NAME_1,
 
     # output
-    "SCHEMA_NAME_2" = sc9::config$schemas$SCHEMA_NAME_2
+    "SCHEMA_NAME_2" = cs9::config$schemas$SCHEMA_NAME_2
   ),
   info = "This task does..."
 )
@@ -62,11 +62,11 @@ addin_db_schema_v8_anon <- function() {
   rstudioapi::insertText(
     '
 # anon_GROUPING_VARIANT ----
-sc9::add_schema_v8(
+cs9::add_schema_v8(
   name_access = c("anon"),
   name_grouping = NULL,
   name_variant = NULL,
-  db_configs = sc9::config$db_configs,
+  db_configs = cs9::config$db_configs,
   field_types =  c(
     "granularity_time" = "TEXT",
     "granularity_geo" = "TEXT",
@@ -100,15 +100,15 @@ sc9::add_schema_v8(
   ),
   censors = list(
     anon = list(
-      XXXX_n = sc9::censor_function_factory_values_0_4(column_name_to_be_censored = "XXXX_n", column_name_value = "XXXX_n"),
-      XXXX_pr = sc9::censor_function_factory_values_0_4(column_name_to_be_censored = "XXXX_pr", column_name_value = "XXXX_n")
+      XXXX_n = cs9::censor_function_factory_values_0_4(column_name_to_be_censored = "XXXX_n", column_name_value = "XXXX_n"),
+      XXXX_pr = cs9::censor_function_factory_values_0_4(column_name_to_be_censored = "XXXX_pr", column_name_value = "XXXX_n")
     )
   ),
   indexes = list(
     "ind1" = c("granularity_time", "granularity_geo", "country_iso3", "location_code", "border", "age", "sex", "date", "isoyear", "isoweek", "isoyearweek")
   ),
-  validator_field_types = sc9::validator_field_types_sykdomspulsen,
-  validator_field_contents = sc9::validator_field_contents_sykdomspulsen,
+  validator_field_types = cs9::validator_field_types_sykdomspulsen,
+  validator_field_contents = cs9::validator_field_contents_sykdomspulsen,
   info = "This db table is used for..."
 )
 '
@@ -121,11 +121,11 @@ addin_db_schema_v8_restr_anon <- function() {
 # redirect_GROUPING_VARIANT ----
 # restr_GROUPING_VARIANT ----
 # anon_GROUPING_VARIANT ----
-sc9::add_schema_v8(
+cs9::add_schema_v8(
   name_access = c("restr", "anon"),
   name_grouping = NULL,
   name_variant = NULL,
-  db_configs = sc9::config$db_configs,
+  db_configs = cs9::config$db_configs,
   field_types =  c(
     "granularity_time" = "TEXT",
     "granularity_geo" = "TEXT",
@@ -159,19 +159,19 @@ sc9::add_schema_v8(
   ),
   censors = list(
     restr = list(
-      XXXX_n = sc9::censor_function_factory_nothing(column_name_to_be_censored = "XXXX_n"),
-      XXXX_pr = sc9::censor_function_factory_nothing(column_name_to_be_censored = "XXXX_pr")
+      XXXX_n = cs9::censor_function_factory_nothing(column_name_to_be_censored = "XXXX_n"),
+      XXXX_pr = cs9::censor_function_factory_nothing(column_name_to_be_censored = "XXXX_pr")
     ),
     anon = list(
-      XXXX_n = sc9::censor_function_factory_values_0_4(column_name_to_be_censored = "XXXX_n", column_name_value = "XXXX_n"),
-      XXXX_pr = sc9::censor_function_factory_values_0_4(column_name_to_be_censored = "XXXX_pr", column_name_value = "XXXX_n")
+      XXXX_n = cs9::censor_function_factory_values_0_4(column_name_to_be_censored = "XXXX_n", column_name_value = "XXXX_n"),
+      XXXX_pr = cs9::censor_function_factory_values_0_4(column_name_to_be_censored = "XXXX_pr", column_name_value = "XXXX_n")
     )
   ),
   indexes = list(
     "ind1" = c("granularity_time", "granularity_geo", "country_iso3", "location_code", "border", "age", "sex", "date", "isoyear", "isoweek", "isoyearweek")
   ),
-  validator_field_types = sc9::validator_field_types_sykdomspulsen,
-  validator_field_contents = sc9::validator_field_contents_sykdomspulsen,
+  validator_field_types = cs9::validator_field_types_sykdomspulsen,
+  validator_field_contents = cs9::validator_field_contents_sykdomspulsen,
   info = "This db table is used for..."
 )
 '
@@ -188,17 +188,17 @@ addin_action_and_data_selector <- function() {
 #\' @param schema DB Schema
 #\' @export
 TASK_NAME_action <- function(data, argset, schema) {
-  # sc9::tm_run_task("TASK_NAME", run_as_rstudio_job_loading_from_devtools = TRUE)
+  # cs9::tm_run_task("TASK_NAME", run_as_rstudio_job_loading_from_devtools = TRUE)
 
   if(plnr::is_run_directly()){
-    # sc9::tm_get_plans_argsets_as_dt("TASK_NAME")
+    # cs9::tm_get_plans_argsets_as_dt("TASK_NAME")
 
     index_plan <- 1
     index_analysis <- 1
 
-    data <- sc9::tm_get_data("TASK_NAME", index_plan = index_plan)
-    argset <- sc9::tm_get_argset("TASK_NAME", index_plan = index_plan, index_analysis = index_analysis)
-    schema <- sc9::tm_get_schema("TASK_NAME")
+    data <- cs9::tm_get_data("TASK_NAME", index_plan = index_plan)
+    argset <- cs9::tm_get_argset("TASK_NAME", index_plan = index_plan, index_analysis = index_analysis)
+    schema <- cs9::tm_get_schema("TASK_NAME")
   }
 
   # code goes here
@@ -208,7 +208,7 @@ TASK_NAME_action <- function(data, argset, schema) {
   }
 
   # put data in db table
-  # sc9::fill_in_missing_v8(d, border = config$border)
+  # cs9::fill_in_missing_v8(d, border = config$border)
   # schema$SCHEMA_NAME$insert_data(d)
   # schema$SCHEMA_NAME$upsert_data(d)
   # schema$SCHEMA_NAME$drop_all_rows_and_then_insert_data(d)
@@ -216,7 +216,7 @@ TASK_NAME_action <- function(data, argset, schema) {
   # special case that runs after everything
   # copy to anon_web?
   if(argset$last_analysis == TRUE){
-    # sc9::copy_into_new_table_where(
+    # cs9::copy_into_new_table_where(
     #   table_from = "anon_X",
     #   table_to = "anon_webkht"
     # )
@@ -230,17 +230,17 @@ TASK_NAME_action <- function(data, argset, schema) {
 #\' @export
 TASK_NAME_data_selector = function(argset, schema){
   if(plnr::is_run_directly()){
-    # sc9::tm_get_plans_argsets_as_dt("TASK_NAME")
+    # cs9::tm_get_plans_argsets_as_dt("TASK_NAME")
 
     index_plan <- 1
 
-    argset <- sc9::tm_get_argset("TASK_NAME", index_plan = index_plan)
-    schema <- sc9::tm_get_schema("TASK_NAME")
+    argset <- cs9::tm_get_argset("TASK_NAME", index_plan = index_plan)
+    schema <- cs9::tm_get_schema("TASK_NAME")
   }
 
   # The database schemas can be accessed here
   d <- schema$SCHEMA_NAME$tbl() %>%
-    sc9::mandatory_db_filter(
+    cs9::mandatory_db_filter(
       granularity_time = NULL,
       granularity_time_not = NULL,
       granularity_geo = NULL,
@@ -285,12 +285,12 @@ TASK_NAME_data_selector = function(argset, schema){
 # **** plan_analysis **** ----
 #\' TASK_NAME (plan/argset)
 #\' This function can be deleted if you are not using "plan_analysis_fn_name"
-#\' inside sc9::task_from_config_v3
+#\' inside cs9::task_from_config_v3
 #\' @export
 TASK_NAME_plan_analysis <- function(argset, schema) {
   if(plnr::is_run_directly()){
-    argset <- sc9::tm_get_argset("TASK_NAME")
-    schema <- sc9::tm_get_schema("TASK_NAME")
+    argset <- cs9::tm_get_argset("TASK_NAME")
+    schema <- cs9::tm_get_schema("TASK_NAME")
   }
 
   # code goes here

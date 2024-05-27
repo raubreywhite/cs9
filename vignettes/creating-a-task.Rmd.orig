@@ -20,15 +20,15 @@ library(data.table)
 library(magrittr)
 ```
 
-Implementing sc9 requires a number of functions to be called in the correct order. To make this as simple as possible, we have provided a skeleton implementation at https://github.com/csids/sc9example/
+Implementing cs9 requires a number of functions to be called in the correct order. To make this as simple as possible, we have provided a skeleton implementation at https://github.com/csids/cs9example/
 
-We suggest that you clone this GitHub repo to your server, and then do a global find/replace on `sc9example` with the name you want for your R package.
+We suggest that you clone this GitHub repo to your server, and then do a global find/replace on `cs9example` with the name you want for your R package.
 
-For the purposes of this vignette, we assume that the reader is either using RStudio Server Open Source or RStudio Workbench inside Docker containers that have been built according to the sc9 specifications. We will refer to your implementation of RStudio Server Open Source/RStudio Workbench with the generic term "RStudio".
+For the purposes of this vignette, we assume that the reader is either using RStudio Server Open Source or RStudio Workbench inside Docker containers that have been built according to the cs9 specifications. We will refer to your implementation of RStudio Server Open Source/RStudio Workbench with the generic term "RStudio".
 
 ## Load the code
 
-Open`sc9example` in [RStudio project mode](https://support.rstudio.com/hc/en-us/articles/200526207-Using-Projects). Restart the R session via `Ctrl+Shift+F10`, `rstudioapi::restartSession()`, or `Session > Restart R`. This will ensure that you have a clean working environment before you begin. You may now load your sc implementation. This can be done via `Ctrl+Shift+L`, `devtools::load_all(".")`, or `Build > Load All`.
+Open`cs9example` in [RStudio project mode](https://support.rstudio.com/hc/en-us/articles/200526207-Using-Projects). Restart the R session via `Ctrl+Shift+F10`, `rstudioapi::restartSession()`, or `Session > Restart R`. This will ensure that you have a clean working environment before you begin. You may now load your sc implementation. This can be done via `Ctrl+Shift+L`, `devtools::load_all(".")`, or `Build > Load All`.
 
 <aside>
   In general, we recommend cleaning your working environment every time before running `devtools::load_all(".")`.

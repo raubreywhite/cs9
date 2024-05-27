@@ -249,7 +249,7 @@ add_task_from_config
 
 \item{\code{data_selector_fn_name}}{The name of a function that will be called to obtain the data for each analysis. The function must have the arguments \code{argset}, \code{schema} and must return a named list.}
 
-\item{\code{tables}}{A named list that maps \code{sc9::config$schemas} for use in \code{action_fn_name} and \code{data_selector_fn_name}}
+\item{\code{tables}}{A named list that maps \code{cs9::config$schemas} for use in \code{action_fn_name} and \code{data_selector_fn_name}}
 }
 \if{html}{\out{</div>}}
 }

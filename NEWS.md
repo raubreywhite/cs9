@@ -4,7 +4,7 @@
 
 # Version 2023.8.1
 
-- sc9::path now uses _interactive instead of interactive.
+- cs9::path now uses _interactive instead of interactive.
 
 # Version 2023.5.3
 
@@ -51,7 +51,7 @@
 
 # Version 2023.3.7
 
-* sc8 is deprecated in favor of sc9.
+* sc8 is deprecated in favor of cs9.
 
 # Version 8.0.2
 

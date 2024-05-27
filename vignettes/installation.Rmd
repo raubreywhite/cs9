@@ -7,13 +7,13 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
-This vignette details the infrastructure requirements of sc9.
+This vignette details the infrastructure requirements of cs9.
 
-We strongly recommend that you use sc9 within a Docker environment.
+We strongly recommend that you use cs9 within a Docker environment.
 
 ## Databases
 
-Currently sc9 only works with MSSQL databases.
+Currently cs9 only works with MSSQL databases.
 
 ## Environmental variables
 
@@ -21,28 +21,28 @@ The following environmental variables must be available from within R. R only lo
 
 | Variable                        | Value                           | Description                                                           |
 |------------------|------------------|------------------------------------|
-| SC9_AUTO                        | 0                               | Is this auto or interactive                                           |
-| SC9_PATH                        | '/input'                        | The base path that will be inserted when using the sc9::path function |
+| CS9_AUTO                        | 0                               | Is this auto or interactive                                           |
+| CS9_PATH                        | '/input'                        | The base path that will be inserted when using the cs9::path function |
 |                                 |                                 |                                                                       |
-| SC9_DBCONFIG_ACCESS             | 'config/anon'                   |                                                                       |
-| SC9_DBCONFIG_DRIVER             | 'ODBC Driver 17 for SQL Server' |                                                                       |
-| SC9_DBCONFIG_PORT               | 1433                            |                                                                       |
-| SC9_DBCONFIG_USER               | 'SA'                            |                                                                       |
-| SC9_DBCONFIG_PASSWORD           | 'yourStrongPassword100'         |                                                                       |
-| SC9_DBCONFIG_TRUSTED_CONNECTION | 'no'                            |                                                                       |
-| SC9_DBCONFIG_SSLMODE | 'no'                            |                                                                       |
-| SC9_DBCONFIG_SERVER             | 'dm-prod'                       |                                                                       |
+| CS9_DBCONFIG_ACCESS             | 'config/anon'                   |                                                                       |
+| CS9_DBCONFIG_DRIVER             | 'ODBC Driver 17 for SQL Server' |                                                                       |
+| CS9_DBCONFIG_PORT               | 1433                            |                                                                       |
+| CS9_DBCONFIG_USER               | 'SA'                            |                                                                       |
+| CS9_DBCONFIG_PASSWORD           | 'yourStrongPassword100'         |                                                                       |
+| CS9_DBCONFIG_TRUSTED_CONNECTION | 'no'                            |                                                                       |
+| CS9_DBCONFIG_SSLMODE | 'no'                            |                                                                       |
+| CS9_DBCONFIG_SERVER             | 'dm-prod'                       |                                                                       |
 |                                 |                                 |                                                                       |
-| SC9_DBCONFIG_SCHEMA_CONFIG      | 'dbo'                           |                                                                       |
-| SC9_DBCONFIG_DB_CONFIG          | 'sc_interactive_config'         |                                                                       |
+| CS9_DBCONFIG_SCHEMA_CONFIG      | 'dbo'                           |                                                                       |
+| CS9_DBCONFIG_DB_CONFIG          | 'sc_interactive_config'         |                                                                       |
 |                                 |                                 |                                                                       |
-| SC9_DBCONFIG_SCHEMA_ANON        | 'dbo'                           |                                                                       |
-| SC9_DBCONFIG_DB_ANON            | 'sc_interactive_anon'           |                                                                       |
+| CS9_DBCONFIG_SCHEMA_ANON        | 'dbo'                           |                                                                       |
+| CS9_DBCONFIG_DB_ANON            | 'sc_interactive_anon'           |                                                                       |
 |                                 |                                 |                                                                       |
 |                                 |                                 |                                                                       |
 
 ## Docker
 
-An example docker-compose file is available [here](https://github.com/csids/docker-examples-csids/blob/main/csids-sc9-single-user-docker-compose/docker-compose.yml).
+An example docker-compose file is available [here](https://github.com/csids/docker-examples-csids/blob/main/csids-cs9-single-user-docker-compose/docker-compose.yml).
 
 

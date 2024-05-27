@@ -8,7 +8,7 @@ path(
   ...,
   create_dir = FALSE,
   trailing_slash = FALSE,
-  auto = sc9::config$is_auto
+  auto = cs9::config$is_auto
 )
 }
 \arguments{

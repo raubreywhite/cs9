@@ -22,7 +22,7 @@ update_config_tasks_stats <- function(
 
   to_upload <- data.table(
     task = task,
-    sc_version = utils::packageDescription("sc9", fields = "Version"),
+    sc_version = utils::packageDescription("cs9", fields = "Version"),
     implementation_version = implementation_version,
     cores_n = cores_n,
     plans_n = plans_n,

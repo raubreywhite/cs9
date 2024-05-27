@@ -1,11 +1,11 @@
-# sc9 <a href="https://www.csids.no/sc9/"><img src="man/figures/logo.png" align="right" width="120" /></a>
+# cs9 <a href="https://www.csids.no/cs9/"><img src="man/figures/logo.png" align="right" width="120" /></a>
 
 
 ## Overview 
 
-[Surveillance Core 9](https://www.csids.no/sc9/) ("sc9") is a free and open-source framework for real-time analysis and disease surveillance.
+[Surveillance Core 9](https://www.csids.no/cs9/) ("cs9") is a free and open-source framework for real-time analysis and disease surveillance.
 
-Read the introduction vignette [here](https://www.csids.no/sc9/articles/sc9.html) or run `help(package="sc9")`.
+Read the introduction vignette [here](https://www.csids.no/cs9/articles/cs9.html) or run `help(package="cs9")`.
 
 ## csverse
 
@@ -31,5 +31,5 @@ Save the file and restart R.
 You can now install [csverse](https://www.csids.no/packages.html) packages from our [drat repository](https://www.csids.no/drat/).
 
 ```
-install.packages("sc9")
+install.packages("cs9")
 ```

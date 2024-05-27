@@ -1,4 +1,4 @@
-ss <- sc9::SurveillanceSystem_v9$new()
+ss <- cs9::SurveillanceSystem_v9$new()
 
 ss$add_table(
   name_access = c("anon"),

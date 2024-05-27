@@ -1,4 +1,4 @@
-Package: sc9
+Package: cs9
 Title: A Framework for Real-time Analysis and Disease Surveillance
 Version: 9.0.2
 Authors@R: c(
@@ -8,8 +8,8 @@ Authors@R: c(
   person("CSIDS", email = "hello@csids.no", role = c("cph"))
   )
 Description: The generic infrastructure that can be used to implement new real-time analysis and disease surveillance systems.
-URL: https://www.csids.no/sc9/, https://github.com/csids/sc9
-BugReports: https://github.com/csids/sc9/issues
+URL: https://www.csids.no/cs9/, https://github.com/csids/cs9
+BugReports: https://github.com/csids/cs9/issues
 Depends:
   R (>= 4.1.0)
 Imports:

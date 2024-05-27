@@ -77,7 +77,7 @@
 
 # Environmental variables ----
 get_db_acess_from_env <- function() {
-  retval <- Sys.getenv("SC9_DBCONFIG_ACCESS") |>
+  retval <- Sys.getenv("CS9_DBCONFIG_ACCESS") |>
     stringr::str_split("/") |>
     unlist()
   retval <- retval[retval != ""]
@@ -88,15 +88,15 @@ get_db_from_env <- function(access) {
 
   retval <- list(
     access = access,
-    driver = Sys.getenv("SC9_DBCONFIG_DRIVER"),
-    port = as.integer(Sys.getenv("SC9_DBCONFIG_PORT")),
-    user = Sys.getenv("SC9_DBCONFIG_USER"),
-    password = Sys.getenv("SC9_DBCONFIG_PASSWORD"),
-    trusted_connection = Sys.getenv("SC9_DBCONFIG_TRUSTED_CONNECTION"),
-    sslmode = Sys.getenv("SC9_DBCONFIG_SSLMODE"),
-    server = Sys.getenv("SC9_DBCONFIG_SERVER"),
-    schema = Sys.getenv(paste0("SC9_DBCONFIG_SCHEMA_", toupper(access))),
-    db = Sys.getenv(paste0("SC9_DBCONFIG_DB_", toupper(access)))
+    driver = Sys.getenv("CS9_DBCONFIG_DRIVER"),
+    port = as.integer(Sys.getenv("CS9_DBCONFIG_PORT")),
+    user = Sys.getenv("CS9_DBCONFIG_USER"),
+    password = Sys.getenv("CS9_DBCONFIG_PASSWORD"),
+    trusted_connection = Sys.getenv("CS9_DBCONFIG_TRUSTED_CONNECTION"),
+    sslmode = Sys.getenv("CS9_DBCONFIG_SSLMODE"),
+    server = Sys.getenv("CS9_DBCONFIG_SERVER"),
+    schema = Sys.getenv(paste0("CS9_DBCONFIG_SCHEMA_", toupper(access))),
+    db = Sys.getenv(paste0("CS9_DBCONFIG_DB_", toupper(access)))
   )
 
   retval$schema <- gsub("\\\\", "\\\\", retval$schema)
@@ -112,11 +112,11 @@ set_env_vars <- function(){
     config$dbconfigs[[i]] <- get_db_from_env(i)
   }
 
-  if (Sys.getenv("SC9_AUTO") == "1") {
+  if (Sys.getenv("CS9_AUTO") == "1") {
     config$is_auto <- TRUE
   }
 
-  config$path <- Sys.getenv("SC9_PATH")
+  config$path <- Sys.getenv("CS9_PATH")
 }
 
 set_progressr <- function() {

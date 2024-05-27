@@ -11,19 +11,19 @@ editor_options:
 
 
 
-Implementing sc9 requires a number of functions to be called in the correct order. To make this as simple as possible, we have provided a skeleton implementation at https://github.com/csids/sc9example/
+Implementing cs9 requires a number of functions to be called in the correct order. To make this as simple as possible, we have provided a skeleton implementation at https://github.com/csids/cs9example/
 
-We suggest that you clone this GitHub repo to your server, and then do a global find/replace on `sc9example` with the name you want for your R package.
+We suggest that you clone this GitHub repo to your server, and then do a global find/replace on `cs9example` with the name you want for your R package.
 
 Descriptions of the required files/functions are detailed below.
 
 ## 00_env_and_namespace.R
 
-https://github.com/csids/sc9example/blob/main/R/00_env_and_namespace.R
+https://github.com/csids/cs9example/blob/main/R/00_env_and_namespace.R
 
 
 ```
-https://github.com/csids/sc9example/blob/main/R/00_env_and_namespace.R
+https://github.com/csids/cs9example/blob/main/R/00_env_and_namespace.R
 
  1 | # ******************************************************************************
  2 | # ******************************************************************************
@@ -64,11 +64,11 @@ https://github.com/csids/sc9example/blob/main/R/00_env_and_namespace.R
 
 ## 01_definitions.R
 
-https://github.com/csids/sc9example/blob/main/R/01_definitions.R
+https://github.com/csids/cs9example/blob/main/R/01_definitions.R
 
 
 ```
-https://github.com/csids/sc9example/blob/main/R/01_definitions.R
+https://github.com/csids/cs9example/blob/main/R/01_definitions.R
 
  1 | # ******************************************************************************
  2 | # ******************************************************************************
@@ -107,11 +107,11 @@ https://github.com/csids/sc9example/blob/main/R/01_definitions.R
 
 ## 02_surveillance_systems.R
 
-https://github.com/csids/sc9example/blob/main/R/02_surveillance_systems.R
+https://github.com/csids/cs9example/blob/main/R/02_surveillance_systems.R
 
 
 ```
-https://github.com/csids/sc9example/blob/main/R/02_surveillance_systems.R
+https://github.com/csids/cs9example/blob/main/R/02_surveillance_systems.R
 
  1 | # ******************************************************************************
  2 | # ******************************************************************************
@@ -125,17 +125,17 @@ https://github.com/csids/sc9example/blob/main/R/02_surveillance_systems.R
 10 | # ******************************************************************************
 11 | 
 12 | set_surveillance_systems <- function() {
-13 |   global$ss <- sc9::SurveillanceSystem_v9$new()
+13 |   global$ss <- cs9::SurveillanceSystem_v9$new()
 14 | }
 ```
 
 ## 03_tables.R
 
-https://github.com/csids/sc9example/blob/main/R/03_tables.R
+https://github.com/csids/cs9example/blob/main/R/03_tables.R
 
 
 ```
-https://github.com/csids/sc9example/blob/main/R/03_tables.R
+https://github.com/csids/cs9example/blob/main/R/03_tables.R
 
   1 | # ******************************************************************************
   2 | # ******************************************************************************
@@ -280,11 +280,11 @@ https://github.com/csids/sc9example/blob/main/R/03_tables.R
 
 ## 04_tasks.R
 
-https://github.com/csids/sc9example/blob/main/R/04_tasks.R
+https://github.com/csids/cs9example/blob/main/R/04_tasks.R
 
 
 ```
-https://github.com/csids/sc9example/blob/main/R/04_tasks.R
+https://github.com/csids/cs9example/blob/main/R/04_tasks.R
 
  1 | # ******************************************************************************
  2 | # ******************************************************************************
@@ -319,8 +319,8 @@ https://github.com/csids/sc9example/blob/main/R/04_tasks.R
 31 |     universal_argset = NULL,
 32 |     upsert_at_end_of_each_plan = FALSE,
 33 |     insert_at_end_of_each_plan = FALSE,
-34 |     action_fn_name = "sc9example::weather_download_and_import_rawdata_action",
-35 |     data_selector_fn_name = "sc9example::weather_download_and_import_rawdata_data_selector",
+34 |     action_fn_name = "cs9example::weather_download_and_import_rawdata_action",
+35 |     data_selector_fn_name = "cs9example::weather_download_and_import_rawdata_data_selector",
 36 |     tables = list(
 37 |       # input
 38 | 
@@ -344,8 +344,8 @@ https://github.com/csids/sc9example/blob/main/R/04_tasks.R
 56 |     universal_argset = NULL,
 57 |     upsert_at_end_of_each_plan = FALSE,
 58 |     insert_at_end_of_each_plan = FALSE,
-59 |     action_fn_name = "sc9example::weather_clean_data_action",
-60 |     data_selector_fn_name = "sc9example::weather_clean_data_data_selector",
+59 |     action_fn_name = "cs9example::weather_clean_data_action",
+60 |     data_selector_fn_name = "cs9example::weather_clean_data_data_selector",
 61 |     tables = list(
 62 |       # input
 63 |       "anon_example_weather_rawdata" = global$ss$tables$anon_example_weather_rawdata,
@@ -374,8 +374,8 @@ https://github.com/csids/sc9example/blob/main/R/04_tasks.R
 86 |     ),
 87 |     upsert_at_end_of_each_plan = FALSE,
 88 |     insert_at_end_of_each_plan = FALSE,
-89 |     action_fn_name = "sc9example::weather_export_plots_action",
-90 |     data_selector_fn_name = "sc9example::weather_export_plots_data_selector",
+89 |     action_fn_name = "cs9example::weather_export_plots_action",
+90 |     data_selector_fn_name = "cs9example::weather_export_plots_data_selector",
 91 |     tables = list(
 92 |       # input
 93 |       "anon_example_weather_data" = global$ss$tables$anon_example_weather_data
@@ -388,11 +388,11 @@ https://github.com/csids/sc9example/blob/main/R/04_tasks.R
 
 ## 05_deliverables.R
 
-https://github.com/csids/sc9example/blob/main/R/05_deliverables.R
+https://github.com/csids/cs9example/blob/main/R/05_deliverables.R
 
 
 ```
-https://github.com/csids/sc9example/blob/main/R/05_deliverables.R
+https://github.com/csids/cs9example/blob/main/R/05_deliverables.R
 
  1 | # ******************************************************************************
  2 | # ******************************************************************************
@@ -413,11 +413,11 @@ https://github.com/csids/sc9example/blob/main/R/05_deliverables.R
 
 ## 10_onLoad.R
 
-https://github.com/csids/sc9example/blob/main/R/10_onLoad.R
+https://github.com/csids/cs9example/blob/main/R/10_onLoad.R
 
 
 ```
-https://github.com/csids/sc9example/blob/main/R/10_onLoad.R
+https://github.com/csids/cs9example/blob/main/R/10_onLoad.R
 
  1 | # ******************************************************************************
  2 | # ******************************************************************************
@@ -469,11 +469,11 @@ https://github.com/csids/sc9example/blob/main/R/10_onLoad.R
 
 ## 11_onAttach.R
 
-https://github.com/csids/sc9example/blob/main/R/11_onAttach.R
+https://github.com/csids/cs9example/blob/main/R/11_onAttach.R
 
 
 ```
-https://github.com/csids/sc9example/blob/main/R/11_onAttach.R
+https://github.com/csids/cs9example/blob/main/R/11_onAttach.R
 
  1 | # ******************************************************************************
  2 | # ******************************************************************************
@@ -488,14 +488,14 @@ https://github.com/csids/sc9example/blob/main/R/11_onAttach.R
 11 | 
 12 | .onAttach <- function(libname, pkgname) {
 13 |   version <- tryCatch(
-14 |     utils::packageDescription("sc9example", fields = "Version"),
+14 |     utils::packageDescription("cs9example", fields = "Version"),
 15 |     warning = function(w){
 16 |       1
 17 |     }
 18 |   )
 19 | 
-20 |   packageStartupMessage(paste0("sc9example ",version))
-21 |   packageStartupMessage(paste0("sc9 ",utils::packageDescription("sc9", fields = "Version")))
+20 |   packageStartupMessage(paste0("cs9example ",version))
+21 |   packageStartupMessage(paste0("cs9 ",utils::packageDescription("cs9", fields = "Version")))
 22 | }
 ```
 
@@ -505,11 +505,11 @@ Task files are placed in .R files under their own names.
 
 ### weather_download_and_import_rawdata.R
 
-https://github.com/csids/sc9example/blob/main/R/weather_download_and_import_rawdata.R
+https://github.com/csids/cs9example/blob/main/R/weather_download_and_import_rawdata.R
 
 
 ```
-https://github.com/csids/sc9example/blob/main/R/weather_download_and_import_rawdata.R
+https://github.com/csids/cs9example/blob/main/R/weather_download_and_import_rawdata.R
 
   1 | # **** action **** ----
   2 | #' weather_download_and_import_rawdata (action)
@@ -518,8 +518,8 @@ https://github.com/csids/sc9example/blob/main/R/weather_download_and_import_rawd
   5 | #' @param tables DB tables
   6 | #' @export
   7 | weather_download_and_import_rawdata_action <- function(data, argset, tables) {
-  8 |   # sc9::run_task_sequentially_as_rstudio_job_using_load_all("weather_download_and_import_rawdata")
-  9 |   # To be run outside of rstudio: sc9example::global$ss$run_task("weather_download_and_import_rawdata")
+  8 |   # cs9::run_task_sequentially_as_rstudio_job_using_load_all("weather_download_and_import_rawdata")
+  9 |   # To be run outside of rstudio: cs9example::global$ss$run_task("weather_download_and_import_rawdata")
  10 | 
  11 |   if (plnr::is_run_directly()) {
  12 |     # global$ss$shortcut_get_plans_argsets_as_dt("weather_download_and_import_rawdata")
@@ -633,10 +633,10 @@ https://github.com/csids/sc9example/blob/main/R/weather_download_and_import_rawd
 
 ### weather_clean_data.R
 
-https://github.com/csids/sc9example/blob/main/R/weather_clean_data.R
+https://github.com/csids/cs9example/blob/main/R/weather_clean_data.R
 
 ```
-https://github.com/csids/sc9example/blob/main/R/weather_clean_data.R
+https://github.com/csids/cs9example/blob/main/R/weather_clean_data.R
 
   1 | # **** action **** ----
   2 | #' weather_clean_data (action)
@@ -645,8 +645,8 @@ https://github.com/csids/sc9example/blob/main/R/weather_clean_data.R
   5 | #' @param tables DB tables
   6 | #' @export
   7 | weather_clean_data_action <- function(data, argset, tables) {
-  8 |   # sc9::run_task_sequentially_as_rstudio_job_using_load_all("weather_clean_data")
-  9 |   # To be run outside of rstudio: sc9example::global$ss$run_task("weather_clean_data")
+  8 |   # cs9::run_task_sequentially_as_rstudio_job_using_load_all("weather_clean_data")
+  9 |   # To be run outside of rstudio: cs9example::global$ss$run_task("weather_clean_data")
  10 | 
  11 | 
  12 |   if (plnr::is_run_directly()) {
@@ -841,7 +841,7 @@ https://github.com/csids/sc9example/blob/main/R/weather_clean_data.R
 201 | 
 202 |   # The database tabless can be accessed here
 203 |   d <- tables$anon_example_weather_rawdata$tbl() %>%
-204 |     sc9::mandatory_db_filter(
+204 |     cs9::mandatory_db_filter(
 205 |       granularity_time = "day",
 206 |       granularity_time_not = NULL,
 207 |       granularity_geo = "municip",
@@ -898,11 +898,11 @@ https://github.com/csids/sc9example/blob/main/R/weather_clean_data.R
 
 ### weather_export_weather_plots.R
 
-https://github.com/csids/sc9example/blob/main/R/weather_export_plots.R
+https://github.com/csids/cs9example/blob/main/R/weather_export_plots.R
 
 
 ```
-https://github.com/csids/sc9example/blob/main/R/weather_export_plots.R
+https://github.com/csids/cs9example/blob/main/R/weather_export_plots.R
 
   1 | # **** action **** ----
   2 | #' weather_export_plots (action)
@@ -911,8 +911,8 @@ https://github.com/csids/sc9example/blob/main/R/weather_export_plots.R
   5 | #' @param tables DB tables
   6 | #' @export
   7 | weather_export_plots_action <- function(data, argset, tables) {
-  8 |   # sc9::run_task_sequentially_as_rstudio_job_using_load_all("weather_export_plots")
-  9 |   # To be run outside of rstudio: sc9example::global$ss$run_task("weather_export_plots")
+  8 |   # cs9::run_task_sequentially_as_rstudio_job_using_load_all("weather_export_plots")
+  9 |   # To be run outside of rstudio: cs9example::global$ss$run_task("weather_export_plots")
  10 | 
  11 |   if(plnr::is_run_directly()){
  12 |     # global$ss$shortcut_get_plans_argsets_as_dt("weather_export_plots")
@@ -966,7 +966,7 @@ https://github.com/csids/sc9example/blob/main/R/weather_export_plots.R
  60 | 
  61 |   # The database tables can be accessed here
  62 |   d <- tables$anon_example_weather_data$tbl() %>%
- 63 |     sc9::mandatory_db_filter(
+ 63 |     cs9::mandatory_db_filter(
  64 |       granularity_time = NULL,
  65 |       granularity_time_not = NULL,
  66 |       granularity_geo = NULL,

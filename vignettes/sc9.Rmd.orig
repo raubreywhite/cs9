@@ -123,12 +123,12 @@ tab
 
 ## Tasks
 
-A task is the basic operational unit of sc9. It is based on [plnr](https://www.csids.no/plnr/).
+A task is the basic operational unit of cs9. It is based on [plnr](https://www.csids.no/plnr/).
 
 In short, you can think of a task as multiple [plnr plans](https://www.csids.no/plnr/) plus [csdb tables](https://www.csids.no/csdb/reference/DBTable_v9.html).
 
 <figure>
-<img id="figure-1" src="sc9-task-general.png" width="100%" />
+<img id="figure-1" src="cs9-task-general.png" width="100%" />
 <figcaption>Figure 1. A general task showing the many options of a task.</figcaption>
 </figure>
 
@@ -163,7 +163,7 @@ Obviously, if a plan's data-pull is larger, it will use more RAM. If you need to
 ## Putting it together
 
 <figure>
-<img id="figure-2" src="sc9-file-locations.png" width="100%" />
+<img id="figure-2" src="cs9-file-locations.png" width="100%" />
 <figcaption>Figure 2. A typical file setup for an implementation of Surveillance Core 9. $plan_argset_fn$ is rarely used, and is therefore shown as blacked out in the most of the tasks..</figcaption>
 </figure>
 
@@ -184,7 +184,7 @@ We will now go through an example of how a person would design and implement tas
 We begin by creating a surveillance system. This is the hub that coordinates everything.
 
 ```{r}
-ss <- sc9::SurveillanceSystem_v9$new()
+ss <- cs9::SurveillanceSystem_v9$new()
 ```
 
 ### add_table
@@ -192,7 +192,7 @@ ss <- sc9::SurveillanceSystem_v9$new()
 As documented in more detail [here](analytics_db_schemas_introduction.html), we create a database table that fits our needs (recording weather data), and we then add it to the surveillance system.
 
 ```{r, out.width = "100%", echo = FALSE}
-knitr::include_graphics(system.file("vignette_resources/tasks/addins_1.png",package="sc9"))
+knitr::include_graphics(system.file("vignette_resources/tasks/addins_1.png",package="cs9"))
 ```
 
 ```{r}
@@ -242,7 +242,7 @@ ss$add_table(
 To "register" our task, we use the RStudio addin `task_from_config`.
 
 ```{r, out.width = "100%", echo = FALSE}
-knitr::include_graphics(system.file("vignette_resources/tasks/addins_2.png",package="sc9"))
+knitr::include_graphics(system.file("vignette_resources/tasks/addins_2.png",package="cs9"))
 ```
 
 ```{r}
@@ -364,7 +364,7 @@ A named list containing the schemas used in this task.
 Use the addins dropdown to easily add in boilerplate code.
 
 ```{r, out.width = "100%", echo = FALSE}
-knitr::include_graphics(system.file("vignette_resources/tasks/addins_3.png",package="sc9"))
+knitr::include_graphics(system.file("vignette_resources/tasks/addins_3.png",package="cs9"))
 ```
 
 The `data_selector_fn` is used to extract the data for each plan.
@@ -538,7 +538,7 @@ ss$run_task("example_weather_import_data_from_api")
 
 ### Importing data
 
-<img src="sc9-task-import-data.png" width="100%" />
+<img src="cs9-task-import-data.png" width="100%" />
 
 ```{r, echo=T, eval=F}
 ss$add_task(
@@ -552,7 +552,7 @@ ss$add_task(
   ),
   for_each_analysis = NULL,
   universal_argset = list(
-    folder = sc9::path("input", "example")
+    folder = cs9::path("input", "example")
   ),
   upsert_at_end_of_each_plan = FALSE,
   insert_at_end_of_each_plan = FALSE,
@@ -569,7 +569,7 @@ ss$add_task(
 
 ### Analysis
 
-<img src="sc9-task-analysis.png" width="100%" />
+<img src="cs9-task-analysis.png" width="100%" />
 
 ```{r, echo=T, eval=F}
 ss$add_task(
@@ -599,7 +599,7 @@ ss$add_task(
 
 ### Exporting multiple sets of results
 
-<img src="sc9-task-export-multiple-results.png" width="100%" />
+<img src="cs9-task-export-multiple-results.png" width="100%" />
 
 ```{r, echo=T, eval=F}
 ss$add_task(
@@ -613,7 +613,7 @@ ss$add_task(
   ),
   for_each_analysis = NULL,
   universal_argset = list(
-    folder = sc9::path("output", "example")
+    folder = cs9::path("output", "example")
   ),
   upsert_at_end_of_each_plan = FALSE,
   insert_at_end_of_each_plan = FALSE,
@@ -630,7 +630,7 @@ ss$add_task(
 
 ### Exporting combined results
 
-<img src="sc9-task-export-combined-results.png" width="100%" />
+<img src="cs9-task-export-combined-results.png" width="100%" />
 
 ```{r, echo=T, eval=F}
 ss$tables(
@@ -644,7 +644,7 @@ ss$tables(
   ),
   for_each_analysis = NULL,
   universal_argset = list(
-    folder = sc9::path("output", "example"),
+    folder = cs9::path("output", "example"),
     granularity_geos = c("nation", "county")
   ),
   upsert_at_end_of_each_plan = FALSE,
