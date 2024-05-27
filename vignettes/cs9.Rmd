@@ -405,10 +405,10 @@ print(argset)
 #> [1] 1
 #> 
 #> $today
-#> [1] "2023-03-10"
+#> [1] "2024-05-27"
 #> 
 #> $yesterday
-#> [1] "2023-03-09"
+#> [1] "2024-05-26"
 #> 
 #> $index_plan
 #> [1] 1
@@ -429,27 +429,7 @@ print(argset)
 #> [1] TRUE
 print(tables)
 #> $anon_example_weather
-#> [sc_interactive_anon].[dbo].[anon_example_weather] (disconnected)
-#> 
-#>   1: granularity_time (TEXT) (KEY)
-#>   2: granularity_geo (TEXT) 
-#>   3: country_iso3 (TEXT) 
-#>   4: location_code (TEXT) (KEY)
-#>   5: border (INTEGER) 
-#>   6: age (TEXT) (KEY)
-#>   7: sex (TEXT) (KEY)
-#>   8: isoyear (INTEGER) 
-#>   9: isoweek (INTEGER) 
-#>  10: isoyearweek (TEXT) 
-#>  11: season (TEXT) 
-#>  12: seasonweek (DOUBLE) 
-#>  13: calyear (INTEGER) 
-#>  14: calmonth (INTEGER) 
-#>  15: calyearmonth (TEXT) 
-#>  16: date (DATE) (KEY)
-#>  17: tg (DOUBLE) 
-#>  18: tx (DOUBLE) 
-#>  19: tn (DOUBLE)
+#> Error in cat(self$table_name_fully_specified, crayon::bgRed(crayon::white("(disconnected)\n\n"))): argument 1 (type 'S4') cannot be handled by 'cat'
 ```
 
 
@@ -497,16 +477,15 @@ index_plan <- 1
 index_analysis <- 1
 
 data <- ss$shortcut_get_data("example_weather_import_data_from_api", index_plan = index_plan)
-#> Creating table anon_example_weather
 argset <- ss$shortcut_get_argset("example_weather_import_data_from_api", index_plan = index_plan, index_analysis = index_analysis)
 tables <- ss$shortcut_get_tables("example_weather_import_data_from_api")
 
 print(data)
 #> $data
 #> {xml_document}
-#> <weatherdata noNamespaceSchemaLocation="https://schema.api.met.no/schemas/weatherapi-0.4.xsd" created="2023-03-10T09:31:18Z" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-#> [1] <meta>\n  <model name="met_public_forecast" termin="2023-03-10T09:00:00Z" r ...
-#> [2] <product class="pointData">\n  <time datatype="forecast" from="2023-03-10T0 ...
+#> <weatherdata noNamespaceSchemaLocation="https://schema.api.met.no/schemas/weatherapi-0.4.xsd" created="2024-05-27T14:11:08Z" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+#> [1] <meta>\n  <model name="met_public_forecast" termin="2024-05-27T14 ...
+#> [2] <product class="pointData">\n  <time datatype="forecast" from="20 ...
 #> 
 #> $hash
 #> $hash$current
@@ -535,10 +514,10 @@ print(argset)
 #> [1] 1
 #> 
 #> $today
-#> [1] "2023-03-10"
+#> [1] "2024-05-27"
 #> 
 #> $yesterday
-#> [1] "2023-03-09"
+#> [1] "2024-05-26"
 #> 
 #> $index_plan
 #> [1] 1
@@ -559,27 +538,7 @@ print(argset)
 #> [1] TRUE
 print(tables)
 #> $anon_example_weather
-#> [sc_interactive_anon].[dbo].[anon_example_weather] (disconnected)
-#> 
-#>   1: granularity_time (TEXT) (KEY)
-#>   2: granularity_geo (TEXT) 
-#>   3: country_iso3 (TEXT) 
-#>   4: location_code (TEXT) (KEY)
-#>   5: border (INTEGER) 
-#>   6: age (TEXT) (KEY)
-#>   7: sex (TEXT) (KEY)
-#>   8: isoyear (INTEGER) 
-#>   9: isoweek (INTEGER) 
-#>  10: isoyearweek (TEXT) 
-#>  11: season (TEXT) 
-#>  12: seasonweek (DOUBLE) 
-#>  13: calyear (INTEGER) 
-#>  14: calmonth (INTEGER) 
-#>  15: calyearmonth (TEXT) 
-#>  16: date (DATE) (KEY)
-#>  17: tg (DOUBLE) 
-#>  18: tx (DOUBLE) 
-#>  19: tn (DOUBLE)
+#> Error in cat(self$table_name_fully_specified, crayon::bgRed(crayon::white("(disconnected)\n\n"))): argument 1 (type 'S4') cannot be handled by 'cat'
 ```
 
 
@@ -688,76 +647,46 @@ ss$run_task("example_weather_import_data_from_api")
 #> Running task=example_weather_import_data_from_api with plans=1 and analyses=1
 #> plans=sequential, argset=sequential with cores=1
 #> Creating table config_data_hash_for_each_plan
-#> [1] "Data after downloading"
-#>          date tg   tx    tn
-#> 1: 2023-03-11 NA  0.5 -10.2
-#> 2: 2023-03-12 NA  0.8 -11.5
-#> 3: 2023-03-13 NA -0.6  -8.2
-#> 4: 2023-03-14 NA  2.2  -2.6
-#> 5: 2023-03-15 NA  1.4  -4.1
-#> 6: 2023-03-16 NA  2.1  -6.5
-#> 7: 2023-03-17 NA  2.0  -4.9
-#> 8: 2023-03-18 NA  1.4  -5.5
-#> 9: 2023-03-19 NA  2.6  -7.0
-#> [1] "Data after missing structural variables filled in"
-#>             [unified]         [unified]      [unified]       [unified]
-#>           <character>       <character>    <character>     <character>
-#>                NA=0 %            NA=0 %         NA=0 %          NA=0 %
-#>      granularity_time   granularity_geo   country_iso3   location_code
-#> 1:                day            county            nor        county03
-#> 2:                day            county            nor        county03
-#> 3:                day            county            nor        county03
-#> 4:                day            county            nor        county03
-#> 5:                day            county            nor        county03
-#> 6:                day            county            nor        county03
-#> 7:                day            county            nor        county03
-#> 8:                day            county            nor        county03
-#> 9:                day            county            nor        county03
-#> 
-#>      [unified]     [unified]     [unified]   [unified]   [unified]     [unified]
-#>      <integer>   <character>   <character>   <integer>   <integer>   <character>
-#>         NA=0 %        NA=0 %        NA=0 %      NA=0 %      NA=0 %        NA=0 %
-#>         border           age           sex     isoyear     isoweek   isoyearweek
-#> 1:        2020         total         total        2023          10       2023-10
-#> 2:        2020         total         total        2023          10       2023-10
-#> 3:        2020         total         total        2023          11       2023-11
-#> 4:        2020         total         total        2023          11       2023-11
-#> 5:        2020         total         total        2023          11       2023-11
-#> 6:        2020         total         total        2023          11       2023-11
-#> 7:        2020         total         total        2023          11       2023-11
-#> 8:        2020         total         total        2023          11       2023-11
-#> 9:        2020         total         total        2023          11       2023-11
-#> 
-#>        [unified]    [unified]   [unified]   [unified]      [unified]    [unified]
-#>      <character>    <numeric>   <integer>   <integer>    <character>       <Date>
-#>           NA=0 %       NA=0 %      NA=0 %      NA=0 %         NA=0 %       NA=0 %
-#>           season   seasonweek     calyear    calmonth   calyearmonth         date
-#> 1:     2022/2023           33        2023           3       2023-M03   2023-03-11
-#> 2:     2022/2023           33        2023           3       2023-M03   2023-03-12
-#> 3:     2022/2023           34        2023           3       2023-M03   2023-03-13
-#> 4:     2022/2023           34        2023           3       2023-M03   2023-03-14
-#> 5:     2022/2023           34        2023           3       2023-M03   2023-03-15
-#> 6:     2022/2023           34        2023           3       2023-M03   2023-03-16
-#> 7:     2022/2023           34        2023           3       2023-M03   2023-03-17
-#> 8:     2022/2023           34        2023           3       2023-M03   2023-03-18
-#> 9:     2022/2023           34        2023           3       2023-M03   2023-03-19
-#> 
-#>      [context]   [context]   [context]
-#>      <logical>   <numeric>   <numeric>
-#>       NA=100 %      NA=0 %      NA=0 %
-#>             tg          tx          tn
-#> 1:          NA         0.5       -10.2
-#> 2:          NA         0.8       -11.5
-#> 3:          NA        -0.6        -8.2
-#> 4:          NA         2.2        -2.6
-#> 5:          NA         1.4        -4.1
-#> 6:          NA         2.1        -6.5
-#> 7:          NA           2        -4.9
-#> 8:          NA         1.4        -5.5
-#> 9:          NA         2.6          -7
-#> Creating table config_tables_last_updated
-#> Task ran in 0 mins
+#> [1] "CREATE TABLE dbo.\"config_data_hash_for_each_plan\" (\n  \"task\" VARCHAR NOT NULL,\n  \"index_plan\" INTEGER NOT NULL,\n  \"element_tag\" VARCHAR NOT NULL,\n  \"date\" DATE NOT NULL,\n  \"datetime\" TIMESTAMP NOT NULL,\n  \"element_hash\" VARCHAR,\n  \"all_hash\" VARCHAR\n)\n"
+#> Error: nanodbc/nanodbc.cpp:1771: 00000
+#> ERROR: schema "dbo" does not exist;
+#> Error while executing the query 
+#>  RROR: schema "dbo" does not exist;
+#> Error while executing the query 
+#> <SQL> 'CREATE TABLE dbo."config_data_hash_for_each_plan" (
+#>   "task" VARCHAR NOT NULL,
+#>   "index_plan" INTEGER NOT NULL,
+#>   "element_tag" VARCHAR NOT NULL,
+#>   "date" DATE NOT NULL,
+#>   "datetime" TIMESTAMP NOT NULL,
+#>   "element_hash" VARCHAR,
+#>   "all_hash" VARCHAR
+#> )
+#> '
 #> Creating table config_tasks_stats
+#> [1] "CREATE TABLE dbo.\"config_tasks_stats\" (\n  \"task\" VARCHAR NOT NULL,\n  \"sc_version\" VARCHAR,\n  \"implementation_version\" VARCHAR,\n  \"cores_n\" INTEGER,\n  \"plans_n\" INTEGER,\n  \"analyses_n\" INTEGER,\n  \"start_date\" DATE,\n  \"start_datetime\" TIMESTAMP NOT NULL,\n  \"stop_date\" DATE,\n  \"stop_datetime\" TIMESTAMP,\n  \"runtime_minutes\" REAL,\n  \"ram_all_cores_mb\" REAL,\n  \"ram_per_core_mb\" REAL,\n  \"status\" VARCHAR\n)\n"
+#> Error: nanodbc/nanodbc.cpp:1771: 00000
+#> ERROR: schema "dbo" does not exist;
+#> Error while executing the query 
+#>  RROR: schema "dbo" does not exist;
+#> Error while executing the query 
+#> <SQL> 'CREATE TABLE dbo."config_tasks_stats" (
+#>   "task" VARCHAR NOT NULL,
+#>   "sc_version" VARCHAR,
+#>   "implementation_version" VARCHAR,
+#>   "cores_n" INTEGER,
+#>   "plans_n" INTEGER,
+#>   "analyses_n" INTEGER,
+#>   "start_date" DATE,
+#>   "start_datetime" TIMESTAMP NOT NULL,
+#>   "stop_date" DATE,
+#>   "stop_datetime" TIMESTAMP,
+#>   "runtime_minutes" REAL,
+#>   "ram_all_cores_mb" REAL,
+#>   "ram_per_core_mb" REAL,
+#>   "status" VARCHAR
+#> )
+#> '
 ```
 
 ## Different types of tasks

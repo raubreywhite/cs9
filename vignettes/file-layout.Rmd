@@ -90,19 +90,13 @@ https://github.com/csids/cs9example/blob/main/R/01_definitions.R
 18 | #' Set global definitions
 19 | set_definitions <- function() {
 20 | 
-21 |   # Norway's last redistricting occurred 2020-01-01
-22 |   global$border <- 2020
+21 |   # Norway's last redistricting occurred 2024-01-01
+22 |   global$border <- 2024
 23 | 
-24 |   # fhidata needs to know which border is in use
-25 |   # fhidata should also replace the population of 1900 with the current year,
-26 |   # because year = 1900 is shorthand for granularity_geo = "total".
-27 |   # This means that it is more appropriate to use the current year's population
-28 |   # for year = 1900.
-29 |   fhidata::set_config(
-30 |     border = global$border,
-31 |     use_current_year_as_1900_pop = TRUE
-32 |   )
-33 | }
+24 |   csdata::set_config(
+25 |     border_nor = global$border
+26 |   )
+27 | }
 ```
 
 ## 02_surveillance_systems.R
@@ -150,12 +144,12 @@ https://github.com/csids/cs9example/blob/main/R/03_tables.R
  11 | 
  12 | set_db_tables <- function() {
  13 |   # __________ ----
- 14 |   # Weather  ----
- 15 |   ## > anon_example_weather_rawdata ----
+ 14 |   # Covid-19  ----
+ 15 |   ## > anon_covid19_data ----
  16 |   global$ss$add_table(
  17 |     name_access = c("anon"),
- 18 |     name_grouping = "example_weather",
- 19 |     name_variant = "rawdata",
+ 18 |     name_grouping = "covid19",
+ 19 |     name_variant = "data",
  20 |     field_types =  c(
  21 |       "granularity_time" = "TEXT",
  22 |       "granularity_geo" = "TEXT",
@@ -177,105 +171,150 @@ https://github.com/csids/cs9example/blob/main/R/03_tables.R
  38 | 
  39 |       "date" = "DATE",
  40 | 
- 41 |       "temp_max" = "DOUBLE",
- 42 |       "temp_min" = "DOUBLE",
- 43 |       "precip" = "DOUBLE"
- 44 |     ),
- 45 |     keys = c(
- 46 |       "granularity_time",
- 47 |       "location_code",
- 48 |       "date",
- 49 |       "age",
- 50 |       "sex"
- 51 |     ),
- 52 |     validator_field_types = csdb::validator_field_types_csfmt_rts_data_v1,
- 53 |     validator_field_contents = csdb::validator_field_contents_csfmt_rts_data_v1
- 54 |   )
- 55 | 
- 56 |   ## > anon_example_weather_data ----
- 57 |   global$ss$add_table(
- 58 |     name_access = c("anon"),
- 59 |     name_grouping = "example_weather",
- 60 |     name_variant = "data",
- 61 |     field_types =  c(
- 62 |       "granularity_time" = "TEXT",
- 63 |       "granularity_geo" = "TEXT",
- 64 |       "country_iso3" = "TEXT",
- 65 |       "location_code" = "TEXT",
- 66 |       "border" = "INTEGER",
- 67 |       "age" = "TEXT",
- 68 |       "sex" = "TEXT",
- 69 | 
- 70 |       "isoyear" = "INTEGER",
- 71 |       "isoweek" = "INTEGER",
- 72 |       "isoyearweek" = "TEXT",
- 73 |       "season" = "TEXT",
- 74 |       "seasonweek" = "DOUBLE",
- 75 | 
- 76 |       "calyear" = "INTEGER",
- 77 |       "calmonth" = "INTEGER",
- 78 |       "calyearmonth" = "TEXT",
+ 41 |       "covid19_cases_testdate_n" = "INTEGER",
+ 42 |       "covid19_cases_testdate_pr100000" = "DOUBLE"
+ 43 |     ),
+ 44 |     keys = c(
+ 45 |       "granularity_time",
+ 46 |       "location_code",
+ 47 |       "date",
+ 48 |       "age",
+ 49 |       "sex"
+ 50 |     ),
+ 51 |     indexes = list(
+ 52 |       "ind1" = c("granularity_time", "granularity_geo", "country_iso3", "location_code", "border", "age", "sex", "date", "isoyear", "isoweek", "isoyearweek")
+ 53 |     ),
+ 54 |     validator_field_types = csdb::validator_field_types_blank,
+ 55 |     validator_field_contents = csdb::validator_field_contents_blank
+ 56 |   )
+ 57 | 
+ 58 |   # __________ ----
+ 59 |   # Weather  ----
+ 60 |   ## > anon_example_weather_rawdata ----
+ 61 |   global$ss$add_table(
+ 62 |     name_access = c("anon"),
+ 63 |     name_grouping = "example_weather",
+ 64 |     name_variant = "rawdata",
+ 65 |     field_types =  c(
+ 66 |       "granularity_time" = "TEXT",
+ 67 |       "granularity_geo" = "TEXT",
+ 68 |       "country_iso3" = "TEXT",
+ 69 |       "location_code" = "TEXT",
+ 70 |       "border" = "INTEGER",
+ 71 |       "age" = "TEXT",
+ 72 |       "sex" = "TEXT",
+ 73 | 
+ 74 |       "isoyear" = "INTEGER",
+ 75 |       "isoweek" = "INTEGER",
+ 76 |       "isoyearweek" = "TEXT",
+ 77 |       "season" = "TEXT",
+ 78 |       "seasonweek" = "DOUBLE",
  79 | 
- 80 |       "date" = "DATE",
- 81 | 
- 82 |       "temp_max" = "DOUBLE",
- 83 |       "temp_min" = "DOUBLE",
- 84 |       "precip" = "DOUBLE"
- 85 |     ),
- 86 |     keys = c(
- 87 |       "granularity_time",
- 88 |       "location_code",
- 89 |       "date",
- 90 |       "age",
- 91 |       "sex"
- 92 |     ),
- 93 |     validator_field_types = csdb::validator_field_types_csfmt_rts_data_v1,
- 94 |     validator_field_contents = csdb::validator_field_contents_csfmt_rts_data_v1
- 95 |   )
- 96 | 
- 97 |   ## > anon_example_income ----
- 98 |   global$ss$add_table(
- 99 |     name_access = c("anon"),
-100 |     name_grouping = "example_income",
-101 |     name_variant = NULL,
-102 |     field_types =  c(
-103 |       "granularity_time" = "TEXT",
-104 |       "granularity_geo" = "TEXT",
-105 |       "country_iso3" = "TEXT",
-106 |       "location_code" = "TEXT",
-107 |       "border" = "INTEGER",
-108 |       "age" = "TEXT",
-109 |       "sex" = "TEXT",
-110 | 
-111 |       "isoyear" = "INTEGER",
-112 |       "isoweek" = "INTEGER",
-113 |       "isoyearweek" = "TEXT",
-114 |       "season" = "TEXT",
-115 |       "seasonweek" = "DOUBLE",
-116 | 
-117 |       "calyear" = "INTEGER",
-118 |       "calmonth" = "INTEGER",
-119 |       "calyearmonth" = "TEXT",
+ 80 |       "calyear" = "INTEGER",
+ 81 |       "calmonth" = "INTEGER",
+ 82 |       "calyearmonth" = "TEXT",
+ 83 | 
+ 84 |       "date" = "DATE",
+ 85 | 
+ 86 |       "temp_max" = "DOUBLE",
+ 87 |       "temp_min" = "DOUBLE",
+ 88 |       "precip" = "DOUBLE"
+ 89 |     ),
+ 90 |     keys = c(
+ 91 |       "granularity_time",
+ 92 |       "location_code",
+ 93 |       "date",
+ 94 |       "age",
+ 95 |       "sex"
+ 96 |     ),
+ 97 |     validator_field_types = csdb::validator_field_types_csfmt_rts_data_v1,
+ 98 |     validator_field_contents = csdb::validator_field_contents_csfmt_rts_data_v1
+ 99 |   )
+100 | 
+101 |   ## > anon_example_weather_data ----
+102 |   global$ss$add_table(
+103 |     name_access = c("anon"),
+104 |     name_grouping = "example_weather",
+105 |     name_variant = "data",
+106 |     field_types =  c(
+107 |       "granularity_time" = "TEXT",
+108 |       "granularity_geo" = "TEXT",
+109 |       "country_iso3" = "TEXT",
+110 |       "location_code" = "TEXT",
+111 |       "border" = "INTEGER",
+112 |       "age" = "TEXT",
+113 |       "sex" = "TEXT",
+114 | 
+115 |       "isoyear" = "INTEGER",
+116 |       "isoweek" = "INTEGER",
+117 |       "isoyearweek" = "TEXT",
+118 |       "season" = "TEXT",
+119 |       "seasonweek" = "DOUBLE",
 120 | 
-121 |       "date" = "DATE",
-122 | 
-123 |       "household_income_median_all_households_nok" = "DOUBLE",
-124 |       "household_income_median_singles_nok" = "DOUBLE",
-125 |       "household_income_median_couples_without_children_nok" = "DOUBLE",
-126 |       "household_income_median_couples_with_children_nok" = "DOUBLE",
-127 |       "household_income_median_single_with_children_nok" = "DOUBLE"
-128 |     ),
-129 |     keys = c(
-130 |       "granularity_time",
-131 |       "location_code",
-132 |       "date",
-133 |       "age",
-134 |       "sex"
-135 |     ),
-136 |     validator_field_types = csdb::validator_field_types_csfmt_rts_data_v1,
-137 |     validator_field_contents = csdb::validator_field_contents_csfmt_rts_data_v1
-138 |   )
-139 | }
+121 |       "calyear" = "INTEGER",
+122 |       "calmonth" = "INTEGER",
+123 |       "calyearmonth" = "TEXT",
+124 | 
+125 |       "date" = "DATE",
+126 | 
+127 |       "temp_max" = "DOUBLE",
+128 |       "temp_min" = "DOUBLE",
+129 |       "precip" = "DOUBLE"
+130 |     ),
+131 |     keys = c(
+132 |       "granularity_time",
+133 |       "location_code",
+134 |       "date",
+135 |       "age",
+136 |       "sex"
+137 |     ),
+138 |     validator_field_types = csdb::validator_field_types_csfmt_rts_data_v1,
+139 |     validator_field_contents = csdb::validator_field_contents_csfmt_rts_data_v1
+140 |   )
+141 | 
+142 |   ## > anon_example_income ----
+143 |   global$ss$add_table(
+144 |     name_access = c("anon"),
+145 |     name_grouping = "example_income",
+146 |     name_variant = NULL,
+147 |     field_types =  c(
+148 |       "granularity_time" = "TEXT",
+149 |       "granularity_geo" = "TEXT",
+150 |       "country_iso3" = "TEXT",
+151 |       "location_code" = "TEXT",
+152 |       "border" = "INTEGER",
+153 |       "age" = "TEXT",
+154 |       "sex" = "TEXT",
+155 | 
+156 |       "isoyear" = "INTEGER",
+157 |       "isoweek" = "INTEGER",
+158 |       "isoyearweek" = "TEXT",
+159 |       "season" = "TEXT",
+160 |       "seasonweek" = "DOUBLE",
+161 | 
+162 |       "calyear" = "INTEGER",
+163 |       "calmonth" = "INTEGER",
+164 |       "calyearmonth" = "TEXT",
+165 | 
+166 |       "date" = "DATE",
+167 | 
+168 |       "household_income_median_all_households_nok" = "DOUBLE",
+169 |       "household_income_median_singles_nok" = "DOUBLE",
+170 |       "household_income_median_couples_without_children_nok" = "DOUBLE",
+171 |       "household_income_median_couples_with_children_nok" = "DOUBLE",
+172 |       "household_income_median_single_with_children_nok" = "DOUBLE"
+173 |     ),
+174 |     keys = c(
+175 |       "granularity_time",
+176 |       "location_code",
+177 |       "date",
+178 |       "age",
+179 |       "sex"
+180 |     ),
+181 |     validator_field_types = csdb::validator_field_types_csfmt_rts_data_v1,
+182 |     validator_field_contents = csdb::validator_field_contents_csfmt_rts_data_v1
+183 |   )
+184 | }
 ```
 
 ## 04_tasks.R
@@ -286,104 +325,131 @@ https://github.com/csids/cs9example/blob/main/R/04_tasks.R
 ```
 https://github.com/csids/cs9example/blob/main/R/04_tasks.R
 
- 1 | # ******************************************************************************
- 2 | # ******************************************************************************
- 3 | #
- 4 | # 04_tasks.R
- 5 | #
- 6 | # PURPOSE 1:
- 7 | #   Set all the tasks that are run by the package.
- 8 | #
- 9 | #   These are basically all of the "things" that you want to do.
-10 | #   E.g. Downloading data, cleaning data, importing data, analyzing data,
-11 | #   making Excel files, making docx/pdf reports, sending emails, etc.
-12 | #
-13 | # ******************************************************************************
-14 | # ******************************************************************************
-15 | 
-16 | set_tasks <- function() {
-17 |   # __________ ----
-18 |   # Weather  ----
-19 |   ## > weather_download_and_import_rawdata ----
-20 |   # tm_run_task("weather_download_and_import_rawdata")
-21 |   global$ss$add_task(
-22 |     name_grouping = "weather",
-23 |     name_action = "download_and_import_rawdata",
-24 |     name_variant = NULL,
-25 |     cores = 1,
-26 |     plan_analysis_fn_name = NULL,
-27 |     for_each_plan = plnr::expand_list(
-28 |       location_code = fhidata::norway_locations_names()[granularity_geo %in% c("municip")]$location_code
-29 |     ),
-30 |     for_each_analysis = NULL,
-31 |     universal_argset = NULL,
-32 |     upsert_at_end_of_each_plan = FALSE,
-33 |     insert_at_end_of_each_plan = FALSE,
-34 |     action_fn_name = "cs9example::weather_download_and_import_rawdata_action",
-35 |     data_selector_fn_name = "cs9example::weather_download_and_import_rawdata_data_selector",
-36 |     tables = list(
-37 |       # input
-38 | 
-39 |       # output
-40 |       "anon_example_weather_rawdata" = global$ss$tables$anon_example_weather_rawdata
-41 |     )
-42 |   )
-43 | 
-44 |   ## > weather_clean_data ----
-45 |   # tm_run_task("weather_clean_data")
-46 |   global$ss$add_task(
-47 |     name_grouping = "weather",
-48 |     name_action = "clean_data",
-49 |     name_variant = NULL,
-50 |     cores = 1,
-51 |     plan_analysis_fn_name = NULL,
-52 |     for_each_plan = plnr::expand_list(
-53 |       x = 1
-54 |     ),
-55 |     for_each_analysis = NULL,
-56 |     universal_argset = NULL,
-57 |     upsert_at_end_of_each_plan = FALSE,
-58 |     insert_at_end_of_each_plan = FALSE,
-59 |     action_fn_name = "cs9example::weather_clean_data_action",
-60 |     data_selector_fn_name = "cs9example::weather_clean_data_data_selector",
-61 |     tables = list(
-62 |       # input
-63 |       "anon_example_weather_rawdata" = global$ss$tables$anon_example_weather_rawdata,
-64 | 
-65 |       # output
-66 |       "anon_example_weather_data" = global$ss$tables$anon_example_weather_data
-67 |     )
-68 |   )
-69 | 
-70 |   ## > weather_clean_data ----
-71 |   # tm_run_task("weather_export_plots")
-72 |   global$ss$add_task(
-73 |     name_grouping = "weather",
-74 |     name_action = "export_plots",
-75 |     name_variant = NULL,
-76 |     cores = 1,
-77 |     plan_analysis_fn_name = NULL,
-78 |     for_each_plan = plnr::expand_list(
-79 |       location_code = fhidata::norway_locations_names()[granularity_geo %in% c("county")]$location_code
-80 |     ),
-81 |     for_each_analysis = NULL,
-82 |     universal_argset = list(
-83 |       output_dir = tempdir(),
-84 |       output_filename = "weather_{argset$location_code}.png",
-85 |       output_absolute_path = fs::path("{argset$output_dir}", "{argset$output_filename}")
-86 |     ),
-87 |     upsert_at_end_of_each_plan = FALSE,
-88 |     insert_at_end_of_each_plan = FALSE,
-89 |     action_fn_name = "cs9example::weather_export_plots_action",
-90 |     data_selector_fn_name = "cs9example::weather_export_plots_data_selector",
-91 |     tables = list(
-92 |       # input
-93 |       "anon_example_weather_data" = global$ss$tables$anon_example_weather_data
-94 | 
-95 |       # output
-96 |     )
-97 |   )
-98 | }
+  1 | # ******************************************************************************
+  2 | # ******************************************************************************
+  3 | #
+  4 | # 04_tasks.R
+  5 | #
+  6 | # PURPOSE 1:
+  7 | #   Set all the tasks that are run by the package.
+  8 | #
+  9 | #   These are basically all of the "things" that you want to do.
+ 10 | #   E.g. Downloading data, cleaning data, importing data, analyzing data,
+ 11 | #   making Excel files, making docx/pdf reports, sending emails, etc.
+ 12 | #
+ 13 | # ******************************************************************************
+ 14 | # ******************************************************************************
+ 15 | 
+ 16 | set_tasks <- function() {
+ 17 |   # __________ ----
+ 18 |   # Covid-19  ----
+ 19 |   ## > covid19_import_data ----
+ 20 |   # tm_run_task("covid19_import_data")
+ 21 |   global$ss$add_task(
+ 22 |     name_grouping = "covid19",
+ 23 |     name_action = "import_data",
+ 24 |     name_variant = NULL,
+ 25 |     cores = 1,
+ 26 |     plan_analysis_fn_name = NULL,
+ 27 |     for_each_plan = plnr::expand_list(
+ 28 |       x = 1
+ 29 |     ),
+ 30 |     for_each_analysis = NULL,
+ 31 |     universal_argset = NULL,
+ 32 |     upsert_at_end_of_each_plan = FALSE,
+ 33 |     insert_at_end_of_each_plan = FALSE,
+ 34 |     action_fn_name = "cs9example::covid19_import_data_action",
+ 35 |     data_selector_fn_name = "cs9example::covid19_import_data_data_selector",
+ 36 |     tables = list(
+ 37 |       # input
+ 38 | 
+ 39 |       # output
+ 40 |       "anon_covid19_data" = global$ss$tables$anon_covid19_data
+ 41 |     )
+ 42 |   )
+ 43 | 
+ 44 |   # __________ ----
+ 45 |   # Weather  ----
+ 46 |   ## > weather_download_and_import_rawdata ----
+ 47 |   # tm_run_task("weather_download_and_import_rawdata")
+ 48 |   global$ss$add_task(
+ 49 |     name_grouping = "weather",
+ 50 |     name_action = "download_and_import_rawdata",
+ 51 |     name_variant = NULL,
+ 52 |     cores = 1,
+ 53 |     plan_analysis_fn_name = NULL,
+ 54 |     for_each_plan = plnr::expand_list(
+ 55 |       location_code = fhidata::norway_locations_names()[granularity_geo %in% c("municip")]$location_code
+ 56 |     ),
+ 57 |     for_each_analysis = NULL,
+ 58 |     universal_argset = NULL,
+ 59 |     upsert_at_end_of_each_plan = FALSE,
+ 60 |     insert_at_end_of_each_plan = FALSE,
+ 61 |     action_fn_name = "cs9example::weather_download_and_import_rawdata_action",
+ 62 |     data_selector_fn_name = "cs9example::weather_download_and_import_rawdata_data_selector",
+ 63 |     tables = list(
+ 64 |       # input
+ 65 | 
+ 66 |       # output
+ 67 |       "anon_example_weather_rawdata" = global$ss$tables$anon_example_weather_rawdata
+ 68 |     )
+ 69 |   )
+ 70 | 
+ 71 |   ## > weather_clean_data ----
+ 72 |   # tm_run_task("weather_clean_data")
+ 73 |   global$ss$add_task(
+ 74 |     name_grouping = "weather",
+ 75 |     name_action = "clean_data",
+ 76 |     name_variant = NULL,
+ 77 |     cores = 1,
+ 78 |     plan_analysis_fn_name = NULL,
+ 79 |     for_each_plan = plnr::expand_list(
+ 80 |       x = 1
+ 81 |     ),
+ 82 |     for_each_analysis = NULL,
+ 83 |     universal_argset = NULL,
+ 84 |     upsert_at_end_of_each_plan = FALSE,
+ 85 |     insert_at_end_of_each_plan = FALSE,
+ 86 |     action_fn_name = "cs9example::weather_clean_data_action",
+ 87 |     data_selector_fn_name = "cs9example::weather_clean_data_data_selector",
+ 88 |     tables = list(
+ 89 |       # input
+ 90 |       "anon_example_weather_rawdata" = global$ss$tables$anon_example_weather_rawdata,
+ 91 | 
+ 92 |       # output
+ 93 |       "anon_example_weather_data" = global$ss$tables$anon_example_weather_data
+ 94 |     )
+ 95 |   )
+ 96 | 
+ 97 |   ## > weather_clean_data ----
+ 98 |   # tm_run_task("weather_export_plots")
+ 99 |   global$ss$add_task(
+100 |     name_grouping = "weather",
+101 |     name_action = "export_plots",
+102 |     name_variant = NULL,
+103 |     cores = 1,
+104 |     plan_analysis_fn_name = NULL,
+105 |     for_each_plan = plnr::expand_list(
+106 |       location_code = fhidata::norway_locations_names()[granularity_geo %in% c("county")]$location_code
+107 |     ),
+108 |     for_each_analysis = NULL,
+109 |     universal_argset = list(
+110 |       output_dir = tempdir(),
+111 |       output_filename = "weather_{argset$location_code}.png",
+112 |       output_absolute_path = fs::path("{argset$output_dir}", "{argset$output_filename}")
+113 |     ),
+114 |     upsert_at_end_of_each_plan = FALSE,
+115 |     insert_at_end_of_each_plan = FALSE,
+116 |     action_fn_name = "cs9example::weather_export_plots_action",
+117 |     data_selector_fn_name = "cs9example::weather_export_plots_data_selector",
+118 |     tables = list(
+119 |       # input
+120 |       "anon_example_weather_data" = global$ss$tables$anon_example_weather_data
+121 | 
+122 |       # output
+123 |     )
+124 |   )
+125 | }
 ```
 
 ## 05_deliverables.R
