@@ -4,73 +4,77 @@
   set_progressr()
   set_plnr()
 
-  # config_tables_last_updated ----
-  config$tables$config_tables_last_updated <- csdb::DBTable_v9$new(
-    dbconfig = config$dbconfigs$config,
-    table_name = "config_tables_last_updated",
-    field_types = c(
-      "table_name" = "TEXT",
-      "date" = "DATE",
-      "datetime" = "DATETIME"
-    ),
-    keys = c(
-      "table_name"
-    ),
-    validator_field_types = csdb::validator_field_types_blank,
-    validator_field_contents = csdb::validator_field_contents_blank
-  )
+  if(length(config$dbconfigs) == 0){
+    packageStartupMessage("CS9 dbconfigs not properly set up.")
+  } else {
+    # config_tables_last_updated ----
+    config$tables$config_tables_last_updated <- csdb::DBTable_v9$new(
+      dbconfig = config$dbconfigs$config,
+      table_name = "config_tables_last_updated",
+      field_types = c(
+        "table_name" = "TEXT",
+        "date" = "DATE",
+        "datetime" = "DATETIME"
+      ),
+      keys = c(
+        "table_name"
+      ),
+      validator_field_types = csdb::validator_field_types_blank,
+      validator_field_contents = csdb::validator_field_contents_blank
+    )
 
-  # config_tasks_stats ----
-  config$tables$config_tasks_stats <- csdb::DBTable_v9$new(
-    dbconfig = config$dbconfigs$config,
-    table_name = "config_tasks_stats",
-    field_types = c(
-      "task" = "TEXT",
-      "sc_version" = "TEXT",
-      "implementation_version" = "TEXT",
-      "cores_n" = "INTEGER",
-      "plans_n" = "INTEGER",
-      "analyses_n" = "INTEGER",
-      "start_date" = "DATE",
-      "start_datetime" = "DATETIME",
-      "stop_date" = "DATE",
-      "stop_datetime" = "DATETIME",
-      "runtime_minutes" = "DOUBLE",
-      "ram_all_cores_mb" = "DOUBLE",
-      "ram_per_core_mb" = "DOUBLE",
-      "status" = "TEXT"
-    ),
-    keys = c(
-      "task",
-      "start_datetime"
-    ),
-    validator_field_types = csdb::validator_field_types_blank,
-    validator_field_contents = csdb::validator_field_contents_blank
-  )
+    # config_tasks_stats ----
+    config$tables$config_tasks_stats <- csdb::DBTable_v9$new(
+      dbconfig = config$dbconfigs$config,
+      table_name = "config_tasks_stats",
+      field_types = c(
+        "task" = "TEXT",
+        "sc_version" = "TEXT",
+        "implementation_version" = "TEXT",
+        "cores_n" = "INTEGER",
+        "plans_n" = "INTEGER",
+        "analyses_n" = "INTEGER",
+        "start_date" = "DATE",
+        "start_datetime" = "DATETIME",
+        "stop_date" = "DATE",
+        "stop_datetime" = "DATETIME",
+        "runtime_minutes" = "DOUBLE",
+        "ram_all_cores_mb" = "DOUBLE",
+        "ram_per_core_mb" = "DOUBLE",
+        "status" = "TEXT"
+      ),
+      keys = c(
+        "task",
+        "start_datetime"
+      ),
+      validator_field_types = csdb::validator_field_types_blank,
+      validator_field_contents = csdb::validator_field_contents_blank
+    )
 
-  # config_data_hash_for_each_plan ----
-  config$tables$config_data_hash_for_each_plan <- csdb::DBTable_v9$new(
-    dbconfig = config$dbconfigs$config,
-    table_name = "config_data_hash_for_each_plan",
-    field_types = c(
-      "task" = "TEXT",
-      "index_plan" = "INTEGER",
-      "element_tag" = "TEXT",
-      "date" = "DATE",
-      "datetime" = "DATETIME",
-      "element_hash" = "TEXT",
-      "all_hash" = "TEXT"
-    ),
-    keys = c(
-      "task",
-      "index_plan",
-      "element_tag",
-      "date",
-      "datetime"
-    ),
-    validator_field_types = csdb::validator_field_types_blank,
-    validator_field_contents = csdb::validator_field_contents_blank
-  )
+    # config_data_hash_for_each_plan ----
+    config$tables$config_data_hash_for_each_plan <- csdb::DBTable_v9$new(
+      dbconfig = config$dbconfigs$config,
+      table_name = "config_data_hash_for_each_plan",
+      field_types = c(
+        "task" = "TEXT",
+        "index_plan" = "INTEGER",
+        "element_tag" = "TEXT",
+        "date" = "DATE",
+        "datetime" = "DATETIME",
+        "element_hash" = "TEXT",
+        "all_hash" = "TEXT"
+      ),
+      keys = c(
+        "task",
+        "index_plan",
+        "element_tag",
+        "date",
+        "datetime"
+      ),
+      validator_field_types = csdb::validator_field_types_blank,
+      validator_field_contents = csdb::validator_field_contents_blank
+    )
+  }
 
   invisible()
 }
