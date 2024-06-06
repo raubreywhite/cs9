@@ -36,7 +36,11 @@ DBPartitionedTableExtended_v9 <- R6::R6Class(
       self$tables <- vector("list", length(self$partitions))
       names(self$tables) <- self$partitions
       for(i in self$partitions){
-        table_name <- paste0(c(table_name_base,"PARTITION", i), collapse = "_")
+        if(dbconfig$driver %in% c("PostgresSQL Unicode")){
+          table_name <- paste0(c(table_name_base,"partition", i), collapse = "_")
+        } else {
+          table_name <- paste0(c(table_name_base,"PARTITION", i), collapse = "_")
+        }
 
         dbtable <- DBTableExtended_v9$new(
           dbconfig = dbconfig,

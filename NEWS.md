@@ -1,3 +1,7 @@
+# Version 2024.6.6
+
+- Partition table names are now 'partition' not 'PARTITION'
+
 # Version 2024.3.7
 
 - Including confirm_insert_via_nrow in DBtables. Checks nrow() before insert and after insert. If nrow() has not increased sufficiently, then attempt an upsert.
