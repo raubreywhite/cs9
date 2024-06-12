@@ -58,7 +58,7 @@ This function provides a named list to be used as the `data` argument to `action
   <li>argset (named list)</li>
   <li>tables (named list)</li>
 </ul>
-This is the thing that **'does stuff'** in Surveillance Core 9.</td>
+This is the thing that **'does stuff'** in Core Surveillance 9.</td>
 </tr>
 <tr>
 <td style='padding-left: .4em; padding-right: .2em; padding-top: .4em; padding-bottom: .4em; font-size: 14px; border-bottom: 1px dashed grey; width: 20%; border-left: 1px solid black; border-right: 1px solid black; text-align: left;'>sc analysis</td>
@@ -129,12 +129,12 @@ Obviously, if a plan's data-pull is larger, it will use more RAM. If you need to
 
 <figure>
 <img id="figure-2" src="cs9-file-locations.png" width="100%" />
-<figcaption>Figure 2. A typical file setup for an implementation of Surveillance Core 9. $plan_argset_fn$ is rarely used, and is therefore shown as blacked out in the most of the tasks..</figcaption>
+<figcaption>Figure 2. A typical file setup for an implementation of Core Surveillance 9. $plan_argset_fn$ is rarely used, and is therefore shown as blacked out in the most of the tasks..</figcaption>
 </figure>
 
-<a href="#figure-2">Figure 2</a> shows a typical implementation of Surveillance Core 9.
+<a href="#figure-2">Figure 2</a> shows a typical implementation of Core Surveillance 9.
 
-`config_db.r` contains all of the [Surveillance Core 9 db tables](analytics_db_schemas_introduction.html) definitions. i.e. A long list of `sc::add_schema_v8` commands.
+`config_db.r` contains all of the [Core Surveillance 9 db tables](analytics_db_schemas_introduction.html) definitions. i.e. A long list of `sc::add_schema_v8` commands.
 
 `config_tasks.r` contains all of the task definitions. i.e. A long list of `sc::add_task_from_config_v8` commands.
 
