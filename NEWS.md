@@ -1,6 +1,10 @@
+# Version 2024.6.17
+
+- When running in parallel, a seed is set according to the index of the first analysis in each plan.
+
 # Version 2024.6.6
 
-- Partition table names are now 'partition' not 'PARTITION'
+- Partition table names are now 'xxxpartitionxxx' not 'PARTITION'
 
 # Version 2024.3.7
 

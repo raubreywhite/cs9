@@ -322,6 +322,11 @@ Task <- R6::R6Class(
           x$set_verbose(FALSE)
           message(".")
 
+          # this tries to set a different seed for each parallel run
+          # so that there isn't a race condition in any of the parallel
+          # processes
+          set.seed(x$get_argset(1)$index)
+
           for (tries in 1:5) {
             config$plan_attempt_index <- tries
 
