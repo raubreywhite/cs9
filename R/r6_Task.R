@@ -312,6 +312,7 @@ Task <- R6::R6Class(
         rm("data")
       }
       for (s in tables) s$disconnect()
+      for (s in config$tables) s$disconnect()
     },
     run_parallel_plans = function(plans_index, tables, upsert_at_end_of_each_plan, insert_at_end_of_each_plan, cores) {
       y <- pbmcapply::pbmclapply(
