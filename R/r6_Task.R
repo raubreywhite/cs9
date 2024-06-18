@@ -311,7 +311,7 @@ Task <- R6::R6Class(
         )
         rm("data")
       }
-      # for (s in tables) s$disconnect()
+      for (s in tables) s$disconnect()
     },
     run_parallel_plans = function(plans_index, tables, upsert_at_end_of_each_plan, insert_at_end_of_each_plan, cores) {
       y <- pbmcapply::pbmclapply(
@@ -326,6 +326,7 @@ Task <- R6::R6Class(
           # so that there isn't a race condition in any of the parallel
           # processes
           set.seed(x$get_argset(1)$index)
+          # for (s in tables) s$disconnect()
 
           for (tries in 1:5) {
             config$plan_attempt_index <- tries
