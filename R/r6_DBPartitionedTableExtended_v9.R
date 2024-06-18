@@ -54,6 +54,11 @@ DBPartitionedTableExtended_v9 <- R6::R6Class(
         self$tables[[i]] <- dbtable
       }
     },
+    disconnect = function() {
+      for(i in self$partitions_randomized){
+        self$tables[[i]]$disconnect()
+      }
+    },
     insert_data = function(newdata, confirm_insert_via_nrow = FALSE, verbose = TRUE){
       if(!is.null(self$value_generator_partition)){
         part <- do.call(self$value_generator_partition, newdata)
